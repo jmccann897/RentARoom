@@ -57,7 +57,8 @@ namespace RentARoom.Controllers
         }
 
         // GET: Properties/Create
-        [Authorize]
+        //Only Admin and Owners to create properties
+        [Authorize(Roles = "Admin, Owner")]
         public IActionResult Create()
         {
             return View();
