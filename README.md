@@ -9,3 +9,16 @@ With enhanced search criteria such as
 - Distance to user selected amenities
 - Travel time to amenities
 
+  
+**Config notes**
+
+Software Requirements
+- Visual Studio 2022
+- SSMS
+- MS SQL Server
+
+Visual Studio
+- Nuget packages - refer to .csproj file
+
+Connecting to DB
+
