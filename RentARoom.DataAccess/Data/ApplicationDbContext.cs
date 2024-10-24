@@ -1,15 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.Identity.Client;
 using RentARoom.Models;
 
 namespace RentARoom.DataAccess.Data
 {
     public class ApplicationDbContext : DbContext
     {
+        //constructor which passes options to base class
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-
+              
         }
         public DbSet<Property> Property { get; set; }
 
