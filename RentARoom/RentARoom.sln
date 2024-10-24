@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentARoom", "RentARoom.csproj", "{D1BA5B1D-B691-4F1C-AE74-0CD20D3B4F5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentARoom", "RentARoom.csproj", "{D1BA5B1D-B691-4F1C-AE74-0CD20D3B4F5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentARoom.DataAccess", "..\RentARoom.DataAccess\RentARoom.DataAccess.csproj", "{5924C737-6BDD-4569-B902-611E40C9B618}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentARoom.Models", "..\RentARoom.Models\RentARoom.Models.csproj", "{F2759B69-B379-4311-84BD-6A352135FCF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentARoom.Utility", "..\RentARoom.Utility\RentARoom.Utility.csproj", "{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{D1BA5B1D-B691-4F1C-AE74-0CD20D3B4F5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1BA5B1D-B691-4F1C-AE74-0CD20D3B4F5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1BA5B1D-B691-4F1C-AE74-0CD20D3B4F5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5924C737-6BDD-4569-B902-611E40C9B618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5924C737-6BDD-4569-B902-611E40C9B618}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5924C737-6BDD-4569-B902-611E40C9B618}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5924C737-6BDD-4569-B902-611E40C9B618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2759B69-B379-4311-84BD-6A352135FCF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2759B69-B379-4311-84BD-6A352135FCF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2759B69-B379-4311-84BD-6A352135FCF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2759B69-B379-4311-84BD-6A352135FCF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

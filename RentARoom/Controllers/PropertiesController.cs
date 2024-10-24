@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using RentARoom.Data;
+using RentARoom.DataAccess.Data;
 using RentARoom.Models;
 
 namespace RentARoom.Controllers
@@ -58,7 +58,7 @@ namespace RentARoom.Controllers
 
         // GET: Properties/Create
         //Only Admin and Owners to create properties
-        [Authorize(Roles = "Admin, Owner")]
+        //[Authorize(Roles = "Admin, Owner")]
         public IActionResult Create()
         {
             return View();
@@ -67,9 +67,9 @@ namespace RentARoom.Controllers
         // POST: Properties/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        //[Authorize]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Address,Postcode,Owner")] Property @property)
         {
             if (ModelState.IsValid)
@@ -101,7 +101,7 @@ namespace RentARoom.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Address,Postcode,Owner")] Property @property)
         {
             if (id != @property.Id)
@@ -152,7 +152,7 @@ namespace RentARoom.Controllers
 
         // POST: Properties/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var @property = await _context.Property.FindAsync(id);
