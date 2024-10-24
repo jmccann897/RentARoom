@@ -7,22 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RentARoom.DataAccess.Data;
+using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
 
 namespace RentARoom.Controllers
 {
     public class PropertiesController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PropertiesController(ApplicationDbContext db)
+        public PropertiesController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            List<Property> objPropertyList = await _db.Property.ToListAsync();
+            List<Property> objPropertyList = _unitOfWork.Property.GetAll().ToList();
             return View(objPropertyList);
         }     
 
@@ -36,8 +37,8 @@ namespace RentARoom.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Property.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.Property.Add(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Property created successfully";
                 return RedirectToAction("Index", "Properties");
             }
@@ -50,7 +51,7 @@ namespace RentARoom.Controllers
             {
                 return NotFound();
             }
-            Property? propertyFromDb = _db.Property.FirstOrDefault(u=>u.Id == id);
+            Property? propertyFromDb = _unitOfWork.Property.Get(u=>u.Id == id);
             return View(propertyFromDb);
         }
 
@@ -59,8 +60,8 @@ namespace RentARoom.Controllers
         {
             if (ModelState.IsValid)
             {
-                _db.Property.Update(obj);
-                _db.SaveChanges();
+                _unitOfWork.Property.Update(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "Property updated successfully";
                 return RedirectToAction("Index", "Properties");
             }
@@ -73,58 +74,58 @@ namespace RentARoom.Controllers
             {
                 return NotFound();
             }
-            Property? propertyFromDb = _db.Property.FirstOrDefault(u => u.Id == id);
+            Property? propertyFromDb = _unitOfWork.Property.Get(u => u.Id == id);
             return View(propertyFromDb);
         }
 
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePOST(int? id)
         {
-            Property obj = _db.Property.Find(id);
-            if(obj == null)
+            Property obj = _unitOfWork.Property.Get(u => u.Id == id);
+            if (obj == null)
             {
                 return NotFound();
             }
-            _db.Property.Remove(obj);
-            _db.SaveChanges();
+            _unitOfWork.Property.Remove(obj);
+            _unitOfWork.Save();
             TempData["success"] = "Property deleted successfully";
             return RedirectToAction("Index", "Properties");
 
         }
 
-        private bool PropertyExists(int id)
-        {
-            return _db.Property.Any(e => e.Id == id);
-        }
+        //private bool PropertyExists(int id)
+        //{
+        //    return _propertyRepo.Any(e => e.Id == id);
+        //}
 
-        // GET: Properties/ShowSearchForm
-        public async Task<IActionResult> ShowSearchForm()
-        {
-            return View();
-        }
+        //// GET: Properties/ShowSearchForm
+        //public async Task<IActionResult> ShowSearchForm()
+        //{
+        //    return View();
+        //}
 
-        // POST: Properties/ShowSearchResults
-        public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
-        {
-            return View("Index", await _db.Property.Where(x => x.Address.Contains(SearchPhrase)).ToListAsync());
-        }
+        //// POST: Properties/ShowSearchResults
+        //public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
+        //{
+        //    return View("Index", await _db.Property.Where(x => x.Address.Contains(SearchPhrase)).ToListAsync());
+        //}
 
-        // GET: Properties/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Properties/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var @property = await _db.Property
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@property == null)
-            {
-                return NotFound();
-            }
+        //    var @property = await _db.Property
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (@property == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(@property);
-        }
+        //    return View(@property);
+        //}
     }
 }
