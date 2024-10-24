@@ -13,72 +13,34 @@ namespace RentARoom.Controllers
 {
     public class PropertiesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
-        public PropertiesController(ApplicationDbContext context)
+        public PropertiesController(ApplicationDbContext db)
         {
-            _context = context;
+            _db = db;
         }
 
-        // GET: Properties
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Property.ToListAsync());
-        }
+            List<Property> objPropertyList = await _db.Property.ToListAsync();
+            return View(objPropertyList);
+        }     
 
-        // GET: Properties/ShowSearchForm
-        public async Task<IActionResult> ShowSearchForm()
-        {
-            return View();
-        }
-
-        // POST: Properties/ShowSearchResults
-        public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
-        {
-            return View("Index", await _context.Property.Where(x => x.Address.Contains(SearchPhrase)).ToListAsync());
-        }
-
-        // GET: Properties/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var @property = await _context.Property
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@property == null)
-            {
-                return NotFound();
-            }
-
-            return View(@property);
-        }
-
-        // GET: Properties/Create
-        //Only Admin and Owners to create properties
-        //[Authorize(Roles = "Admin, Owner")]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Properties/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[Authorize]
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Address,Postcode,Owner")] Property @property)
+        public IActionResult Create(Property obj)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(@property);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _db.Property.Add(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index", "Properties");
             }
-            return View(@property);
+            return View();
         }
 
         // GET: Properties/Edit/5
@@ -89,7 +51,7 @@ namespace RentARoom.Controllers
                 return NotFound();
             }
 
-            var @property = await _context.Property.FindAsync(id);
+            var @property = await _db.Property.FindAsync(id);
             if (@property == null)
             {
                 return NotFound();
@@ -113,8 +75,8 @@ namespace RentARoom.Controllers
             {
                 try
                 {
-                    _context.Update(@property);
-                    await _context.SaveChangesAsync();
+                    _db.Update(@property);
+                    await _db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -140,7 +102,7 @@ namespace RentARoom.Controllers
                 return NotFound();
             }
 
-            var @property = await _context.Property
+            var @property = await _db.Property
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (@property == null)
             {
@@ -155,19 +117,49 @@ namespace RentARoom.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var @property = await _context.Property.FindAsync(id);
+            var @property = await _db.Property.FindAsync(id);
             if (@property != null)
             {
-                _context.Property.Remove(@property);
+                _db.Property.Remove(@property);
             }
 
-            await _context.SaveChangesAsync();
+            await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PropertyExists(int id)
         {
-            return _context.Property.Any(e => e.Id == id);
+            return _db.Property.Any(e => e.Id == id);
+        }
+
+        // GET: Properties/ShowSearchForm
+        public async Task<IActionResult> ShowSearchForm()
+        {
+            return View();
+        }
+
+        // POST: Properties/ShowSearchResults
+        public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
+        {
+            return View("Index", await _db.Property.Where(x => x.Address.Contains(SearchPhrase)).ToListAsync());
+        }
+
+        // GET: Properties/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @property = await _db.Property
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (@property == null)
+            {
+                return NotFound();
+            }
+
+            return View(@property);
         }
     }
 }
