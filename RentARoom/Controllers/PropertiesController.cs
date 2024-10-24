@@ -38,93 +38,58 @@ namespace RentARoom.Controllers
             {
                 _db.Property.Add(obj);
                 _db.SaveChanges();
+                TempData["success"] = "Property created successfully";
                 return RedirectToAction("Index", "Properties");
             }
             return View();
         }
 
-        // GET: Properties/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
-            if (id == null)
+            if(id == null || id == 0)
             {
                 return NotFound();
             }
-
-            var @property = await _db.Property.FindAsync(id);
-            if (@property == null)
-            {
-                return NotFound();
-            }
-            return View(@property);
+            Property? propertyFromDb = _db.Property.FirstOrDefault(u=>u.Id == id);
+            return View(propertyFromDb);
         }
 
-        // POST: Properties/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Address,Postcode,Owner")] Property @property)
+        public IActionResult Edit(Property obj)
         {
-            if (id != @property.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _db.Update(@property);
-                    await _db.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PropertyExists(@property.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _db.Property.Update(obj);
+                _db.SaveChanges();
+                TempData["success"] = "Property updated successfully";
+                return RedirectToAction("Index", "Properties");
             }
-            return View(@property);
+            return View();
         }
 
-        // GET: Properties/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            if (id == null)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
-
-            var @property = await _db.Property
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@property == null)
-            {
-                return NotFound();
-            }
-
-            return View(@property);
+            Property? propertyFromDb = _db.Property.FirstOrDefault(u => u.Id == id);
+            return View(propertyFromDb);
         }
 
-        // POST: Properties/Delete/5
         [HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeletePOST(int? id)
         {
-            var @property = await _db.Property.FindAsync(id);
-            if (@property != null)
+            Property obj = _db.Property.Find(id);
+            if(obj == null)
             {
-                _db.Property.Remove(@property);
+                return NotFound();
             }
+            _db.Property.Remove(obj);
+            _db.SaveChanges();
+            TempData["success"] = "Property deleted successfully";
+            return RedirectToAction("Index", "Properties");
 
-            await _db.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool PropertyExists(int id)
