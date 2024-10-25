@@ -1,8 +1,32 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿
+<div class="container">
+    <div class="row">
+        <div class="container square-box d-flex justify-content-center align-items-center">
+            <div class="col-sm">
+                <h2 class="text-center">Helping Students find their place</h2>
+                @* search bar above search submit on one half and then image on the right hand side *@
+                <form class="">
+                    <input class="form-control" type="search" placeholder="Search">
+                </form>
+                <div class="d-grid gap-2 pt-1">
+                    <button class="btn btn-lg btn-secondary" type="submit">Search</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col">
+            <div class="carousel-item">
+                <img src="..." alt="...">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>...</h5>
+                    <p>...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    
+
 </div>
