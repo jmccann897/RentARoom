@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentARoom.Models
 {
@@ -11,10 +13,7 @@ namespace RentARoom.Models
         [Required]
         [MaxLength(8)]
         public string Postcode { get; set; }
-        public string Owner { get; set; }
-
-        [Display(Name ="Property Type")]
-        public PropertyType PropertyType { get; set; }
+        public string Owner { get; set; }      
 
         [Display(Name = "Rent")]
         [Range(1,10000)]
@@ -27,8 +26,14 @@ namespace RentARoom.Models
         [Display(Name = "Floor Area")]
         [Range(1, 1000000)]
         public int FloorArea { get; set; }
+        [ValidateNever]
         public string ImageUrl { get; set; }
-       
+
+        [Display(Name = "Property Type")]
+        public int PropertyTypeId { get; set; }
+        [ForeignKey("PropertyTypeId")]
+        [ValidateNever]
+        public PropertyType PropertyType { get; set; }
 
 
         //default constructor

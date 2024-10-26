@@ -22,7 +22,21 @@ namespace RentARoom.DataAccess.Repository
 
         public void Update(Property obj)
         {
-            _db.Property.Update(obj);
+            var objFromDb = _db.Property.FirstOrDefault(u => u.Id == obj.Id);
+            if (objFromDb != null)
+            {
+                objFromDb.Address = obj.Address;
+                objFromDb.Postcode = obj.Postcode;
+                objFromDb.Price = obj.Price;
+                objFromDb.Owner = obj.Owner;
+                objFromDb.NumberOfBedrooms = obj.NumberOfBedrooms;
+                objFromDb.FloorArea = obj.FloorArea;
+                objFromDb.PropertyTypeId = obj.PropertyTypeId;
+                if(obj.ImageUrl != null)
+                {
+                    objFromDb.ImageUrl = obj.ImageUrl;
+                }
+            }
         }
     }
 }
