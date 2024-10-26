@@ -9,67 +9,77 @@
     <div class="card-body p-4">
         <form method="post" class="row" enctype="multipart/form-data">
             <input asp-for="Property.Id" hidden />
-            <div class="border p-3">
-                <div class="form-floating py-2 col-12">
-                    <input asp-for="Property.Address" class="form-control border-0 shadow"/>
-                    <label asp-for="Property.Address" class="ms-2"></label>
-                    <span asp-validation-for="Property.Address" class="text-danger"></span>
-                </div>
-                <div class="form-floating py-2 col-12">
-                    <input asp-for="Property.Postcode" class="form-control border-0 shadow" />
-                    <label asp-for="Property.Postcode" class="ms-2"></label>
-                    <span asp-validation-for="Property.Postcode" class="text-danger"></span>
-                </div>
-                <div class="form-floating py-2 col-12">
-                    <input asp-for="Property.Owner" class="form-control border-0 shadow" />
-                    <label asp-for="Property.Owner" class="ms-2"></label>
-                    @* <span asp-validation-for="Owner" class="text-danger"></span> *@
-                </div>
-                <div class="form-floating py-2 col-12">
-                    <input asp-for="Property.Price" class="form-control border-0 shadow" />
-                    <label asp-for="Property.Price" class="ms-2"></label>
-                    <span asp-validation-for="Property.Price" class="text-danger"></span>
-                </div>
-                <div class="form-floating py-2 col-12">
-                    <input asp-for="Property.NumberOfBedrooms" class="form-control border-0 shadow" />
-                    <label asp-for="Property.NumberOfBedrooms" class="ms-2"></label>
-                    <span asp-validation-for="Property.NumberOfBedrooms" class="text-danger"></span>
-                </div>
-                <div class="form-floating py-2 col-12">
-                    <input asp-for="Property.FloorArea" class="form-control border-0 shadow" />
-                    <label asp-for="Property.FloorArea" class="ms-2"></label>
-                    <span asp-validation-for="Property.FloorArea" class="text-danger"></span>
-                </div>
-                <div class="form-floating py-2 col-12">
-                    <select asp-for="Property.PropertyTypeId" asp-items="@Model.PropertyTypeList" class="form-control border-0 shadow">
-                        <option disabled selected>--Select Property Type--</option>                        
-                    </select>
-                    <label asp-for="Property.PropertyTypeId" class="ms-2"></label>
-                    <span asp-validation-for="Property.PropertyTypeId" class="text-danger"></span>
-                </div>
-                <div class="form-floating py-2 col-12">
-                    <input type="file" class="form-control border-0 shadow" />
-                    <label asp-for="Property.ImageUrl" class="ms-2"></label>                    
-                </div>
-                <div class="row pt-2">
-                    <div class="col-6 col-md-3">
-                        @if(Model.Property.Id != 0)
-                        {
-                            <button type="submit" class="btn btn-primary form-control">Update</button>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-primary form-control">Create</button>
-                        }
-                        
+            <input asp-for="Property.ImageUrl" hidden />
+            <div class="row">
+                <div class="col-10">
+                    <div class="border p-3">
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Property.Address" class="form-control border-0 shadow" />
+                            <label asp-for="Property.Address" class="ms-2"></label>
+                            <span asp-validation-for="Property.Address" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Property.Postcode" class="form-control border-0 shadow" />
+                            <label asp-for="Property.Postcode" class="ms-2"></label>
+                            <span asp-validation-for="Property.Postcode" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Property.Owner" class="form-control border-0 shadow" />
+                            <label asp-for="Property.Owner" class="ms-2"></label>
+                            @* <span asp-validation-for="Owner" class="text-danger"></span> *@
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Property.Price" class="form-control border-0 shadow" />
+                            <label asp-for="Property.Price" class="ms-2"></label>
+                            <span asp-validation-for="Property.Price" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Property.NumberOfBedrooms" class="form-control border-0 shadow" />
+                            <label asp-for="Property.NumberOfBedrooms" class="ms-2"></label>
+                            <span asp-validation-for="Property.NumberOfBedrooms" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Property.FloorArea" class="form-control border-0 shadow" />
+                            <label asp-for="Property.FloorArea" class="ms-2"></label>
+                            <span asp-validation-for="Property.FloorArea" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <select asp-for="Property.PropertyTypeId" asp-items="@Model.PropertyTypeList" class="form-control border-0 shadow">
+                                <option disabled selected>--Select Property Type--</option>
+                            </select>
+                            <label asp-for="Property.PropertyTypeId" class="ms-2"></label>
+                            <span asp-validation-for="Property.PropertyTypeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input type="file" name="file" class="form-control border-0 shadow" />
+                            <label asp-for="Property.ImageUrl" class="ms-2"></label>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-6 col-md-3">
+                                @if (Model.Property.Id != 0)
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Update</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                                }
+
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a asp-controller="Properties" asp-action="Index" class="btn btn-secondary form-control">
+                                    Back to List
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-6 col-md-3">
-                        <a asp-controller="Properties" asp-action="Index" class="btn btn-secondary form-control">
-                            Back to List
-                        </a>
-                    </div>
+                </div>
+                <div class="col-2">
+                    <img src="@Model.Property.ImageUrl" width="100%"
+                    style="border-radius:5px; border:1px solid #bbb9b9" />
                 </div>
             </div>
+            
         </form>
     </div>
 

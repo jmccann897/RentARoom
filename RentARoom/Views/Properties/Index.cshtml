@@ -59,7 +59,7 @@
                         <td>@obj.Price.ToString("c")</td>
                         <td>@obj.NumberOfBedrooms</td>
                         <td>@obj.FloorArea</td>
-                        <td>@obj.PropertyType</td>
+                        <td>@obj.PropertyType.Name</td>
                         <td>
                             <div class="w-75 btn-group" role="group">
                                 <a asp-controller="Properties" asp-action="Upsert" asp-route-id="@obj.Id" class="btn btn-primary mx-2">

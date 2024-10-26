@@ -16,15 +16,17 @@ namespace RentARoom.Controllers
     public class PropertiesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public PropertiesController(IUnitOfWork unitOfWork)
+        public PropertiesController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-            List<Property> objPropertyList = _unitOfWork.Property.GetAll().ToList();
+            List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties:"PropertyType").ToList();
             return View(objPropertyList);
         }     
 
@@ -59,7 +61,51 @@ namespace RentARoom.Controllers
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Property.Add(propertyVM.Property);
+                string wwwRootPath = _webHostEnvironment.WebRootPath;//gets to wwwRoot folder
+                if (file != null)
+                {
+                    //Generate random name for file + extension from upload
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); 
+                    //Generate location to save file to
+                    string propertyPath = Path.Combine(wwwRootPath, @"images/property");
+
+                    //check if already present - as uploading new file + existing = update
+                    if (!string.IsNullOrEmpty(propertyVM.Property.ImageUrl))
+                    {
+                        //delete old img
+
+                        //generate path to old img
+                        //need to remove leading backslash with trim
+                        var oldImagePath = Path.Combine(wwwRootPath, propertyVM.Property.ImageUrl.TrimStart('\\'));
+
+                        //delete old img
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    //using auto disposes of service post use
+                    //FileStream to copy file(complete path name, mode)
+                    using (var fileStream = new FileStream(Path.Combine(propertyPath, fileName), FileMode.Create))
+                    {
+                        //copy file to new location generated above
+                        file.CopyTo(fileStream);
+                    }
+
+                    propertyVM.Property.ImageUrl = @"\images\property\" + fileName;
+                }
+
+                //check if update or create by whether id is 0 (create)
+                if(propertyVM.Property.Id == 0 )
+                {
+                    _unitOfWork.Property.Add(propertyVM.Property);
+                }
+                else
+                {
+                    _unitOfWork.Property.Update(propertyVM.Property);
+                }
+                
                 _unitOfWork.Save();
                 TempData["success"] = "Property created successfully";
                 return RedirectToAction("Index", "Properties");
