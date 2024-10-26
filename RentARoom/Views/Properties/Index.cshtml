@@ -31,6 +31,19 @@
                         Owner
                     </th>
                     <th>
+                        Rent
+                    </th>
+                    <th>
+                        Number of Bedrooms
+                    </th>
+                    <th>
+                        Floor Area (m2)
+                    </th>
+                    <th>
+                        Property Type
+                    </th>
+                    <th>
+
 
                     </th>
 
@@ -43,6 +56,10 @@
                         <td>@obj.Address</td>
                         <td>@obj.Postcode</td>
                         <td>@obj.Owner</td>
+                        <td>@obj.Price.ToString("c")</td>
+                        <td>@obj.NumberOfBedrooms</td>
+                        <td>@obj.FloorArea</td>
+                        <td>@obj.PropertyType</td>
                         <td>
                             <div class="w-75 btn-group" role="group">
                                 <a asp-controller="Properties" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">

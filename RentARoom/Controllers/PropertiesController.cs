@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
+using RentARoom.Models.ViewModels;
 
 namespace RentARoom.Controllers
 {
@@ -29,20 +30,44 @@ namespace RentARoom.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            PropertyVM productVM = new()
+            {
+                PropertyTypeList = _unitOfWork.PropertyType
+                .GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                }),
+                Property = new Property()
+            };
+
+        
+
+            return View(productVM);
         }
 
         [HttpPost]
-        public IActionResult Create(Property obj)
+        public IActionResult Create(PropertyVM productVM)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Property.Add(obj);
+                _unitOfWork.Property.Add(productVM.Property);
                 _unitOfWork.Save();
                 TempData["success"] = "Property created successfully";
                 return RedirectToAction("Index", "Properties");
             }
-            return View();
+            else
+            {
+                //if issue, need to re-populate dropdown
+                productVM.PropertyTypeList = _unitOfWork.PropertyType
+                .GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                });
+                return View(productVM);
+            }
+            
         }
 
         public IActionResult Edit(int? id)
