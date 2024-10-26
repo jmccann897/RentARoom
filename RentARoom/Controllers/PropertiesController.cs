@@ -28,9 +28,9 @@ namespace RentARoom.Controllers
             return View(objPropertyList);
         }     
 
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {
-            PropertyVM productVM = new()
+            PropertyVM propertyVM = new()
             {
                 PropertyTypeList = _unitOfWork.PropertyType
                 .GetAll().Select(u => new SelectListItem
@@ -41,17 +41,25 @@ namespace RentARoom.Controllers
                 Property = new Property()
             };
 
-        
-
-            return View(productVM);
+            //create
+            if(id == null || id == 0)
+            {
+                return View(propertyVM);
+            }
+            else
+            {
+                //update
+                propertyVM.Property = _unitOfWork.Property.Get(u => u.Id == id);
+                return View(propertyVM);
+            }            
         }
 
         [HttpPost]
-        public IActionResult Create(PropertyVM productVM)
+        public IActionResult Upsert(PropertyVM propertyVM, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Property.Add(productVM.Property);
+                _unitOfWork.Property.Add(propertyVM.Property);
                 _unitOfWork.Save();
                 TempData["success"] = "Property created successfully";
                 return RedirectToAction("Index", "Properties");
@@ -59,40 +67,17 @@ namespace RentARoom.Controllers
             else
             {
                 //if issue, need to re-populate dropdown
-                productVM.PropertyTypeList = _unitOfWork.PropertyType
+                propertyVM.PropertyTypeList = _unitOfWork.PropertyType
                 .GetAll().Select(u => new SelectListItem
                 {
                     Text = u.Name,
                     Value = u.Id.ToString()
                 });
-                return View(productVM);
+                return View(propertyVM);
             }
             
         }
-
-        public IActionResult Edit(int? id)
-        {
-            if(id == null || id == 0)
-            {
-                return NotFound();
-            }
-            Property? propertyFromDb = _unitOfWork.Property.Get(u=>u.Id == id);
-            return View(propertyFromDb);
-        }
-
-        [HttpPost]
-        public IActionResult Edit(Property obj)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Property.Update(obj);
-                _unitOfWork.Save();
-                TempData["success"] = "Property updated successfully";
-                return RedirectToAction("Index", "Properties");
-            }
-            return View();
-        }
-
+     
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)

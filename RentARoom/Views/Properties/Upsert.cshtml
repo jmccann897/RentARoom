@@ -3,11 +3,12 @@
 <div class="card shadow border-0 mb-3">
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
-        <h2 class="text-white py-2">Create Property</h2>
+        <h2 class="text-white py-2">@(Model.Property.Id!=0?"Update":"Create") Property</h2>
     </div>
 
     <div class="card-body p-4">
         <form method="post" class="row" enctype="multipart/form-data">
+            <input asp-for="Property.Id" hidden />
             <div class="border p-3">
                 <div class="form-floating py-2 col-12">
                     <input asp-for="Property.Address" class="form-control border-0 shadow"/>
@@ -52,7 +53,15 @@
                 </div>
                 <div class="row pt-2">
                     <div class="col-6 col-md-3">
-                        <button type="submit" class="btn btn-primary form-control">Create</button>
+                        @if(Model.Property.Id != 0)
+                        {
+                            <button type="submit" class="btn btn-primary form-control">Update</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary form-control">Create</button>
+                        }
+                        
                     </div>
                     <div class="col-6 col-md-3">
                         <a asp-controller="Properties" asp-action="Index" class="btn btn-secondary form-control">
