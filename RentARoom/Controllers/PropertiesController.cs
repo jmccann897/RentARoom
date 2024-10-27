@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
 using RentARoom.Models.ViewModels;
+using Property = RentARoom.Models.Property;
 
 namespace RentARoom.Controllers
 {
@@ -125,30 +127,6 @@ namespace RentARoom.Controllers
             
         }
      
-        public IActionResult Delete(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            Property? propertyFromDb = _unitOfWork.Property.Get(u => u.Id == id);
-            return View(propertyFromDb);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(int? id)
-        {
-            Property obj = _unitOfWork.Property.Get(u => u.Id == id);
-            if (obj == null)
-            {
-                return NotFound();
-            }
-            _unitOfWork.Property.Remove(obj);
-            _unitOfWork.Save();
-            TempData["success"] = "Property deleted successfully";
-            return RedirectToAction("Index", "Properties");
-
-        }
 
         #region API CALLS
         [HttpGet]
@@ -159,6 +137,26 @@ namespace RentARoom.Controllers
             return Json(new { data = objPropertyList });
         }
 
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var propertyToBeDeleted = _unitOfWork.Property.Get(u => u.Id == id);
+            if(propertyToBeDeleted == null)
+            {
+                return Json(new { success = false, message = "Error while Deleting" });
+            }
+
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, propertyToBeDeleted.ImageUrl.TrimStart('\\'));            
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.Property.Remove(propertyToBeDeleted);
+            _unitOfWork.Save();
+           
+            return Json(new { success = true, message = "Delete successful" });
+        }
 
         #endregion
 
