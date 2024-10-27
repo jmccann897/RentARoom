@@ -1,6 +1,6 @@
-﻿
+﻿var dataTable;
 
-$(document).ready(function () {
+$(function () {
     loadDataTable();
 });
 
@@ -8,16 +8,49 @@ function loadDataTable() {
     dataTable = $('#tblData').DataTable({
         "ajax": { url: 'Properties/getall' },
         "columns": [
-        { data: 'address', "width": "25%" },
+        { data: 'address', "width": "15%" },
         { data: 'postcode', "width": "10%" },
         { data: 'owner', "width": "10%" },
-        { data: 'price', "width": "10%" },
-        { data: 'numberOfBedrooms', "width": "10%" },
-        { data: 'floorArea', "width": "10%" },
-        { data: 'propertyType.name', "width": "15%" }
+        { data: 'price', "width": "5%" },
+        { data: 'numberOfBedrooms', "width": "5%" },
+        { data: 'floorArea', "width": "5%" },
+        { data: 'propertyType.name', "width": "10%" },
+        {
+            data: 'id',
+            "render": function (data) {
+                return `<div class="w-75 btn-group" role="group">
+                <a href="/properties/upsert/?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
+                <a onCLick=Delete('/properties/delete/${data}') class="btn btn-secondary mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                </div>`
+            },
+            "width": "25%"
+        }
+
         ]
     });
 }
 
+function Delete(url) {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: function (data) {
+                    dataTable.ajax.reload();
+                    toastr.success(data.message)
+                }
+            })
+        }
+    });
+}
 
 
