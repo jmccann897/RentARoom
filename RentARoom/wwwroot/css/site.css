@@ -21,8 +21,33 @@ body {
   margin-bottom: 60px;
 }
 
-.square-box{
+.home-banner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-card-list-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    min-height: 450px;
+    max-height: 600px;
+}
+
+.square-box {
     max-width: 600px;
     min-height: 600px;
     border: 1px solid #333;
+    align-items: center;
+}
+
+.card-deck { 
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.card {
+    flex: 1 0 auto;
 }

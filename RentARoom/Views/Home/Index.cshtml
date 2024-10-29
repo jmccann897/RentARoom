@@ -1,32 +1,71 @@
-﻿
+﻿@model IEnumerable<Property>
+
 <div class="container">
-    <div class="row">
-        <div class="container square-box d-flex justify-content-center align-items-center">
-            <div class="col-sm">
+    @if(Model != null)
+    {
+        var promotedProperty = Model.FirstOrDefault();
+
+        <div class="row home-banner-container">
+            <div class="col-4 square-box pt-5">
                 <h2 class="text-center">Helping Students find their place</h2>
-                @* search bar above search submit on one half and then image on the right hand side *@
-                <form class="">
+                <form class="p-3">
                     <input class="form-control" type="search" placeholder="Search">
                 </form>
-                <div class="d-grid gap-2 pt-1">
+                <div class="d-grid gap-2 p-3">
                     <button class="btn btn-lg btn-secondary" type="submit">Search</button>
                 </div>
             </div>
-        </div>
-        
-        <div class="col">
-            <div class="carousel-item">
-                <img src="..." alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>...</h5>
-                    <p>...</p>
+            <div class="col-sm-6">
+                <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                    <img src="@promotedProperty.ImageUrl" class="card-img-top rounded" />
+                    <div class="card-body pb-0">
+                        <div class="pl-1">
+                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@promotedProperty.Address</p>
+                                <p class="card-title text-warning text-center">@promotedProperty.PropertyType.Name</p>
+                        </div>
+                        <div class="pl-1">
+                                <p class="text-dark opacity-75 text-center"><span>@promotedProperty.Price.ToString("c")</span></p>
+                        </div>
+                    </div>
+                    <div>
+                            <a asp-controller="Home" asp-action="Details" asp-route-id="@promotedProperty.Id"
+                           class="btn btn-primary bg-gradient border-0 form-control">
+                            Details
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+    
+    }
+    <div class="card-deck home-card-list-container pt-3">
+    
+            @foreach (var property in Model)
+            {
+            <div class="col p-1">
+                <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                    <img src="@property.ImageUrl" class="card-img-top rounded" />
+                    <div class="card-body pb-0">
+                        <div class="pl-1">
+                            <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@property.Address</p>
+                            <p class="card-title text-warning text-center">@property.PropertyType.Name</p>
+                        </div>
+                        <div class="pl-1">
+                            <p class="text-dark opacity-75 text-center"><span>@property.Price.ToString("c")</span></p>
+                        </div>
+                    </div>
+                    <div>
+                        <a asp-controller="Home" asp-action="Details" asp-route-id="@property.Id"
+                           class="btn btn-primary bg-gradient border-0 form-control">
+                            Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            }
     </div>
 </div>
 
 
-    
 
-</div>
+
