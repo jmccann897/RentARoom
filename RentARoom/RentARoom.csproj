@@ -27,4 +27,11 @@
     <Folder Include="wwwroot\images\property\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Home\Index - Copy.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
