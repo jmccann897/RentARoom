@@ -160,39 +160,5 @@ namespace RentARoom.Controllers
 
         #endregion
 
-        //private bool PropertyExists(int id)
-        //{
-        //    return _propertyRepo.Any(e => e.Id == id);
-        //}
-
-        //// GET: Properties/ShowSearchForm
-        //public async Task<IActionResult> ShowSearchForm()
-        //{
-        //    return View();
-        //}
-
-        //// POST: Properties/ShowSearchResults
-        //public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
-        //{
-        //    return View("Index", await _db.Property.Where(x => x.Address.Contains(SearchPhrase)).ToListAsync());
-        //}
-
-        //// GET: Properties/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var @property = await _db.Property
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (@property == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(@property);
-        //}
     }
 }
