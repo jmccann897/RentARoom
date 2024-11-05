@@ -24,14 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="Controllers\" />
     <Folder Include="wwwroot\images\property\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="Views\Home\Index - Copy.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>

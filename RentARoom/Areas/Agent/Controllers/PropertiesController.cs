@@ -14,8 +14,9 @@ using RentARoom.Models;
 using RentARoom.Models.ViewModels;
 using Property = RentARoom.Models.Property;
 
-namespace RentARoom.Controllers
+namespace RentARoom.Areas.Agent.Controllers
 {
+    [Area("Agent")]
     public class PropertiesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -29,9 +30,9 @@ namespace RentARoom.Controllers
 
         public IActionResult Index()
         {
-            List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties:"PropertyType").ToList();
+            List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").ToList();
             return View(objPropertyList);
-        }     
+        }
 
         public IActionResult Upsert(int? id)
         {
@@ -47,7 +48,7 @@ namespace RentARoom.Controllers
             };
 
             //create
-            if(id == null || id == 0)
+            if (id == null || id == 0)
             {
                 return View(propertyVM);
             }
@@ -56,7 +57,7 @@ namespace RentARoom.Controllers
                 //update
                 propertyVM.Property = _unitOfWork.Property.Get(u => u.Id == id);
                 return View(propertyVM);
-            }            
+            }
         }
 
         [HttpPost]
@@ -68,7 +69,7 @@ namespace RentARoom.Controllers
                 if (file != null)
                 {
                     //Generate random name for file + extension from upload
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName); 
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     //Generate location to save file to
                     string propertyPath = Path.Combine(wwwRootPath, @"images/property");
 
@@ -100,7 +101,7 @@ namespace RentARoom.Controllers
                 }
 
                 //check if update or create by whether id is 0 (create)
-                if(propertyVM.Property.Id == 0 )
+                if (propertyVM.Property.Id == 0)
                 {
                     _unitOfWork.Property.Add(propertyVM.Property);
                 }
@@ -108,7 +109,7 @@ namespace RentARoom.Controllers
                 {
                     _unitOfWork.Property.Update(propertyVM.Property);
                 }
-                
+
                 _unitOfWork.Save();
                 TempData["success"] = "Property created successfully";
                 return RedirectToAction("Index", "Properties");
@@ -124,9 +125,9 @@ namespace RentARoom.Controllers
                 });
                 return View(propertyVM);
             }
-            
+
         }
-     
+
 
         #region API CALLS
         [HttpGet]
@@ -141,12 +142,12 @@ namespace RentARoom.Controllers
         public IActionResult Delete(int? id)
         {
             var propertyToBeDeleted = _unitOfWork.Property.Get(u => u.Id == id);
-            if(propertyToBeDeleted == null)
+            if (propertyToBeDeleted == null)
             {
                 return Json(new { success = false, message = "Error while Deleting" });
             }
 
-            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, propertyToBeDeleted.ImageUrl.TrimStart('\\'));            
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, propertyToBeDeleted.ImageUrl.TrimStart('\\'));
             if (System.IO.File.Exists(oldImagePath))
             {
                 System.IO.File.Delete(oldImagePath);
@@ -154,7 +155,7 @@ namespace RentARoom.Controllers
 
             _unitOfWork.Property.Remove(propertyToBeDeleted);
             _unitOfWork.Save();
-           
+
             return Json(new { success = true, message = "Delete successful" });
         }
 
