@@ -10,12 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options=>options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();//AddEFStores defines Db linked to identity
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false) //switch when deploying to have emails confirmed
-//    .AddRoles<IdentityRole>() //Needed for roles
-//    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddRazorPages(); //needed for identity
 
 
 builder.Services.AddControllersWithViews();
@@ -38,14 +37,16 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapRazorPages(); //needed for identity which use razor pages
 
-//app.UseAuthorization();
-
+//Route for MVC
 app.MapControllerRoute(
     name: "default",
     pattern: "{area=User}/{controller=Home}/{action=Index}/{id?}");
 
-//app.MapRazorPages();
+
 
 #region Role management
 ////Seeding initial role data
