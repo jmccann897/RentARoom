@@ -17,6 +17,7 @@ namespace RentARoom.DataAccess.Data
         }
         public DbSet<Property> Property { get; set; }
         public DbSet<PropertyType> PropertyType { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
