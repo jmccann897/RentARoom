@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository;
 using RentARoom.DataAccess.Repository.IRepository;
+using RentARoom.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,14 +12,27 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options=>options.UseSqlServer(connectionString));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()//AddEFStores defines Db linked to identity
+    .AddDefaultTokenProviders();//Needed for email token generation no longer using basic identity
+
+//Needed to redirect with identity pages ***MUST BE AFTER ADDIDENTITY***
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDeniedPath";
+});
+
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+//Unique DI
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
-//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false) //switch when deploying to have emails confirmed
-//    .AddRoles<IdentityRole>() //Needed for roles
-//    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-
+builder.Services.AddRazorPages(); //needed for identity
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -38,14 +53,16 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapRazorPages(); //needed for identity which use razor pages
 
-//app.UseAuthorization();
-
+//Route for MVC
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=User}/{controller=Home}/{action=Index}/{id?}");
 
-//app.MapRazorPages();
+
 
 #region Role management
 ////Seeding initial role data

@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Identity.Client;
 using RentARoom.Models;
 
 namespace RentARoom.DataAccess.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         //constructor which passes options to base class
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -15,9 +17,12 @@ namespace RentARoom.DataAccess.Data
         }
         public DbSet<Property> Property { get; set; }
         public DbSet<PropertyType> PropertyType { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder); //needed for identities to build properly
+
             modelBuilder.Entity<PropertyType>().HasData(
                 new Models.PropertyType { Id = 1, Name = "Terrace" },
                 new Models.PropertyType { Id = 2, Name = "Semi Detached" },

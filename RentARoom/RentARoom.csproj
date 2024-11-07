@@ -13,6 +13,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
@@ -21,14 +22,17 @@
   <ItemGroup>
     <ProjectReference Include="..\RentARoom.DataAccess\RentARoom.DataAccess.csproj" />
     <ProjectReference Include="..\RentARoom.Models\RentARoom.Models.csproj" />
+    <ProjectReference Include="..\RentARoom.Utility\RentARoom.Utility.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Admin\Controllers\" />
+    <Folder Include="Areas\Admin\Views\" />
     <Folder Include="wwwroot\images\property\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Home\Index - Copy.cshtml">
+    <Content Update="Areas\Identity\Pages\Account\Manage\_ViewStart.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
