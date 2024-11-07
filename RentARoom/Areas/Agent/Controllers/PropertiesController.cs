@@ -12,11 +12,13 @@ using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
 using RentARoom.Models.ViewModels;
+using RentARoom.Utility;
 using Property = RentARoom.Models.Property;
 
 namespace RentARoom.Areas.Agent.Controllers
 {
     [Area("Agent")]
+    [Authorize(Roles = SD.Role_Agent+","+SD.Role_Admin)]
     public class PropertiesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -25,9 +25,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="User" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="Agent" asp-controller="Properties" asp-action="Index">Properties</a>
-                        </li>
+                        @if (User.IsInRole(SD.Role_Agent) || User.IsInRole(SD.Role_Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="Agent" asp-controller="Properties" asp-action="Index">Properties</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="User" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>

@@ -13,8 +13,22 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<ApplicationDbContext>(options=>options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();//AddEFStores defines Db linked to identity
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()//AddEFStores defines Db linked to identity
+    .AddDefaultTokenProviders();//Needed for email token generation no longer using basic identity
+
+//Needed to redirect with identity pages ***MUST BE AFTER ADDIDENTITY***
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = $"Identity/Account/Login";
+    options.LogoutPath = $"Identity/Account/Logout";
+    options.AccessDeniedPath = $"Identity/Account/AccessDeniedPath";
+});
+
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+//Unique DI
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
