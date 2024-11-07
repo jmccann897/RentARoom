@@ -20,9 +20,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 //Needed to redirect with identity pages ***MUST BE AFTER ADDIDENTITY***
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = $"Identity/Account/Login";
-    options.LogoutPath = $"Identity/Account/Logout";
-    options.AccessDeniedPath = $"Identity/Account/AccessDeniedPath";
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDeniedPath";
 });
 
 

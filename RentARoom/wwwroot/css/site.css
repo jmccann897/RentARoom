@@ -51,3 +51,13 @@ body {
 .card {
     flex: 1 0 auto;
 }
+
+.divider-text:before,
+.divider-text:after{
+    color:white;
+    content:"";
+    flex:1;
+    border-bottom: 1px solid #555;
+    margin: auto 0.25rem;
+    box-shadow: 0 -2px;
+}
