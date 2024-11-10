@@ -47,7 +47,8 @@ namespace RentARoom.Areas.User.Controllers
             {
                 properties = _unitOfWork.Property.Find(m => m.Address.Contains(SearchPhrase)
                                                      || m.Owner.Contains(SearchPhrase)
-                                                     || m.Postcode.Contains(SearchPhrase));
+                                                     || m.Postcode.Contains(SearchPhrase)
+                                                     || m.City.Contains(SearchPhrase));
             }
 
             return View("SearchResults", properties.ToList());

@@ -34,6 +34,7 @@ namespace RentARoom.Models
         [ForeignKey("PropertyTypeId")]
         [ValidateNever]
         public PropertyType PropertyType { get; set; }
+        public String City { get; set; }
 
 
         //default constructor

@@ -32,9 +32,9 @@ namespace RentARoom.DataAccess.Data
                );
         
             modelBuilder.Entity<Property>().HasData(
-                new Models.Property { Id = 1, Postcode = "BT71 4PT", Address = "24 Kings Row", Owner = "Clanmill Housing", PropertyTypeId=1, Price=400, NumberOfBedrooms=3, FloorArea=83, ImageUrl=""},
-                new Models.Property { Id = 2, Postcode = "BT12 7BN", Address = "17 Gortfin Street", Owner = "Private", PropertyTypeId=3, Price = 700, NumberOfBedrooms = 4, FloorArea = 151, ImageUrl = "" },
-                new Models.Property { Id = 3, Postcode = "BT9 5BN", Address = "16A Malone Road", Owner = "QUB", PropertyTypeId=4, Price = 1000, NumberOfBedrooms = 1, FloorArea = 57, ImageUrl = "" }
+                new Models.Property { Id = 1, Postcode = "BT71 4PT", Address = "24 Kings Row", Owner = "Clanmill Housing", PropertyTypeId=1, Price=400, NumberOfBedrooms=3, FloorArea=83, ImageUrl="", City ="Belfast"},
+                new Models.Property { Id = 2, Postcode = "BT12 7BN", Address = "17 Gortfin Street", Owner = "Private", PropertyTypeId=3, Price = 700, NumberOfBedrooms = 4, FloorArea = 151, ImageUrl = "", City = "Belfast" },
+                new Models.Property { Id = 3, Postcode = "BT9 5BN", Address = "16A Malone Road", Owner = "QUB", PropertyTypeId=4, Price = 1000, NumberOfBedrooms = 1, FloorArea = 57, ImageUrl = "", City = "Belfast" }
                 );
         }
     }
