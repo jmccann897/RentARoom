@@ -21,7 +21,7 @@ function loadDataTable() {
             "render": function (data) {
                 return `<div class="w-75 btn-group" role="group">
                 <a href="properties/upsert/?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                <a onCLick=Delete('properties/delete/${data}') class="btn btn-secondary mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                <a onClick=Delete('properties/delete/${data}') class="btn btn-secondary mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                 </div>`
             },
             "width": "25%"

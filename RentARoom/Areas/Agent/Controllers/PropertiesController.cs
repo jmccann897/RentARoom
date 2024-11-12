@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -32,8 +33,16 @@ namespace RentARoom.Areas.Agent.Controllers
 
         public IActionResult Index()
         {
-            List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").ToList();
-            return View(objPropertyList);
+            if (User.IsInRole(SD.Role_Agent))
+            {
+                List<Property> objPropertyList = _unitOfWork.Property.Find(x => x.Owner == User.Identity.Name).ToList();
+                return View(objPropertyList);
+            }
+            else
+            {
+                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").ToList();
+                return View(objPropertyList);
+            }
         }
 
         public IActionResult Upsert(int? id)
@@ -135,9 +144,18 @@ namespace RentARoom.Areas.Agent.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").ToList();
-
-            return Json(new { data = objPropertyList });
+            //Check role first then filter results if Agent to their properties
+            if (User.IsInRole(SD.Role_Agent))
+            {
+                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").Where(x => x.Owner == User.Identity.Name).ToList();
+                return Json(new { data = objPropertyList });
+            }
+            // if Admin, show all
+            else
+            {
+                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").ToList();
+                return Json(new { data = objPropertyList });
+            }          
         }
 
         [HttpDelete]

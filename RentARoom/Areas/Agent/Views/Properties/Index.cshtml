@@ -3,7 +3,7 @@
 <div class="card shadow border-0 mb-3">
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
-        <h2 class="text-white py-2">Property List</h2>
+        <h2 class="text-white py-2">@(User.IsInRole(SD.Role_Agent)?"My":"All") Property List</h2>
     </div>
 
     <div class="card-body p-4">
@@ -17,7 +17,7 @@
                 </a>
             </div>
         </div>
-
+        @* https://datatables.net/ *@
         <table id="tblData" class="display table-striped table-bordered pt-2" style="width:100%">
             <thead>
                 <tr>
