@@ -1,0 +1,109 @@
+﻿<style>
+    .sidebar {
+        background-color: #50c3ae;
+        color: white;
+        height: 100%;
+        border-right: 2px solid #78c2ad;
+    }
+
+    .channel-list {
+        background-color: #d7f3ed; /* Slightly darker shade */
+        color: #212529;
+        height: 100%;
+        border-right: 2px solid #78c2ad;
+    }
+
+    .chat-area {
+        background-color: #f8f9fa; /* Light background */
+        color: #212529;
+        height: 100%;
+        border-right: 2px solid #78c2ad;
+        overflow-y: auto;
+    }
+
+    .user-panel {
+        background-color: #d7f3ed; /* Slightly darker shade */
+        color: #212529;
+        height: 100%;
+        border-left: 2px solid #78c2ad;
+    }
+
+    .scrollable {
+        overflow-y: auto;
+    }
+
+    .sidebar ul li:hover {
+        background-color: #3ca692;
+        cursor: pointer;
+    }
+
+    .channel-list ul li:hover {
+        color: #50c3ae;
+        cursor: pointer;
+    }
+
+    .user-panel button {
+        background-color: #50c3ae;
+        color: white;
+    }
+
+    .user-panel button:hover {
+        background-color: #3ca692;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="d-flex">
+            <!-- Sidebar for user list -->
+            <div class="sidebar p-3 col-1" style="width: 80px;">
+                <ul class="list-unstyled">
+                    <li class="mb-3 text-center"><i class="bi bi-people-fill"></i></li>
+                    <li class="mb-3 text-center"><i class="bi bi-person-circle"></i></li>
+                    <li class="mb-3 text-center"><i class="bi bi-person-circle"></i></li>
+                    <li class="mb-3 text-center"><i class="bi bi-person-circle"></i></li>
+
+                </ul>
+            </div>
+            <!-- Renter list for agents / Agent list for Renter -->
+            <div class="channel-list p-3 flex-grow-1 col-1" style="width: 250px;">
+                <h5 class="text-dark">Property list</h5>
+                <ul class="list-unstyled scrollable">
+                    <li class="mb-2"><i class="bi bi-house-door-fill"></i> Property 1</li>
+                    <li class="mb-2"><i class="bi bi-house-door-fill"></i> Property 2</li>
+                    <li class="mb-2"><i class="bi bi-house-door-fill"></i> Property 3</li>
+                    <li class="mb-2"><i class="bi bi-house-door-fill"></i> Property 4</li>
+                    <li class="mb-2"><i class="bi bi-house-door-fill"></i> Property 5</li>
+                </ul>
+            </div>
+            <!-- Chat Area -->
+            <div class="chat-area flex-grow-1 p-3 col-6">
+                <h5 class="text-light">Chat</h5>
+                <div class="scrollable">
+                    <p><strong>User1:</strong> Hello, everyone!</p>
+                    <p><strong>User2:</strong> Hi! What's up?</p>
+                    <p><strong>User1:</strong> Just working on some projects.</p>
+                    <!-- Add more chat messages -->
+                </div>
+            </div>
+            <!-- User Panel -->
+            <div class="user-panel p-3 col-2" style="width: 200px;">
+                <div class="d-flex align-items-center">
+                    <img src="https://via.placeholder.com/40" alt="User" class="rounded-circle me-3">
+                    <div>
+                        <p class="mb-0">User123</p>
+                        <small class="text-muted">Online</small>
+                    </div>
+                </div>
+                <hr class="text-light">
+                <button class="btn btn-sm btn-light w-100">Settings</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
