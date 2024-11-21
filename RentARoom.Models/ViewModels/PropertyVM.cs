@@ -13,5 +13,7 @@ namespace RentARoom.Models.ViewModels
         public Property Property { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> PropertyTypeList { get; set; }
+        [ValidateNever]
+        public IEnumerable<SelectListItem> ApplicationUserList { get; set; }
     }
 }

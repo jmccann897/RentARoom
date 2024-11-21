@@ -10,7 +10,7 @@ function loadDataTable() {
         "columns": [
         { data: 'address', "width": "15%" },
         { data: 'postcode', "width": "10%" },
-        { data: 'owner', "width": "10%" },
+        { data: 'applicationUser.userName', "width": "10%" },
         { data: 'price', "width": "5%" },
         { data: 'numberOfBedrooms', "width": "5%" },
         { data: 'floorArea', "width": "5%" },

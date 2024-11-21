@@ -24,18 +24,21 @@ namespace RentARoom.Areas.Agent.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PropertiesController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
+        public PropertiesController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
             if (User.IsInRole(SD.Role_Agent))
             {
-                List<Property> objPropertyList = _unitOfWork.Property.Find(x => x.Owner == User.Identity.Name).ToList();
+                //Update as owner changed to user object and name should be accessible
+                List<Property> objPropertyList = _unitOfWork.Property.Find(x => x.ApplicationUserId == User.Identity.Name).ToList();
                 return View(objPropertyList);
             }
             else
@@ -45,7 +48,7 @@ namespace RentARoom.Areas.Agent.Controllers
             }
         }
 
-        public IActionResult Upsert(int? id)
+        public async Task<IActionResult> Upsert(int? id)
         {
             PropertyVM propertyVM = new()
             {
@@ -55,6 +58,11 @@ namespace RentARoom.Areas.Agent.Controllers
                     Text = u.Name,
                     Value = u.Id.ToString()
                 }),
+                ApplicationUserList = (await GetAdminAndAgentUsersAsync()).Select(user => new SelectListItem
+                {
+                    Text = user.UserName, // Display the username
+                    Value = user.Id.ToString() // Use the userId as the value
+                }).ToList(),
                 Property = new Property()
             };
 
@@ -71,8 +79,20 @@ namespace RentARoom.Areas.Agent.Controllers
             }
         }
 
+        public async Task<List<ApplicationUser>> GetAdminAndAgentUsersAsync()
+        {
+            var adminAndAgentUsers = new List<ApplicationUser>();
+            var agentList =  await _userManager.GetUsersInRoleAsync(SD.Role_Agent);
+            var adminList =  await _userManager.GetUsersInRoleAsync(SD.Role_Admin);
+            adminAndAgentUsers.AddRange(agentList);
+            adminAndAgentUsers.AddRange(adminList);
+            adminAndAgentUsers = adminAndAgentUsers.Distinct().ToList();
+
+            return adminAndAgentUsers;
+        }
+
         [HttpPost]
-        public IActionResult Upsert(PropertyVM propertyVM, IFormFile? file)
+        public async Task<IActionResult> Upsert(PropertyVM propertyVM, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
@@ -134,6 +154,12 @@ namespace RentARoom.Areas.Agent.Controllers
                     Text = u.Name,
                     Value = u.Id.ToString()
                 });
+                var users = await GetAdminAndAgentUsersAsync() ?? new List<ApplicationUser>();
+                propertyVM.ApplicationUserList = users.Select(user => new SelectListItem
+                {
+                    Text = user.UserName,
+                    Value = user.Id.ToString() 
+                }).ToList();
                 return View(propertyVM);
             }
 
@@ -147,13 +173,13 @@ namespace RentARoom.Areas.Agent.Controllers
             //Check role first then filter results if Agent to their properties
             if (User.IsInRole(SD.Role_Agent))
             {
-                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").Where(x => x.Owner == User.Identity.Name).ToList();
+                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser").Where(x => x.ApplicationUser.UserName == User.Identity.Name).ToList();
                 return Json(new { data = objPropertyList });
             }
             // if Admin, show all
             else
             {
-                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").ToList();
+                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser").ToList();
                 return Json(new { data = objPropertyList });
             }          
         }

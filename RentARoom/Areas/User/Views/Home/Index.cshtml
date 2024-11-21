@@ -49,26 +49,26 @@
     
             @foreach (var property in Model)
             {
-            <div class="col p-1">
-                <div class="card border-0 p-3 shadow border-top border-5 rounded">
-                    <img src="@property.ImageUrl" class="card-img-top rounded" />
-                    <div class="card-body pb-0">
-                        <div class="pl-1">
-                            <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@property.Address</p>
-                            <p class="card-title text-warning text-center">@property.PropertyType.Name</p>
+                <div class="col p-1">
+                    <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                        <img src="@property.ImageUrl" class="card-img-top rounded" />
+                        <div class="card-body pb-0">
+                            <div class="pl-1">
+                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@property.Address</p>
+                                <p class="card-title text-warning text-center">@property.PropertyType.Name</p>
+                            </div>
+                            <div class="pl-1">
+                                <p class="text-dark opacity-75 text-center"><span>@property.Price.ToString("c")</span></p>
+                            </div>
                         </div>
-                        <div class="pl-1">
-                            <p class="text-dark opacity-75 text-center"><span>@property.Price.ToString("c")</span></p>
+                        <div>
+                            <a asp-controller="Home" asp-action="Details" asp-route-id="@property.Id"
+                               class="btn btn-primary bg-gradient border-0 form-control">
+                                Details
+                            </a>
                         </div>
-                    </div>
-                    <div>
-                        <a asp-controller="Home" asp-action="Details" asp-route-id="@property.Id"
-                           class="btn btn-primary bg-gradient border-0 form-control">
-                            Details
-                        </a>
                     </div>
                 </div>
-            </div>
             }
     </div>
 </div>

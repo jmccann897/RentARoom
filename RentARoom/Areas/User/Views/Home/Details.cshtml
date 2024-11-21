@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-12 text-center">
                     <h3 class="text-white text-uppercase">Address: @Model.Address</h3>
-                    <p class="text-white-50 fw-semibold mb-0">Owner: @Model.Owner</p>
+                    <p class="text-white-50 fw-semibold mb-0">Owner: @Model.ApplicationUser.UserName</p>
                 </div>
             </div>
         </div>
@@ -57,10 +57,10 @@
                         <div class="row">
                             <div class="col-12 col-md-8">
                                 <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
-                                    <i class="bi bi-telephone-fill"></i> @Model.Owner
+                                    <i class="bi bi-telephone-fill"></i>@Model.ApplicationUser.PhoneNumber
                                 </button>
                                 <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
-                                    <i class="bi bi-envelope-arrow-up-fill"></i> Email
+                                    <i class="bi bi-envelope-arrow-up-fill"></i> @Model.ApplicationUser.Email
                                 </button>
                                 <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
                                     <i class="bi bi-chat-left-text-fill"></i> Chat
