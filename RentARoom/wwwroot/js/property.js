@@ -10,17 +10,18 @@ function loadDataTable() {
         "columns": [
         { data: 'address', "width": "15%" },
         { data: 'postcode', "width": "10%" },
-        { data: 'owner', "width": "10%" },
+        { data: 'applicationUser.userName', "width": "10%" },
         { data: 'price', "width": "5%" },
         { data: 'numberOfBedrooms', "width": "5%" },
         { data: 'floorArea', "width": "5%" },
+        { data: 'city', "width": "5%" },
         { data: 'propertyType.name', "width": "10%" },
         {
             data: 'id',
             "render": function (data) {
                 return `<div class="w-75 btn-group" role="group">
-                <a href="/properties/upsert/?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                <a onCLick=Delete('/properties/delete/${data}') class="btn btn-secondary mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                <a href="properties/upsert/?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
+                <a onClick=Delete('properties/delete/${data}') class="btn btn-secondary mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                 </div>`
             },
             "width": "25%"

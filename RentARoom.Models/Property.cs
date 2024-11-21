@@ -13,7 +13,6 @@ namespace RentARoom.Models
         [Required]
         [MaxLength(8)]
         public string Postcode { get; set; }
-        public string Owner { get; set; }      
 
         [Display(Name = "Rent")]
         [Range(1,10000)]
@@ -34,7 +33,16 @@ namespace RentARoom.Models
         [ForeignKey("PropertyTypeId")]
         [ValidateNever]
         public PropertyType PropertyType { get; set; }
+        public String City { get; set; }
 
+        // Foreign key for ApplicationUser
+        [Display(Name = "Application User Id")]
+        public string ApplicationUserId { get; set; }
+
+        // Navigation property
+        [ForeignKey("ApplicationUserId")]
+        [ValidateNever]
+        public virtual ApplicationUser ApplicationUser { get; set; } = null!;
 
         //default constructor
         public Property()

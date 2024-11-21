@@ -28,9 +28,10 @@ namespace RentARoom.DataAccess.Repository
                 objFromDb.Address = obj.Address;
                 objFromDb.Postcode = obj.Postcode;
                 objFromDb.Price = obj.Price;
-                objFromDb.Owner = obj.Owner;
+                objFromDb.ApplicationUserId = obj.ApplicationUserId;
                 objFromDb.NumberOfBedrooms = obj.NumberOfBedrooms;
                 objFromDb.FloorArea = obj.FloorArea;
+                objFromDb.City = obj.City;
                 objFromDb.PropertyTypeId = obj.PropertyTypeId;
                 if(obj.ImageUrl != null)
                 {

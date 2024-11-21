@@ -3,7 +3,15 @@
 <div class="card shadow border-0 mb-3">
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
-        <h2 class="text-white py-2">Property List</h2>
+       <div class="d-flex flex-row">
+           
+           <h2 class="text-white py-2">@(User.IsInRole(SD.Role_Agent)?"My":"All") Property List</h2>
+           <button type="button" class="btn btn-secondary ms-auto">
+               <i class="bi bi-bell-fill"></i>
+                Notifications
+           </button>
+         
+       </div>
     </div>
 
     <div class="card-body p-4">
@@ -12,21 +20,22 @@
                 
             </div>
             <div class="col-6 text-end">
-                <a asp-controller="Properties" asp-action="Upsert" class="btn btn-primary">
+                <a asp-area="Agent" asp-controller="Properties" asp-action="Upsert" class="btn btn-primary">
                     <i class="bi bi-house-add-fill"></i>  Create New Property
                 </a>
             </div>
         </div>
-
+        @* https://datatables.net/ *@
         <table id="tblData" class="display table-striped table-bordered pt-2" style="width:100%">
             <thead>
                 <tr>
                     <th>Address</th>
                     <th>Postcode</th>
-                    <th>Owner</th>
+                    <th>Agent</th>
                     <th>Rent</th>
                     <th>Beds</th>
                     <th>Floor Area</th>
+                    <th>City</th>
                     <th>Type</th>
                     <th>
 
@@ -40,6 +49,38 @@
 
 </div>
 
+
+
+<div class="container">
+    <div class="row p-1">
+        <div class="col-1">User</div>
+        <div class="col-5"><input type="text" id="userInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-1">Message</div>
+        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6 text-end">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+</div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/chat.js"></script>
+
 @section Scripts{
     <script src="~/js/property.js"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>
 }

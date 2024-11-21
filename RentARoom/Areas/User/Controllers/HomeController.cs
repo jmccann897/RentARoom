@@ -19,13 +19,13 @@ namespace RentARoom.Areas.User.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Property> propertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType");
+            IEnumerable<Property> propertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser");
             return View(propertyList);
         }
 
         public IActionResult Details(int id)
         {
-            Property property = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "PropertyType");
+            Property property = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "PropertyType,ApplicationUser");
             return View(property);
         }
 
@@ -46,8 +46,9 @@ namespace RentARoom.Areas.User.Controllers
             if (!string.IsNullOrEmpty(SearchPhrase))
             {
                 properties = _unitOfWork.Property.Find(m => m.Address.Contains(SearchPhrase)
-                                                     || m.Owner.Contains(SearchPhrase)
-                                                     || m.Postcode.Contains(SearchPhrase));
+                                                     || m.ApplicationUserId.Contains(SearchPhrase)
+                                                     || m.Postcode.Contains(SearchPhrase)
+                                                     || m.City.Contains(SearchPhrase));
             }
 
             return View("SearchResults", properties.ToList());

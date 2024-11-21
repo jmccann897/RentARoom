@@ -7,21 +7,29 @@ using RentARoom.Models;
 
 namespace RentARoom.DataAccess.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         //constructor which passes options to base class
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext(DbContextOptions options)
             : base(options)
         {
               
         }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Property> Property { get; set; }
         public DbSet<PropertyType> PropertyType { get; set; }
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); //needed for identities to build properly
+
+            //https://learn.microsoft.com/en-us/ef/core/modeling/relationships/one-to-many
+            //https://stackoverflow.com/questions/62110667/cannot-resolve-symbol-hasrequired-entity-framework-core
+            modelBuilder.Entity<Property>()
+                .HasOne(c => c.ApplicationUser)
+                .WithMany(t => t.Properties)
+                .HasForeignKey(m => m.ApplicationUserId)
+                .IsRequired();
 
             modelBuilder.Entity<PropertyType>().HasData(
                 new Models.PropertyType { Id = 1, Name = "Terrace" },
@@ -32,9 +40,9 @@ namespace RentARoom.DataAccess.Data
                );
         
             modelBuilder.Entity<Property>().HasData(
-                new Models.Property { Id = 1, Postcode = "BT71 4PT", Address = "24 Kings Row", Owner = "Clanmill Housing", PropertyTypeId=1, Price=400, NumberOfBedrooms=3, FloorArea=83, ImageUrl=""},
-                new Models.Property { Id = 2, Postcode = "BT12 7BN", Address = "17 Gortfin Street", Owner = "Private", PropertyTypeId=3, Price = 700, NumberOfBedrooms = 4, FloorArea = 151, ImageUrl = "" },
-                new Models.Property { Id = 3, Postcode = "BT9 5BN", Address = "16A Malone Road", Owner = "QUB", PropertyTypeId=4, Price = 1000, NumberOfBedrooms = 1, FloorArea = 57, ImageUrl = "" }
+                new Models.Property { Id = 1, Postcode = "BT71 4PT", Address = "24 Kings Row", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId=1, Price=400, NumberOfBedrooms=3, FloorArea=83, ImageUrl="", City ="Belfast"},
+                new Models.Property { Id = 2, Postcode = "BT12 7BN", Address = "17 Gortfin Street", ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264", PropertyTypeId=3, Price = 700, NumberOfBedrooms = 4, FloorArea = 151, ImageUrl = "", City = "Belfast" },
+                new Models.Property { Id = 3, Postcode = "BT9 5BN", Address = "16A Malone Road", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId=4, Price = 1000, NumberOfBedrooms = 1, FloorArea = 57, ImageUrl = "", City = "Belfast" }
                 );
         }
     }

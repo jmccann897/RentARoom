@@ -24,11 +24,6 @@
                             <span asp-validation-for="Property.Postcode" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
-                            <input asp-for="Property.Owner" class="form-control border-0 shadow" />
-                            <label asp-for="Property.Owner" class="ms-2"></label>
-                            @* <span asp-validation-for="Owner" class="text-danger"></span> *@
-                        </div>
-                        <div class="form-floating py-2 col-12">
                             <input asp-for="Property.Price" class="form-control border-0 shadow" />
                             <label asp-for="Property.Price" class="ms-2"></label>
                             <span asp-validation-for="Property.Price" class="text-danger"></span>
@@ -42,6 +37,18 @@
                             <input asp-for="Property.FloorArea" class="form-control border-0 shadow" />
                             <label asp-for="Property.FloorArea" class="ms-2"></label>
                             <span asp-validation-for="Property.FloorArea" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Property.City" class="form-control border-0 shadow" />
+                            <label asp-for="Property.City" class="ms-2"></label>
+                            <span asp-validation-for="Property.City" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <select asp-for="Property.ApplicationUserId" asp-items="@Model.ApplicationUserList" class="form-control border-0 shadow">
+                                <option disabled selected>--Select User Id--</option>
+                            </select>
+                            <label asp-for="Property.ApplicationUserId" class="ms-2"></label>
+                            <span asp-validation-for="Property.ApplicationUserId" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
                             <select asp-for="Property.PropertyTypeId" asp-items="@Model.PropertyTypeList" class="form-control border-0 shadow">
