@@ -22,6 +22,10 @@ namespace RentARoom.Models
         [Range(1, 100)]
         public int NumberOfBedrooms { get; set; }
 
+        [Display(Name = "Number of Bathrooms")]
+        [Range(1, 100)]
+        public int NumberOfBathrooms { get; set; }
+
         [Display(Name = "Floor Area")]
         [Range(1, 1000000)]
         public int FloorArea { get; set; }
