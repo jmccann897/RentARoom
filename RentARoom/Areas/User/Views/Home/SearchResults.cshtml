@@ -1,8 +1,8 @@
-﻿@model List<Property>
-@* cant handle foreign key fields *@
+﻿@model SearchResultsVM
+<partial name="~/Views/Shared/_SearchAndFilterBar.cshtml" />
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
-    @foreach (var property in Model)
+    @foreach (var property in Model.PropertyList)
     {
         <div class="col">
             <div class="card border-0 shadow border-top border-5 rounded h-100">

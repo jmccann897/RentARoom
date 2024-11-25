@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using NuGet.Versioning;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
+using RentARoom.Models.ViewModels;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -65,7 +66,14 @@ namespace RentARoom.Areas.User.Controllers
                                                         || m.City.Contains(SearchPhrase)));
                 }
             }
-            return View("SearchResults", properties.ToList());
+
+            // Create SearchResultsVM and populate with PropertyList and default settings for SearchAndFilterBar
+
+            SearchResultsVM searchResultsVM = new();
+            searchResultsVM.PropertyList = properties.ToList();
+            searchResultsVM.Keywords = SearchPhrase;
+
+            return View("SearchResults", searchResultsVM);
 
 
             //    // nested ternary
