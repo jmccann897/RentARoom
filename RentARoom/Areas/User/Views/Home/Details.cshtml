@@ -6,8 +6,8 @@
         <div class="card-header bg-warning bg-gradient text-light py-4">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h3 class="text-white text-uppercase">Address: @Model.Address</h3>
-                    <p class="text-white-50 fw-semibold mb-0">Owner: @Model.ApplicationUser.UserName</p>
+                    <h3 class="text-white text-uppercase">@Model.Address, @Model.City, @Model.Postcode</h3>
+                    <p class="text-white-50 fw-semibold mb-0">Agent: @Model.ApplicationUser.UserName</p>
                 </div>
             </div>
         </div>
@@ -33,11 +33,18 @@
                     <div class="col-12 col-lg-6 offset-lg-1">
                         <h5> Property Details</h5>
                         <div class="row ps-2">
+                            <h6> @Model.NumberOfBedrooms <i class="fa-solid fa-bed" title="Number of Bedrooms"></i>  @Model.NumberOfBathrooms <i class="fa fa-solid fa-toilet" title="Number of Bathrooms"></i> </h6>
+                        </div>
+                        <div class="row ps-2">
                             <h6 class="text-dark text-opacity-50">Property Type: @Model.PropertyType.Name</h6>
                         </div>
                         <div class="row ps-2">
-                            <h6 class="text-dark text-opacity-50">Floor Area in m2: @Model.FloorArea</h6>
-                        </div>
+                            @{
+                                double areaBySingleBeds = (Model.FloorArea / 1.71);
+                                double roundedAreaBySingleBeds = Math.Round(areaBySingleBeds, 2);
+                            }
+                            <h6 class="text-dark text-opacity-50">Floor Area: @Model.FloorArea (m<sup>2</sup>) (Same area as @roundedAreaBySingleBeds single beds)</h6>
+                        </div> 
                         <div class="row ps-2">
                             <h6 class="text-dark text-opacity-50  pb-2">
                                 Rent Price:
@@ -46,7 +53,6 @@
                                 </span>
                             </h6>
                         </div>
-
                     </div>
                 </div>
             </div>

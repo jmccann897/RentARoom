@@ -1,7 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using NuGet.Versioning;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
+using RentARoom.Models.ViewModels;
 using System.Diagnostics;
+using System.Linq.Expressions;
 
 namespace RentARoom.Areas.User.Controllers
 {
@@ -35,23 +39,63 @@ namespace RentARoom.Areas.User.Controllers
         }
 
 
-        //https://stackoverflow.com/questions/72476089/how-to-implement-search-functionality
+        // https://stackoverflow.com/questions/72476089/how-to-implement-search-functionality
         // POST: /ShowSearchResults
-        public IActionResult SearchResults(string SearchPhrase)
+        public IActionResult SearchResults(string SearchType, string SearchPhrase)
         {
-            //ViewData["CurrentFilter"] = SearchPhrase;
+            // Get all properties
+            var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser");
 
-            var properties = _unitOfWork.Property.GetAll();
-
-            if (!string.IsNullOrEmpty(SearchPhrase))
+            // Search Type
+            if (!string.IsNullOrEmpty(SearchType))
             {
-                properties = _unitOfWork.Property.Find(m => m.Address.Contains(SearchPhrase)
-                                                     || m.ApplicationUserId.Contains(SearchPhrase)
-                                                     || m.Postcode.Contains(SearchPhrase)
-                                                     || m.City.Contains(SearchPhrase));
+                if (SearchType.Equals("Bedroom"))
+                {
+                    properties = _unitOfWork.Property.Find(m => m.PropertyType.Name.Equals("Bedroom")
+                                                        && (m.Address.Contains(SearchPhrase)
+                                                        || m.ApplicationUserId.Contains(SearchPhrase)
+                                                        || m.Postcode.Contains(SearchPhrase)
+                                                        || m.City.Contains(SearchPhrase)));
+                }
+                else if (SearchType.Equals("House"))
+                {
+                    properties = _unitOfWork.Property.Find(m => !m.PropertyType.Name.Equals("Bedroom")
+                                                        && (m.Address.Contains(SearchPhrase)
+                                                        || m.ApplicationUserId.Contains(SearchPhrase)
+                                                        || m.Postcode.Contains(SearchPhrase)
+                                                        || m.City.Contains(SearchPhrase)));
+                }
             }
 
-            return View("SearchResults", properties.ToList());
+            // Create SearchResultsVM and populate with PropertyList and default settings for SearchAndFilterBar
+
+            SearchResultsVM searchResultsVM = new();
+            searchResultsVM.PropertyList = properties.ToList();
+            searchResultsVM.Keywords = SearchPhrase;
+
+            return View("SearchResults", searchResultsVM);
+
+
+            //    // nested ternary
+            //    properties = properties.Where(m =>
+            //        SearchType.Equals("bedroom") ? m.PropertyType.Name.Equals("Bedroom") : // searchBedroom
+            //        SearchType.Equals("house") ? !m.PropertyType.Name.Equals("Bedroom") : // searchHouse = everything but bedroom
+            //        true // searchAll
+            //        );
+            //}
+
+            //// Search Phrase logic
+            //if (!string.IsNullOrEmpty(SearchPhrase))
+            //{
+            //    properties = _unitOfWork.Property.Find(m => m.Address.Contains(SearchPhrase)
+            //                                            || m.ApplicationUserId.Contains(SearchPhrase)
+            //                                            || m.Postcode.Contains(SearchPhrase)
+            //                                            || m.City.Contains(SearchPhrase));
+            //}
+
+
+
+
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
