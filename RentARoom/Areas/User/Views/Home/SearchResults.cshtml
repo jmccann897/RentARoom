@@ -1,37 +1,6 @@
 ﻿@model SearchResultsVM
 <partial name="~/Views/Shared/_SearchAndFilterBar.cshtml" />
 
-@* <div class="row row-cols-1 row-cols-md-3 g-4">
-    @foreach (var property in Model.PropertyList)
-    {
-        <div class="col">
-            <div class="card border-0 shadow border-top border-5 rounded h-100">
-                <img src="@property.ImageUrl" class="card-img-top rounded" />
-                <div class="card-body">
-                    <div class="pl-1">
-                        <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@property.Address</p>
-                        <p class="card-title h5 text-dark opacity-75 text-center">@property.City, @property.Postcode</p>
-                       
-                        <p class="card-title text-warning text-center">@property.PropertyType.Name</p>
-                    </div>
-                    <div class="pl-1">
-                        <p class="text-dark opacity-75 text-center"><span>@property.Price.ToString("c")</span></p>
-                    </div>
-                </div>
-                <div>
-                    <div class="card-footer bg-transparent border-0">
-                        <a asp-controller="Home" asp-action="Details" asp-route-id="@property.Id"
-                           class="btn btn-primary bg-gradient border-0 form-control">
-                            Details
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div> *@
-
-
 <div class="container">
     @foreach (var property in Model.PropertyList)
     {
