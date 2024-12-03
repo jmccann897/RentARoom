@@ -41,12 +41,12 @@ namespace RentARoom.DataAccess.Data
                );
         
             modelBuilder.Entity<Property>().HasData(
-                new Models.Property { Id = 1, Postcode = "BT71 4PT", Address = "24 Kings Row", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId=1, Price=800, NumberOfBedrooms=3, NumberOfBathrooms=2, FloorArea=83, ImageUrl="", City ="Belfast"},
-                new Models.Property { Id = 2, Postcode = "BT12 7BN", Address = "17 Gortfin Street", ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264", PropertyTypeId=3, Price = 700, NumberOfBedrooms = 4, NumberOfBathrooms = 2, FloorArea = 151, ImageUrl = "", City = "Belfast" },
-                new Models.Property { Id = 3, Postcode = "BT9 5BN", Address = "16A Malone Road", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId=4, Price = 1000, NumberOfBedrooms = 1, NumberOfBathrooms = 2, FloorArea = 57, ImageUrl = "", City = "Belfast" },
-                new Models.Property { Id = 4, Postcode = "BT12 3AB", Address = "9 Sandymount Mews", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId = 6, Price = 400, NumberOfBedrooms = 1, NumberOfBathrooms = 1, FloorArea = 15, ImageUrl = "", City = "Belfast" },
-                new Models.Property { Id = 5, Postcode = "BT9 5EJ", Address = "12 Hillside Drive", ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264", PropertyTypeId = 6, Price = 700, NumberOfBedrooms = 1, NumberOfBathrooms = 1, FloorArea = 20, ImageUrl = "", City = "Belfast" },
-                new Models.Property { Id = 6, Postcode = "BT6 8EX", Address = "31 FLorida Drive", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId = 6, Price = 1000, NumberOfBedrooms = 1, NumberOfBathrooms = 2, FloorArea = 30, ImageUrl = "", City = "Belfast" }
+                new Models.Property { Id = 1, Postcode = "BT71 4PT", Address = "24 Kings Row", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId=1, Price=800, NumberOfBedrooms=3, NumberOfBathrooms=2, NumberOfEnsuites = 0, FloorArea =83, ImageUrl="", City ="Belfast"},
+                new Models.Property { Id = 2, Postcode = "BT12 7BN", Address = "17 Gortfin Street", ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264", PropertyTypeId=3, Price = 700, NumberOfBedrooms = 4, NumberOfBathrooms = 2, NumberOfEnsuites = 1, FloorArea = 151, ImageUrl = "", City = "Belfast" },
+                new Models.Property { Id = 3, Postcode = "BT9 5BN", Address = "16A Malone Road", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId=4, Price = 1000, NumberOfBedrooms = 1, NumberOfBathrooms = 2, NumberOfEnsuites = 2, FloorArea = 57, ImageUrl = "", City = "Belfast" },
+                new Models.Property { Id = 4, Postcode = "BT12 3AB", Address = "9 Sandymount Mews", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId = 6, Price = 400, NumberOfBedrooms = 1, NumberOfBathrooms = 1, NumberOfEnsuites = 0, FloorArea = 15, ImageUrl = "", City = "Belfast" },
+                new Models.Property { Id = 5, Postcode = "BT9 5EJ", Address = "12 Hillside Drive", ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264", PropertyTypeId = 6, Price = 700, NumberOfBedrooms = 1, NumberOfBathrooms = 1, NumberOfEnsuites = 1, FloorArea = 20, ImageUrl = "", City = "Belfast" },
+                new Models.Property { Id = 6, Postcode = "BT6 8EX", Address = "31 FLorida Drive", ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41", PropertyTypeId = 6, Price = 1000, NumberOfBedrooms = 1, NumberOfBathrooms = 2, NumberOfEnsuites = 1, FloorArea = 30, ImageUrl = "", City = "Belfast" }
                 );
         }
     }
