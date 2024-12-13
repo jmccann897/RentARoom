@@ -1,10 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RentARoom.DataAccess.Repository.IRepository;
+using RentARoom.Utility;
+using Property = RentARoom.Models.Property;
 
 namespace RentARoom.Areas.User.Controllers
 {
     [Area("User")]
     public class MapController : Controller
     {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public MapController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
+
         public IActionResult Index()
         {
             // Should the api key be hidden - no as no charge associated to simple embed request
@@ -24,5 +34,19 @@ namespace RentARoom.Areas.User.Controllers
             // Leaflet.js with OpenStreetMap tiles
             return View();
         }
+    
+
+        #region API CALLS
+        [HttpGet]
+        public IActionResult GetMapProperties()
+        {
+   
+            {
+                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser").ToList();
+                return Json(new { data = objPropertyList });
+            }
+        }
+            #endregion
+
     }
 }

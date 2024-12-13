@@ -52,6 +52,10 @@ namespace RentARoom.Models
         [ValidateNever]
         public virtual ApplicationUser ApplicationUser { get; set; } = null!;
 
+        // https://stackoverflow.com/questions/28068123/double-or-decimal-for-latitude-longitude-values-in-c-sharp
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+
         //default constructor
         public Property()
         {           
