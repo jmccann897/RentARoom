@@ -4,43 +4,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentARoom.Models
 {
-    public class Property
+    public class Location
     {
         //class fields
         public int Id { get; set; }
+        [Required]
+        public string LocationName { get; set; }
+        
         [Required]
         public string Address { get; set; }
         [Required]
         [MaxLength(8)]
         public string Postcode { get; set; }
-
-        [Display(Name = "Rent")]
-        [Range(1,10000)]
-        public int Price { get; set; }
-
-        [Display(Name = "Number of Bedrooms")]
-        [Range(1, 100)]
-        public int NumberOfBedrooms { get; set; }
-
-        [Display(Name = "Number of Bathrooms")]
-        [Range(1, 100)]
-        public int NumberOfBathrooms { get; set; }
-
-        [Display(Name = "Number of Ensuites")]
-        [Range(0, 100)]
-        public int NumberOfEnsuites { get; set; }
-
-        [Display(Name = "Floor Area")]
-        [Range(1, 1000000)]
-        public int FloorArea { get; set; }
-        [ValidateNever]
-        public string ImageUrl { get; set; }
-
-        [Display(Name = "Property Type")]
-        public int PropertyTypeId { get; set; }
-        [ForeignKey("PropertyTypeId")]
-        [ValidateNever]
-        public PropertyType PropertyType { get; set; }
         public string City { get; set; }
 
         // Foreign key for ApplicationUser
@@ -57,7 +32,7 @@ namespace RentARoom.Models
         public double Longitude { get; set; }
 
         //default constructor
-        public Property()
+        public Location()
         {           
         }
     }

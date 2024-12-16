@@ -6,14 +6,28 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+// Create marker cluster groups for properties and locations
+const propertyClusterGroup = L.markerClusterGroup();
+const locationClusterGroup = L.markerClusterGroup();
 
-// Create an array of markers to add to the map
-const propertyMarkers = [];
+
+// Property icon
+const propertyIcon = L.divIcon({
+    html: '<i class="bi bi-house-fill" style="font-size: 24px; color: darkblue;"></i>',
+    iconSize: [24, 24],
+    className: '' // Remove default class styling for DivIcon
+});
+
 
 // Initialize the map and fetch data
-fetchPropertyData();
+fetchMapData();
 
 // #region Functions
+
+function fetchMapData() {
+    fetchPropertyData();
+    fetchLocationData();
+}
 
 // Fetch property data and handle the response
 function fetchPropertyData() {
@@ -21,18 +35,40 @@ function fetchPropertyData() {
         type: "GET",
         url: '/User/Map/GetMapProperties',
         dataType: "json",
-        success: handleResponse,
+        success: handleProperty,
+        error: handleError
+    });
+}
+// Fetch Location data and handle the response
+function fetchLocationData() {
+    console.log("reached");
+    $.ajax({
+        type: "GET",
+        url: '/User/Map/GetMapLocations',
+        dataType: "json",
+        success: handleLocation,
         error: handleError
     });
 }
 
-function handleResponse(response) {
-    console.log("Response data:", response); // Log the entire response for inspection
+// Property response if GET request is successful 
+function handleProperty(response) {
+    console.log("Property Response data:", response);
 
     if (Array.isArray(response.data)) {
-        response.data.forEach(createMarker);
+        response.data.forEach(createPropertyMarker);
     } else {
-        console.error("Data is not an array. Please check the response format.");
+        console.error("Property data is not an array. Please check the response format.");
+    }
+}
+// Location response if GET request is successful 
+function handleLocation(response) {
+    console.log("Location Response data:", response);
+
+    if (Array.isArray(response.data)) {
+        response.data.forEach(createLocationMarker);
+    } else {
+        console.error("Location data is not an array. Please check the response format.");
     }
 }
 
@@ -41,25 +77,51 @@ function handleError(response) {
     console.error("Error fetching properties:", response);
 }
 
-// Create a marker for each property and add it to the map
-function createMarker(property) {
+// Create a marker for each property and add to cluster group
+function createPropertyMarker(property) {
     if (property.latitude && property.longitude) {
-        const marker = L.marker([property.latitude, property.longitude]).addTo(map);
-        propertyMarkers.push(marker);
-
+        const marker = L.marker([property.latitude, property.longitude], { icon: propertyIcon });
         // Add a popup with property details
         marker.bindPopup(`
             <strong>${property.address}</strong>, <strong>${property.city}</strong>, <strong>${property.postcode}</strong><br>
-            Price: £${property.price}<br>
+            Price: £${property.price || "Unknown"}<br>
             Type: ${property.propertyType?.name || "Unknown"}
         `);
+        propertyClusterGroup.addLayer(marker); // Add marker to the cluster group
     } else {
         console.warn(`Property with ID ${property.id} is missing latitude/longitude.`);
     }
 }
 
+// Create a marker for each location and add to cluster group
+function createLocationMarker(location) {
+    if (location.latitude && location.longitude) {
+        console.log("reached");
+        const marker = L.marker([location.latitude, location.longitude]);
+        // Add a popup with property details
+        marker.bindPopup(`
+            <strong>${location.locationName || "Unknown"}</strong><br>
+            ${location.address || "No description available."}
+        `);
+        locationClusterGroup.addLayer(marker); // Add marker to the cluster group
+    } else {
+        console.warn(`Location with ID ${location.id} is missing latitude/longitude.`);
+    }
+}
+
+// Layer control setup with MarkerCluster groups
+L.control.layers(null,{
+    'Properties': propertyClusterGroup,
+    'Locations': locationClusterGroup,
+}).addTo(map);
+
+// Add cluster groups to the map (this will enable clustering and visibility)
+propertyClusterGroup.addTo(map);
+locationClusterGroup.addTo(map);
+
+
 // #endregion
-       
+
 
 // #region MapProperties
 
@@ -84,13 +146,6 @@ var polygon = L.polygon([
     [51.51, -0.047]
 ])
     .addTo(map);
-
-
-// Stand alone popup
-var popup = L.popup()
-    .setLatLng([54.595229, -5.93429])
-    .setContent("Tesco Express")
-    .openOn(map);
 
 // Dealing with dynamically setting popup when user clicks 
 var popupClick = L.popup();
