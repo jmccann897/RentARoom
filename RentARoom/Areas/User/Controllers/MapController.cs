@@ -2,6 +2,7 @@
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Utility;
 using Property = RentARoom.Models.Property;
+using Location = RentARoom.Models.Location;
 
 namespace RentARoom.Areas.User.Controllers
 {
@@ -46,7 +47,18 @@ namespace RentARoom.Areas.User.Controllers
                 return Json(new { data = objPropertyList });
             }
         }
-            #endregion
+
+        [HttpGet]
+        public IActionResult GetMapLocations()
+        {
+
+            {
+                List<Location> objLocationList = _unitOfWork.Location.GetAll(includeProperties: "ApplicationUser").ToList();
+                return Json(new { data = objLocationList });
+            }
+        }
+
+        #endregion
 
     }
 }

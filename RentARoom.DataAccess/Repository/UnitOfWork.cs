@@ -13,11 +13,13 @@ namespace RentARoom.DataAccess.Repository
         private ApplicationDbContext _db;
         public IPropertyRepository Property{ get; private set; }
         public IPropertyTypeRepository PropertyType { get; private set; }
+        public ILocationRepository Location { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             Property = new PropertyRepository(_db);
             PropertyType = new PropertyTypeRepository(_db);
+            Location = new LocationRepository(_db);
         }
 
         public void Save()

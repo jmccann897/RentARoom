@@ -10,6 +10,7 @@ namespace RentARoom.DataAccess.Repository.IRepository
     {
         IPropertyRepository Property { get; }
         IPropertyTypeRepository PropertyType { get; }
+        ILocationRepository Location { get;  }
 
         void Save();
     }
