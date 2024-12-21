@@ -1,6 +1,4 @@
-﻿@model MapSearchVM
-
-@{
+﻿@{
     // Razor variable to check if the user is logged in
     var isLoggedIn = User.Identity.IsAuthenticated;
 }
@@ -28,15 +26,11 @@
     <div id="map"></div>
 </div>
 
-<div class="card shadow border-0 mb-3">
+<div class="card shadow border-0 mb-3 mt-2">
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
         <div class="d-flex flex-row">
             <h2 class="text-white py-2">My Locations</h2>
-            <button type="button" class="btn btn-secondary ms-auto">
-                <i class="bi bi-geo-alt-fill"></i>
-                Add New Location
-            </button>
         </div>
     </div>
 
