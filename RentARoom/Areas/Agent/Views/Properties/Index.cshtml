@@ -4,20 +4,17 @@
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
        <div class="d-flex flex-row">
-           
            <h2 class="text-white py-2">@(User.IsInRole(SD.Role_Agent)?"My":"All") Property List</h2>
            <button type="button" class="btn btn-secondary ms-auto">
                <i class="bi bi-bell-fill"></i>
                 Notifications
            </button>
-         
        </div>
     </div>
 
     <div class="card-body p-4">
         <div class="row pb-3">
             <div class="col-6">
-                
             </div>
             <div class="col-6 text-end">
                 <a asp-area="Agent" asp-controller="Properties" asp-action="Upsert" class="btn btn-primary">
@@ -38,49 +35,12 @@
                     <th>City</th>
                     <th>Type</th>
                     <th>
-
-
                     </th>
                 </tr>
             </thead>            
         </table>
-        
-    </div>
-
-</div>
-
-
-
-<div class="container">
-    <div class="row p-1">
-        <div class="col-1">User</div>
-        <div class="col-5"><input type="text" id="userInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-1">Message</div>
-        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6 text-end">
-            <input type="button" id="sendButton" value="Send Message" />
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <hr />
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <ul id="messagesList"></ul>
-        </div>
     </div>
 </div>
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js"></script>
-
-@section Scripts{
+@section Scripts {
     <script src="~/js/property.js"></script>
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/chat.js"></script>
 }
