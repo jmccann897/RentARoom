@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RentARoom.Models\RentARoom.Models.csproj" />
+    <ProjectReference Include="..\RentARoom.Utility\RentARoom.Utility.csproj" />
   </ItemGroup>
 
 </Project>

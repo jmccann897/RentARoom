@@ -1,4 +1,4 @@
-﻿// Initialise  map
+﻿// #region Initialise  map
 var map = L.map('map').setView([54.607868, -5.926437], 13);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -10,20 +10,18 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const propertyClusterGroup = L.markerClusterGroup();
 const locationClusterGroup = L.markerClusterGroup();
 
-
 // Property icon
 const propertyIcon = L.divIcon({
     html: '<i class="bi bi-house-fill" style="font-size: 24px; color: darkblue;"></i>',
     iconSize: [24, 24],
-    className: '' // Remove default class styling for DivIcon
+    className: '' // Remove default class styling for DivIcon otherwise looks bad
 });
+// #endregion
 
-
-// Initialize the map and fetch data
+// Fetch data
 fetchMapData();
 
 // #region Functions
-
 function fetchMapData() {
     fetchPropertyData();
     fetchLocationData();
@@ -41,7 +39,6 @@ function fetchPropertyData() {
 }
 // Fetch Location data and handle the response
 function fetchLocationData() {
-    console.log("reached");
     $.ajax({
         type: "GET",
         url: '/User/Map/GetMapLocations',
@@ -53,8 +50,6 @@ function fetchLocationData() {
 
 // Property response if GET request is successful 
 function handleProperty(response) {
-    console.log("Property Response data:", response);
-
     if (Array.isArray(response.data)) {
         response.data.forEach(createPropertyMarker);
     } else {
@@ -63,8 +58,6 @@ function handleProperty(response) {
 }
 // Location response if GET request is successful 
 function handleLocation(response) {
-    console.log("Location Response data:", response);
-
     if (Array.isArray(response.data)) {
         response.data.forEach(createLocationMarker);
     } else {
@@ -74,7 +67,7 @@ function handleLocation(response) {
 
 // Handle any errors that occur during the request
 function handleError(response) {
-    console.error("Error fetching properties:", response);
+    console.error("Error fetching data:", response);
 }
 
 // Create a marker for each property and add to cluster group
@@ -96,7 +89,6 @@ function createPropertyMarker(property) {
 // Create a marker for each location and add to cluster group
 function createLocationMarker(location) {
     if (location.latitude && location.longitude) {
-        console.log("reached");
         const marker = L.marker([location.latitude, location.longitude]);
         // Add a popup with property details
         marker.bindPopup(`
@@ -118,45 +110,190 @@ L.control.layers(null,{
 // Add cluster groups to the map (this will enable clustering and visibility)
 propertyClusterGroup.addTo(map);
 locationClusterGroup.addTo(map);
+// #endregion
 
+// #region Map Refresh Function
+function mapRefresh() {
+    // Clear all markers from the cluster groups
+    propertyClusterGroup.clearLayers();
+    locationClusterGroup.clearLayers();
 
+    // Fetch updated data and re-populate the map
+    fetchMapData();
+}
 // #endregion
 
 
-// #region MapProperties
+// #region Event Handlers & Listeners
 
-// Circle
-var circle = L.circle([54.5945, -5.9542], {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5,
-    radius: 50
-}).addTo(map);
+// Click on map event --> Show add location version of modal
+map.on('click', (e) => {
+    const { lat, lng } = e.latlng; // Extract latitude and longitude
+    initializeModal({ latitude: lat, longitude: lng });
+});
 
-// Generic popups based on object mapped
-// Can dynamic popups be used i.e specific to 
-//marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-circle.bindPopup("I am a circle.");
-//polygon.bindPopup("I am a polygon.");
+// If no data, then empty otherwise populate the modal field with values
+function initializeModal(data = {}) {
+    document.getElementById('locationId').value = data.id || '';
+    document.getElementById('locationName').value = data.locationName || '';
+    document.getElementById('locationAddress').value = data.address || '';
+    document.getElementById('locationCity').value = data.city || '';
+    document.getElementById('locationPostcode').value = data.postcode || '';
+    document.getElementById('locationLat').value = data.latitude || '';
+    document.getElementById('locationLng').value = data.longitude || '';
 
-// Polygon
-var polygon = L.polygon([
-    [51.509, -0.08],
-    [51.503, -0.06],
-    [51.51, -0.047]
-])
-    .addTo(map);
+    const modalTitle = document.getElementById('locationModalLabel');
+    const saveButton = document.getElementById('saveLocationBtn');
 
-// Dealing with dynamically setting popup when user clicks 
-var popupClick = L.popup();
+    if (data.id) {
+        modalTitle.textContent = 'Edit Location';
+        saveButton.textContent = 'Save Changes';
+    } else {
+        modalTitle.textContent = 'Add Location';
+        saveButton.textContent = 'Save';
+    }
 
-function onMapClick(e) {
-    popupClick
-        .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(map);
+    const modal = new bootstrap.Modal(document.getElementById('locationModal'));
+    modal.show();
+};
+
+document.getElementById('saveLocationBtn').addEventListener('click', function (e) {
+    console.log('Button clicked'); // This will show up in your browser console
+    e.preventDefault();
+    const form = document.getElementById('locationForm');
+    form.dispatchEvent(new Event('submit')); // Manually trigger form submit
+});
+
+
+// Modal form submit event --> either an add or edit depending on value of location Id 
+document.getElementById('locationForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const locationId = document.getElementById('locationId').value;
+    const locationName = document.getElementById('locationName').value;
+    const address = document.getElementById('locationAddress').value;
+    const city = document.getElementById('locationCity').value;
+    const postcode = document.getElementById('locationPostcode').value;
+    const latitude = document.getElementById('locationLat').value;
+    const longitude = document.getElementById('locationLng').value;
+
+    const locationData = {
+        id: locationId, // only populate for edit
+        locationName,
+        address,
+        city,
+        postcode,
+        latitude,
+        longitude
+    };
+
+    // AJAX call for Add or Edit (based on locationId)
+    const url = locationId ? `/User/Map/Edit/${locationId}` : '/User/Map/SaveNewLocation';
+    const type = locationId ? 'PUT' : 'POST';
+
+    console.log(url);
+    console.log(type);
+
+    // AJAX request depending on modal edit in data table or add via map
+    $.ajax({
+        type: type,
+        url: url,
+        contentType: 'application/json',
+        data: JSON.stringify(locationData),
+        success: function (response) {
+            if (response.success) {
+                console.log("this dynamic ajax reached");
+                const marker = L.marker([latitude, longitude])
+                    .bindPopup(`<strong>${locationName}</strong><br>${address}, ${city} ${postcode}`)
+                    .addTo(locationClusterGroup);
+
+                alert('Location saved successfully!');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('locationModal'));
+                modal.hide(); // Close the modal
+                locationsTable.ajax.reload(); // Refresh the table with the new data
+                mapRefresh();
+            } else {
+                alert('Error saving location. Please try again.');
+            }
+        },
+        error: function (error) {
+            console.error('Error saving location:', error);
+            alert('An error occurred while saving the location.');
+        }
+    });
+});
+
+// #region Location Datatable
+let locationsTable;
+
+$(document).ready(function () {
+    loadLocationsTable();
+});
+
+function loadLocationsTable() {
+    locationsTable = $('#tblLocations').DataTable({
+        "ajax": { url: '/User/Map/GetMapLocations', type: 'GET' }, 
+        "columns": [
+            { data: 'locationName', "width": "30%" },
+            { data: 'address', "width": "40%" },
+            { data: 'city', "width": "20%" },
+            {
+                data: 'id',
+                "render": function (data) {
+                    return `<div class="w-75 btn-group" role="group">
+                        <button class="btn btn-primary mx-2" onclick="editLocation(${data})"> 
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </button>
+                        <button class="btn btn-secondary mx-2" onclick="deleteLocation(${data})">
+                            <i class="bi bi-trash-fill"></i> Delete
+                        </button>
+                    </div>`;
+                },
+                "width": "10%"
+            }
+        ]
+    });
 }
 
-map.on('click', onMapClick);
+// Edit Get request when selecting edit option in datatable
+function editLocation(id) {
+    $.ajax({
+        url: `/User/Map/GetLocation/${id}`,
+        type: 'GET',
+        success: function (data) {
+            console.log(data);
+            if (data && data.locationName && data.address && data.city && data.postcode) {
+                initializeModal(data);          
+            } else {
+                toastr.error("Location not found.");
+            }
+        },
+        error: function (error) {
+            toastr.error("Failed to load location data.");
+        }
+    });
+}
+// Delete API is working bar toastr
+function deleteLocation(id) {
+    if (confirm('Are you sure you want to delete this location?')) {
+        $.ajax({
+            url: `/User/Map/DeleteLocation/${id}`,
+            type: 'DELETE',
+            success: function (response) {
+                if (response.success) {
+                    locationsTable.ajax.reload(); // Reload table after deletion
+                    mapRefresh();
+                } else {
+                    alert('Failed to delete location.');
+                }
+            },
+            error: function () {
+                alert('An error occurred while deleting the location.');
+            }
+        });
+    }
+}
+
+// #endregion
 
 // #endregion

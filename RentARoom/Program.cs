@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository;
 using RentARoom.DataAccess.Repository.IRepository;
+using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Hubs;
 using RentARoom.Models;
+using RentARoom.Services;
 using RentARoom.Utility;
 using System.Text.Json.Serialization;
 
@@ -38,6 +40,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 // Unique DI
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddRazorPages(); // needed for identity
 builder.Services.AddControllersWithViews();
