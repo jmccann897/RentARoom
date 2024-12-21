@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository.IRepository;
+using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Models.ViewModels;
 using RentARoom.Utility;
@@ -25,12 +18,14 @@ namespace RentARoom.Areas.Agent.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserService _userService;
 
-        public PropertiesController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager)
+        public PropertiesController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager, IUserService userService)
         {
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
+            _userService = userService;
         }
 
         public IActionResult Index()
@@ -58,7 +53,7 @@ namespace RentARoom.Areas.Agent.Controllers
                     Text = u.Name,
                     Value = u.Id.ToString()
                 }),
-                ApplicationUserList = (await GetAdminAndAgentUsersAsync()).Select(user => new SelectListItem
+                ApplicationUserList = (await _userService.GetAdminAndAgentUsersAsync()).Select(user => new SelectListItem
                 {
                     Text = user.UserName, // Display the username
                     Value = user.Id.ToString() // Use the userId as the value
@@ -77,18 +72,6 @@ namespace RentARoom.Areas.Agent.Controllers
                 propertyVM.Property = _unitOfWork.Property.Get(u => u.Id == id);
                 return View(propertyVM);
             }
-        }
-
-        public async Task<List<ApplicationUser>> GetAdminAndAgentUsersAsync()
-        {
-            var adminAndAgentUsers = new List<ApplicationUser>();
-            var agentList =  await _userManager.GetUsersInRoleAsync(SD.Role_Agent);
-            var adminList =  await _userManager.GetUsersInRoleAsync(SD.Role_Admin);
-            adminAndAgentUsers.AddRange(agentList);
-            adminAndAgentUsers.AddRange(adminList);
-            adminAndAgentUsers = adminAndAgentUsers.Distinct().ToList();
-
-            return adminAndAgentUsers;
         }
 
         [HttpPost]
@@ -154,7 +137,7 @@ namespace RentARoom.Areas.Agent.Controllers
                     Text = u.Name,
                     Value = u.Id.ToString()
                 });
-                var users = await GetAdminAndAgentUsersAsync() ?? new List<ApplicationUser>();
+                var users = await _userService.GetAdminAndAgentUsersAsync() ?? new List<ApplicationUser>();
                 propertyVM.ApplicationUserList = users.Select(user => new SelectListItem
                 {
                     Text = user.UserName,
