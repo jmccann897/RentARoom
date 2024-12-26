@@ -12,8 +12,8 @@ using RentARoom.DataAccess.Data;
 namespace RentARoom.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241120134603_UpdateAppUserForFKInPropertyTable")]
-    partial class UpdateAppUserForFKInPropertyTable
+    [Migration("20241226133436_ResetDbToChangeAppUserSeedDataToDynamic")]
+    partial class ResetDbToChangeAppUserSeedDataToDynamic
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,6 +239,48 @@ namespace RentARoom.DataAccess.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("RentARoom.Models.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("LocationName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Postcode")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Location");
+                });
+
             modelBuilder.Entity("RentARoom.Models.Property", b =>
                 {
                     b.Property<int>("Id")
@@ -266,7 +308,19 @@ namespace RentARoom.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<int>("NumberOfBathrooms")
+                        .HasColumnType("int");
+
                     b.Property<int>("NumberOfBedrooms")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberOfEnsuites")
                         .HasColumnType("int");
 
                     b.Property<string>("Postcode")
@@ -287,47 +341,6 @@ namespace RentARoom.DataAccess.Migrations
                     b.HasIndex("PropertyTypeId");
 
                     b.ToTable("Property");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "24 Kings Row",
-                            ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41",
-                            City = "Belfast",
-                            FloorArea = 83,
-                            ImageUrl = "",
-                            NumberOfBedrooms = 3,
-                            Postcode = "BT71 4PT",
-                            Price = 400,
-                            PropertyTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "17 Gortfin Street",
-                            ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264",
-                            City = "Belfast",
-                            FloorArea = 151,
-                            ImageUrl = "",
-                            NumberOfBedrooms = 4,
-                            Postcode = "BT12 7BN",
-                            Price = 700,
-                            PropertyTypeId = 3
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Address = "16A Malone Road",
-                            ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41",
-                            City = "Belfast",
-                            FloorArea = 57,
-                            ImageUrl = "",
-                            NumberOfBedrooms = 1,
-                            Postcode = "BT9 5BN",
-                            Price = 1000,
-                            PropertyTypeId = 4
-                        });
                 });
 
             modelBuilder.Entity("RentARoom.Models.PropertyType", b =>
@@ -346,33 +359,6 @@ namespace RentARoom.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PropertyType");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Terrace"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Semi Detached"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Detached"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Apartment"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Bungalow"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -424,6 +410,17 @@ namespace RentARoom.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("RentARoom.Models.Location", b =>
+                {
+                    b.HasOne("RentARoom.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("RentARoom.Models.Property", b =>

@@ -9,6 +9,7 @@ using RentARoom.Hubs;
 using RentARoom.Models;
 using RentARoom.Services;
 using RentARoom.Utility;
+using System;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,7 +34,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = $"/Identity/Account/Logout";
     options.AccessDeniedPath = $"/Identity/Account/AccessDeniedPath";
 });
-
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -90,6 +90,31 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{area=User}/{controller=Home}/{action=Index}/{id?}");
 
+// Seed data
+var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+
+// Check if Db present or not
+var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+dbContext.Database.Migrate();
+
+try
+{
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    
+
+    await dbContext.SeedDataAsync(roleManager, userManager);
+}
+catch (Exception ex)
+{
+    // Handle errors
+    Console.WriteLine($"An error occurred during database seeding: {ex.Message}");
+    if (ex.InnerException != null)
+    {
+        Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+    }
+}
 
 //starts the app
 app.Run();
