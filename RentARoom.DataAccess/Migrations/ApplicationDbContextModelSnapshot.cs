@@ -276,41 +276,6 @@ namespace RentARoom.DataAccess.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Location");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "16A Malone Road",
-                            ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264",
-                            City = "Belfast",
-                            Latitude = 54.594109000000003,
-                            LocationName = "QUB Computer Science Building",
-                            Longitude = -5.9157710000000003,
-                            Postcode = "BT9 5BN"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "60-66 Dublin Rd",
-                            ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264",
-                            City = "Belfast",
-                            Latitude = 54.588756699999998,
-                            LocationName = "Tesco Express",
-                            Longitude = -5.9476385000000001,
-                            Postcode = "BT2 7HP"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Address = "Stranmillis Gardens",
-                            ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264",
-                            City = "Belfast",
-                            Latitude = 54.580800600000003,
-                            LocationName = "QUB PEC",
-                            Longitude = -5.9321733999999999,
-                            Postcode = "BT9 5EX"
-                        });
                 });
 
             modelBuilder.Entity("RentARoom.Models.Property", b =>
@@ -373,110 +338,6 @@ namespace RentARoom.DataAccess.Migrations
                     b.HasIndex("PropertyTypeId");
 
                     b.ToTable("Property");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "24 Kings Row",
-                            ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41",
-                            City = "Belfast",
-                            FloorArea = 83,
-                            ImageUrl = "",
-                            Latitude = 54.541069999999998,
-                            Longitude = -6.69998,
-                            NumberOfBathrooms = 2,
-                            NumberOfBedrooms = 3,
-                            NumberOfEnsuites = 0,
-                            Postcode = "BT71 4PT",
-                            Price = 800,
-                            PropertyTypeId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "17 Gortfin Street",
-                            ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264",
-                            City = "Belfast",
-                            FloorArea = 151,
-                            ImageUrl = "",
-                            Latitude = 54.622864999999997,
-                            Longitude = -5.9518950000000004,
-                            NumberOfBathrooms = 2,
-                            NumberOfBedrooms = 4,
-                            NumberOfEnsuites = 1,
-                            Postcode = "BT12 7BN",
-                            Price = 700,
-                            PropertyTypeId = 3
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Address = "16A Malone Road",
-                            ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41",
-                            City = "Belfast",
-                            FloorArea = 57,
-                            ImageUrl = "",
-                            Latitude = 54.594109000000003,
-                            Longitude = -5.9157710000000003,
-                            NumberOfBathrooms = 2,
-                            NumberOfBedrooms = 1,
-                            NumberOfEnsuites = 2,
-                            Postcode = "BT9 5BN",
-                            Price = 1000,
-                            PropertyTypeId = 4
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Address = "9 Sandymount Mews",
-                            ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41",
-                            City = "Belfast",
-                            FloorArea = 15,
-                            ImageUrl = "",
-                            Latitude = 54.544020000000003,
-                            Longitude = -6.0140200000000004,
-                            NumberOfBathrooms = 1,
-                            NumberOfBedrooms = 1,
-                            NumberOfEnsuites = 0,
-                            Postcode = "BT12 3AB",
-                            Price = 400,
-                            PropertyTypeId = 6
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Address = "12 Hillside Drive",
-                            ApplicationUserId = "b27826ed-35dd-474d-ae38-ecd0cdc89264",
-                            City = "Belfast",
-                            FloorArea = 20,
-                            ImageUrl = "",
-                            Latitude = 54.573028000000001,
-                            Longitude = -5.937106,
-                            NumberOfBathrooms = 1,
-                            NumberOfBedrooms = 1,
-                            NumberOfEnsuites = 1,
-                            Postcode = "BT9 5EJ",
-                            Price = 700,
-                            PropertyTypeId = 6
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Address = "31 FLorida Drive",
-                            ApplicationUserId = "69b2f21d-9f6a-4756-a4ee-bbe873232f41",
-                            City = "Belfast",
-                            FloorArea = 30,
-                            ImageUrl = "",
-                            Latitude = 54.600098000000003,
-                            Longitude = -5.8854100000000003,
-                            NumberOfBathrooms = 2,
-                            NumberOfBedrooms = 1,
-                            NumberOfEnsuites = 1,
-                            Postcode = "BT6 8EX",
-                            Price = 1000,
-                            PropertyTypeId = 6
-                        });
                 });
 
             modelBuilder.Entity("RentARoom.Models.PropertyType", b =>
@@ -495,38 +356,6 @@ namespace RentARoom.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PropertyType");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Terrace"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Semi Detached"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Detached"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Apartment"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Bungalow"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Bedroom"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
