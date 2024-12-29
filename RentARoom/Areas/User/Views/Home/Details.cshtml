@@ -1,6 +1,8 @@
 ﻿
 @model Property
 
+@await Html.PartialAsync("_PrivateChat")
+
 <form method="post">
     <div class="card shadow border-0 mt-4 mb-4">
         <div class="card-header bg-warning bg-gradient text-light py-4">
@@ -68,7 +70,8 @@
                                 <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
                                     <i class="bi bi-envelope-arrow-up-fill"></i> @Model.ApplicationUser.Email
                                 </button>
-                                <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
+                                <button type="button" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold"
+                                        data-bs-toggle="modal" data-bs-target="#chatModal">
                                     <i class="bi bi-chat-left-text-fill"></i> Chat
                                 </button>
                             </div>

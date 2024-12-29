@@ -1,0 +1,46 @@
+﻿<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="chatModalLabel">Chat</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row p-1 mt-3">
+            <div class="col-3">Sender</div>
+            <div class="col-9"><input type="text" value="@User.Identity.Name" id="senderEmail" class="form-control" /></div>
+          </div>
+          <div class="row p-1">
+            <div class="col-3">User</div>
+            <div class="col-9"><input type="text" value="@Model.ApplicationUser.Name" id="receiverEmail" class="form-control" /></div>
+          </div>
+          <div class="row p-1">
+            <div class="col-3">Message</div>
+            <div class="col-9"><input type="text" class="form-control" id="chatMessage" /></div>
+          </div>
+          <div class="row p-1">
+            <div class="col-12 text-end">
+              <input type="button" id="sendMessage" value="Send Message" class="btn btn-primary" />
+            </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-12">
+              <hr />
+            </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-12">
+              <ul id="messagesList" class="list-group"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
