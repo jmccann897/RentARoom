@@ -17,5 +17,10 @@ namespace RentARoom.Areas.User.Controllers
             
             return View();
         }
+        public IActionResult BasicChat()
+        {
+
+            return View();
+        }
     }
 }
