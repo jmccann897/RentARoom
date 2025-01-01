@@ -1,7 +1,5 @@
 ﻿@model IEnumerable<Property>
 
-
-
 <div class="container">
     @if(Model != null)
     {
@@ -33,16 +31,40 @@
                 </form>
             </div>
 
-
-
-           
-            
-
             @if(promotedProperty != null)
             {
                 <div class="col-sm-6">
                     <div class="card border-0 p-3 shadow border-top border-5 rounded">
-                        <img src="@promotedProperty.ImageUrl" class="card-img-top rounded" alt="Image of @promotedProperty.Address" />
+                        <div id="carouselPromotedProperty" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                            <div class="carousel-inner">
+                                @if (promotedProperty.Images != null && promotedProperty.Images.Any())
+                                {
+                                    int index = 0;
+                                    foreach (var image in promotedProperty.Images)
+                                    {
+                                        <div class="carousel-item @(index == 0 ? "active" : "")">
+                                            <img src="@image.ImageUrl" class="d-block w-100 rounded" alt="Promoted Property Image @(index + 1)" />
+                                        </div>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="carousel-item active">
+                                        <img src="/images/no-image-available.png" class="d-block w-100 rounded" alt="No Images Available" />
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselPromotedProperty" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselPromotedProperty" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+
                         <div class="card-body pb-0">
                             <div class="pl-1">
                                     <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@promotedProperty.Address</p>
@@ -65,12 +87,43 @@
     
     }
     <div class="card-deck home-card-list-container pt-3">
-    
             @foreach (var property in Model)
             {
-                <div class="col p-1">
-                    <div class="card border-0 p-3 shadow border-top border-5 rounded">
-                        <img src="@property.ImageUrl" class="card-img-top rounded" />
+            <div class="col p-1">
+                <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                    @{
+                        string carouselId = "carouselProperty" + @property.Id;
+                    }
+                    <div id="@carouselId" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                            <div class="carousel-inner">
+                                @if (property.Images != null && property.Images.Any())
+                                {
+                                    int index = 0;
+                                    foreach (var image in property.Images)
+                                    {
+                                        <div class="carousel-item @(index == 0 ? "active" : "")">
+                                            <img src="@image.ImageUrl" class="d-block w-100 rounded" alt="Property Image @(index + 1)" />
+                                        </div>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="carousel-item active">
+                                        <img src="/images/no-image-available.png" class="d-block w-100 rounded" alt="No Images Available" />
+                                    </div>
+                                }
+                            </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+
                         <div class="card-body pb-0">
                             <div class="pl-1">
                                 <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@property.Address</p>

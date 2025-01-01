@@ -32,7 +32,7 @@ namespace RentARoom.Areas.Agent.Controllers
         {
             if (User.IsInRole(SD.Role_Agent))
             {
-                //Update as owner changed to user object and name should be accessible
+                // Update as owner changed to user object and name should be accessible
                 List<Property> objPropertyList = _unitOfWork.Property.Find(x => x.ApplicationUserId == User.Identity.Name).ToList();
                 return View(objPropertyList);
             }
@@ -43,6 +43,7 @@ namespace RentARoom.Areas.Agent.Controllers
             }
         }
 
+        // Get
         public async Task<IActionResult> Upsert(int? id)
         {
             PropertyVM propertyVM = new()
@@ -61,91 +62,108 @@ namespace RentARoom.Areas.Agent.Controllers
                 Property = new Property()
             };
 
-            //create
+            // Create
             if (id == null || id == 0)
             {
+                if (propertyVM.Property.Images == null)
+                {
+                    propertyVM.Property.Images = new List<Image>();
+                }
                 return View(propertyVM);
             }
             else
             {
-                //update
-                propertyVM.Property = _unitOfWork.Property.Get(u => u.Id == id);
+                // Update
+                propertyVM.Property = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "Images");
+                propertyVM.ImageUrls = propertyVM.Property.Images?.Select(i => i.ImageUrl) ?? Enumerable.Empty<string>(); //check for null or empty
                 return View(propertyVM);
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upsert(PropertyVM propertyVM, IFormFile? file)
+        public async Task<IActionResult> Upsert(PropertyVM propertyVM, IEnumerable<IFormFile>? files)
         {
             if (ModelState.IsValid)
             {
-                string wwwRootPath = _webHostEnvironment.WebRootPath;//gets to wwwRoot folder
-                if (file != null)
+                try
                 {
-                    //Generate random name for file + extension from upload
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    //Generate location to save file to
-                    string propertyPath = Path.Combine(wwwRootPath, @"images/property");
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;// Gets to wwwRoot folder
+                    var imageUrls = new List<string>(); // List to hold image URLs
 
-                    //check if already present - as uploading new file + existing = update
-                    if (!string.IsNullOrEmpty(propertyVM.Property.ImageUrl))
+                    // Save images to file system
+                    if (files != null && files.Any())
                     {
-                        //delete old img
-
-                        //generate path to old img
-                        //need to remove leading backslash with trim
-                        var oldImagePath = Path.Combine(wwwRootPath, propertyVM.Property.ImageUrl.TrimStart('\\'));
-
-                        //delete old img
-                        if (System.IO.File.Exists(oldImagePath))
+                        foreach (var file in files)
                         {
-                            System.IO.File.Delete(oldImagePath);
+                            // Generate random name for file + extension from upload
+                            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                            //Generate location to save file to
+                            string propertyPath = Path.Combine(wwwRootPath, @"images/property");
+
+                            // Ensure directory exists
+                            Directory.CreateDirectory(propertyPath);
+
+                            // Save each image to the file system
+                            using (var fileStream = new FileStream(Path.Combine(propertyPath, fileName), FileMode.Create))
+                            {
+                                file.CopyTo(fileStream);
+                            }
+
+                            // Add the image URL to the list
+                            imageUrls.Add(@"\images\property\" + fileName);
                         }
                     }
 
-                    //using auto disposes of service post use
-                    //FileStream to copy file(complete path name, mode)
-                    using (var fileStream = new FileStream(Path.Combine(propertyPath, fileName), FileMode.Create))
+                    // Check if update or create by whether id is 0 (create)
+                    // Save property before adding images to it
+                    if (propertyVM.Property.Id == 0)
                     {
-                        //copy file to new location generated above
-                        file.CopyTo(fileStream);
+                        _unitOfWork.Property.Add(propertyVM.Property);
+                        _unitOfWork.Save();
+                    }
+                    else
+                    {
+                        _unitOfWork.Property.Update(propertyVM.Property);
+                        _unitOfWork.Save();
                     }
 
-                    propertyVM.Property.ImageUrl = @"\images\property\" + fileName;
-                }
+                    // Create new images for the property
+                    foreach (var imageUrl in imageUrls)
+                    {
+                        var image = new Image
+                        {
+                            ImageUrl = imageUrl,
+                            PropertyId = propertyVM.Property.Id
+                        };
+                        _unitOfWork.Image.Add(image);
+                    }
 
-                //check if update or create by whether id is 0 (create)
-                if (propertyVM.Property.Id == 0)
-                {
-                    _unitOfWork.Property.Add(propertyVM.Property);
-                }
-                else
-                {
-                    _unitOfWork.Property.Update(propertyVM.Property);
-                }
+                    _unitOfWork.Save();
+                    TempData["success"] = "Property created successfully";
+                    return RedirectToAction("Index", "Properties");
 
-                _unitOfWork.Save();
-                TempData["success"] = "Property created successfully";
-                return RedirectToAction("Index", "Properties");
+                } catch (Exception ex)
+                {
+                    TempData["error"] = "An error occurred while saving the property. Please try again.";
+                    Console.WriteLine(ex.Message); 
+                    return View(propertyVM);
+                }
             }
-            else
+          
+            // If issue, need to re-populate dropdown
+            propertyVM.PropertyTypeList = _unitOfWork.PropertyType
+            .GetAll().Select(u => new SelectListItem
             {
-                //if issue, need to re-populate dropdown
-                propertyVM.PropertyTypeList = _unitOfWork.PropertyType
-                .GetAll().Select(u => new SelectListItem
-                {
-                    Text = u.Name,
-                    Value = u.Id.ToString()
-                });
-                var users = await _userService.GetAdminAndAgentUsersAsync() ?? new List<ApplicationUser>();
-                propertyVM.ApplicationUserList = users.Select(user => new SelectListItem
-                {
-                    Text = user.UserName,
-                    Value = user.Id.ToString() 
-                }).ToList();
-                return View(propertyVM);
-            }
-
+                Text = u.Name,
+                Value = u.Id.ToString()
+            }).ToList();
+            var users = await _userService.GetAdminAndAgentUsersAsync() ?? new List<ApplicationUser>();
+            propertyVM.ApplicationUserList = users.Select(user => new SelectListItem
+            {
+                Text = user.UserName,
+                Value = user.Id.ToString() 
+            }).ToList();
+            return View(propertyVM);
         }
 
 
@@ -153,13 +171,13 @@ namespace RentARoom.Areas.Agent.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            //Check role first then filter results if Agent to their properties
+            // Check role first then filter results if Agent to their properties
             if (User.IsInRole(SD.Role_Agent))
             {
                 List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser").Where(x => x.ApplicationUser.UserName == User.Identity.Name).ToList();
                 return Json(new { data = objPropertyList });
             }
-            // if Admin, show all
+            // If Admin, show all
             else
             {
                 List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser").ToList();
@@ -170,16 +188,24 @@ namespace RentARoom.Areas.Agent.Controllers
         [HttpDelete]
         public IActionResult Delete(int? id)
         {
-            var propertyToBeDeleted = _unitOfWork.Property.Get(u => u.Id == id);
+            var propertyToBeDeleted = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "Images");
             if (propertyToBeDeleted == null)
             {
                 return Json(new { success = false, message = "Error while Deleting" });
             }
 
-            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, propertyToBeDeleted.ImageUrl.TrimStart('\\'));
-            if (System.IO.File.Exists(oldImagePath))
+            // Iterate through the images and delete each file
+            if(propertyToBeDeleted.Images != null && propertyToBeDeleted.Images.Any())
             {
-                System.IO.File.Delete(oldImagePath);
+                foreach (var image in propertyToBeDeleted.Images)
+                {
+                    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, image.ImageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(imagePath))
+                    {
+                        System.IO.File.Delete(imagePath);
+                        _unitOfWork.Image.Remove(image); // manual removal from Db - likely need redirected to r2
+                    }
+                }
             }
 
             _unitOfWork.Property.Remove(propertyToBeDeleted);

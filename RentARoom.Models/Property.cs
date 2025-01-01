@@ -33,8 +33,6 @@ namespace RentARoom.Models
         [Display(Name = "Floor Area")]
         [Range(1, 1000000)]
         public int FloorArea { get; set; }
-        [ValidateNever]
-        public string ImageUrl { get; set; }
 
         [Display(Name = "Property Type")]
         public int PropertyTypeId { get; set; }
@@ -55,6 +53,9 @@ namespace RentARoom.Models
         // https://stackoverflow.com/questions/28068123/double-or-decimal-for-latitude-longitude-values-in-c-sharp
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+
+        // Navigation property for Images
+        public ICollection<Image> Images { get; set; } = new List<Image>();
 
         //default constructor
         public Property()

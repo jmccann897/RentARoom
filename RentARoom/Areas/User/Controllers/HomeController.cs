@@ -23,13 +23,13 @@ namespace RentARoom.Areas.User.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Property> propertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser");
+            IEnumerable<Property> propertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
             return View(propertyList);
         }
 
         public IActionResult Details(int id)
         {
-            Property property = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "PropertyType,ApplicationUser");
+            Property property = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "PropertyType,ApplicationUser,Images");
             return View(property);
         }
 
@@ -44,7 +44,7 @@ namespace RentARoom.Areas.User.Controllers
         public IActionResult SearchResults(string SearchType, string SearchPhrase)
         {
             // Get all properties
-            var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser");
+            var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
 
             // Search Type
             if (!string.IsNullOrEmpty(SearchType))
