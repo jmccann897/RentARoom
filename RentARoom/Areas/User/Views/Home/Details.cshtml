@@ -14,7 +14,10 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="property-image-carousel">
+
+
+
+            @* <div class="property-image-carousel">
                 <div class="row">
                     <div class="col-6 col-md-2 offset-lg-1 pb-1">
                         <a asp-controller="Home" asp-action="Index"
@@ -24,12 +27,47 @@
                     </div>
                     <div class="row d-flex justify-content-center">
                         <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                            <img src="@Model.ImageUrl" width="100%" class="rounded" />
+                            <img src="@Model.ImageUrl" width="100" class="rounded" />
                             <h3>Image carousel to go here</h3>
                         </div>
                     </div>
                 </div>
+            </div> *@
+
+            <div class="property-image-carousel">
+                <div id="propertyImageCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @if (Model.Images != null && Model.Images.Any())
+                        {
+                            int index = 0;
+                            foreach (var image in Model.Images)
+                            {
+                                <div class="carousel-item @(index == 0 ? "active" : "")">
+                                    <img src="@image.ImageUrl" class="d-block w-100 rounded" alt="Property Image @(index + 1)">
+                                </div>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <div class="carousel-item active">
+                                <img src="/images/no-image-available.png" class="d-block w-100 rounded" alt="No Images Available">
+                            </div>
+                        }
+                    </div>
+                    <!-- Carousel Controls -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#propertyImageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#propertyImageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
             </div>
+
+
             <div class="property-details">
                 <div class="row d-flex justify-content-center">
                     <div class="col-12 col-lg-6 offset-lg-1">

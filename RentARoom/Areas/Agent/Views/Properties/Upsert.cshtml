@@ -9,7 +9,6 @@
     <div class="card-body p-4">
         <form method="post" class="row" enctype="multipart/form-data">
             <input asp-for="Property.Id" hidden />
-            <input asp-for="Property.ImageUrl" hidden />
             <div class="row">
                 <div class="col-10">
                     <div class="border p-3">
@@ -32,6 +31,11 @@
                             <input asp-for="Property.NumberOfBedrooms" class="form-control border-0 shadow" />
                             <label asp-for="Property.NumberOfBedrooms" class="ms-2"></label>
                             <span asp-validation-for="Property.NumberOfBedrooms" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="Property.NumberOfBathrooms" class="form-control border-0 shadow" />
+                            <label asp-for="Property.NumberOfBathrooms" class="ms-2"></label>
+                            <span asp-validation-for="Property.NumberOfBathrooms" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
                             <input asp-for="Property.NumberOfEnsuites" class="form-control border-0 shadow" />
@@ -63,8 +67,9 @@
                             <span asp-validation-for="Property.PropertyTypeId" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
-                            <input type="file" name="file" class="form-control border-0 shadow" />
-                            <label asp-for="Property.ImageUrl" class="ms-2"></label>
+                            <input type="file" name="files" class="form-control border-0 shadow" multiple />
+                            <label class="ms-2">Upload Images</label>
+                            @Html.ValidationMessageFor(model => model.Property.Images, "", new { @class = "text-danger" })
                         </div>
                         <div class="row pt-2">
                             <div class="col-6 col-md-3">
@@ -86,9 +91,19 @@
                         </div>
                     </div>
                 </div>
+                <!-- Display existing images -->
                 <div class="col-2">
-                    <img src="@Model.Property.ImageUrl" width="100%"
-                    style="border-radius:5px; border:1px solid #bbb9b9" />
+                    @if (Model.ImageUrls != null && Model.ImageUrls.Any())
+                    {
+                        foreach (var imageUrl in Model.ImageUrls)
+                        {
+                            <img src="@imageUrl" width="100" style="border-radius:5px; border:1px solid #bbb9b9; margin-bottom:10px;" />
+                        }
+                    }
+                    else
+                    {
+                        <p>No images available</p>
+                    }
                 </div>
             </div>
             

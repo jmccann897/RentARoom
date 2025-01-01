@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,6 @@ namespace RentARoom.Models.ViewModels
         public IEnumerable<SelectListItem> PropertyTypeList { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> ApplicationUserList { get; set; }
+        public IEnumerable<string> ImageUrls { get; set; } = Enumerable.Empty<string>();
     }
 }

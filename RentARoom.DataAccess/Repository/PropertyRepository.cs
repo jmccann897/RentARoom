@@ -33,10 +33,6 @@ namespace RentARoom.DataAccess.Repository
                 objFromDb.FloorArea = obj.FloorArea;
                 objFromDb.City = obj.City;
                 objFromDb.PropertyTypeId = obj.PropertyTypeId;
-                if(obj.ImageUrl != null)
-                {
-                    objFromDb.ImageUrl = obj.ImageUrl;
-                }
             }
         }
     }

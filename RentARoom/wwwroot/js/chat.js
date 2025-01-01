@@ -1,4 +1,6 @@
-﻿const connectionChat = new signalR.HubConnectionBuilder()
+﻿"use strict"
+
+const connectionChat = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub")
      .configureLogging(signalR.LogLevel.Information)
     .build();

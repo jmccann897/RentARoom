@@ -6,7 +6,42 @@
     {
         <div class="row g-4 mb-4 align-items-center">
             <div class="col-md-4">
-                <img src="@property.ImageUrl" class="img-fluid rounded shadow" style="width: 300px; height: 200px;" /> 
+
+
+                @* <img src="@property.ImageUrl" class="img-fluid rounded shadow" style="width: 300px; height: 200px;" />  *@
+
+                <div id="carouselProperty@property.Id" class="carousel slide shadow rounded" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @if (property.Images != null && property.Images.Any())
+                        {
+                            int index = 0;
+                            foreach (var image in property.Images)
+                            {
+                                <div class="carousel-item @(index == 0 ? "active" : "")">
+                                    <img src="@image.ImageUrl" class="d-block w-100" alt="Property Image @(index + 1)" style="width: 300px; height: 200px;" />
+                                </div>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <div class="carousel-item active">
+                                <img src="/images/no-image-available.png" class="d-block w-100" alt="No Images Available" style="width: 300px; height: 200px;" />
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProperty@property.Id" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProperty@property.Id" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+
+
             </div>
             <div class="col-md-6">
                 <div class="card border-0 shadow border-top border-5 rounded h-100">
