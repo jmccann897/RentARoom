@@ -6,6 +6,7 @@ using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Models.ViewModels;
+using RentARoom.Services;
 using RentARoom.Utility;
 using Property = RentARoom.Models.Property;
 
@@ -19,13 +20,15 @@ namespace RentARoom.Areas.Agent.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserService _userService;
+        private readonly IAzureBlobService _azureBlobService;
 
-        public PropertiesController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager, IUserService userService)
+        public PropertiesController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager, IUserService userService, IAzureBlobService azureBlobService)
         {
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
             _userService = userService;
+            _azureBlobService = azureBlobService;
         }
 
         public IActionResult Index()
@@ -90,27 +93,25 @@ namespace RentARoom.Areas.Agent.Controllers
                     string wwwRootPath = _webHostEnvironment.WebRootPath;// Gets to wwwRoot folder
                     var imageUrls = new List<string>(); // List to hold image URLs
 
-                    // Save images to file system
+                    // Save images to Azure blob storage
                     if (files != null && files.Any())
                     {
                         foreach (var file in files)
                         {
+                            
                             // Generate random name for file + extension from upload
                             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                            //Generate location to save file to
-                            string propertyPath = Path.Combine(wwwRootPath, @"images/property");
 
-                            // Ensure directory exists
-                            Directory.CreateDirectory(propertyPath);
-
-                            // Save each image to the file system
-                            using (var fileStream = new FileStream(Path.Combine(propertyPath, fileName), FileMode.Create))
+                            // Upload to Azure Blob Storage
+                            var blobClient = _azureBlobService.GetContainerClient().GetBlobClient(fileName);
+                            using (var stream = file.OpenReadStream())
                             {
-                                file.CopyTo(fileStream);
+                                await blobClient.UploadAsync(stream, overwrite: true);
                             }
 
                             // Add the image URL to the list
-                            imageUrls.Add(@"\images\property\" + fileName);
+                            var imageUrl = blobClient.Uri.AbsoluteUri;
+                            imageUrls.Add(imageUrl);
                         }
                     }
 
@@ -186,7 +187,7 @@ namespace RentARoom.Areas.Agent.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             var propertyToBeDeleted = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "Images");
             if (propertyToBeDeleted == null)
@@ -194,20 +195,31 @@ namespace RentARoom.Areas.Agent.Controllers
                 return Json(new { success = false, message = "Error while Deleting" });
             }
 
-            // Iterate through the images and delete each file
-            if(propertyToBeDeleted.Images != null && propertyToBeDeleted.Images.Any())
+            // Iterate through the images and delete each file from Azure Blob Storage
+            if (propertyToBeDeleted.Images != null && propertyToBeDeleted.Images.Any())
             {
                 foreach (var image in propertyToBeDeleted.Images)
                 {
-                    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, image.ImageUrl.TrimStart('\\'));
-                    if (System.IO.File.Exists(imagePath))
+                    try
                     {
-                        System.IO.File.Delete(imagePath);
-                        _unitOfWork.Image.Remove(image); // manual removal from Db - likely need redirected to r2
+                        // Extract blob name from ImageUrl (assuming it's the full Azure URL)
+                        var blobName = Path.GetFileName(new Uri(image.ImageUrl).AbsolutePath);
+
+                        // Delete blob using AzureBlobService
+                        await _azureBlobService.DeleteFileAsync(blobName);
+
+                        // Remove image entry from the database
+                        _unitOfWork.Image.Remove(image);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the error (optional)
+                        Console.WriteLine($"Error deleting blob: {ex.Message}");
                     }
                 }
             }
 
+            // Remove the property itself
             _unitOfWork.Property.Remove(propertyToBeDeleted);
             _unitOfWork.Save();
 
