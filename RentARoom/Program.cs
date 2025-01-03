@@ -41,6 +41,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddSingleton<IAzureBlobService, AzureBlobService>();
+
 
 builder.Services.AddRazorPages(); // needed for identity
 builder.Services.AddControllersWithViews();
