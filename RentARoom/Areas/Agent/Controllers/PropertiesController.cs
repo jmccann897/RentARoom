@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
@@ -212,6 +213,48 @@ namespace RentARoom.Areas.Agent.Controllers
             _unitOfWork.Save();
 
             return Json(new { success = true, message = "Delete successful" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteImage(string imageUrl, int propertyId)
+        {
+            if (string.IsNullOrEmpty(imageUrl) || propertyId == 0)
+            {
+                TempData["error"] = "Invalid image URL.";
+                return RedirectToAction("Upsert", new { id = propertyId }); // Adjust with the appropriate action
+            }
+
+            try
+            {
+                // Find the image in the database based on its URL
+                var image = _unitOfWork.Image.Get(img => img.ImageUrl == imageUrl);
+                if (image != null)
+                {
+                    // Delete the image from the database
+                    _unitOfWork.Image.Remove(image);
+                     _unitOfWork.Save();
+
+                    // Get filename for deletion from blob
+                    var fileName = Path.GetFileName(imageUrl);
+
+                    // Delete the image from Azure Blob Storage
+                    var blobClient = _azureBlobService.GetContainerClient().GetBlobClient(fileName);
+                    await blobClient.DeleteIfExistsAsync();
+
+                    TempData["success"] = "Image deleted successfully.";
+                }
+                else
+                {
+                    TempData["error"] = "Image not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "An error occurred while deleting the image.";
+                Console.WriteLine(ex.Message);
+            }
+
+            return RedirectToAction("Upsert", new { id = propertyId });
         }
 
         #endregion
