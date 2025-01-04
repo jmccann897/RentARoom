@@ -4,6 +4,11 @@ using Microsoft.Extensions.Configuration;
 using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Utility;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats.Webp;
+using Image = SixLabors.ImageSharp.Image;
+using System.IO;
 
 namespace RentARoom.Services
 {
@@ -33,19 +38,41 @@ namespace RentARoom.Services
             return blobServiceClient.GetBlobContainerClient(_containerName);
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file)
+        public async Task<string> UploadFileAsync(IFormFile file, int maxWidth = 1920, int maxHeight = 1080)
         {
             var containerClient = GetContainerClient();
-            var blobClient = containerClient.GetBlobClient(file.FileName);
 
-            // Upload the file to Azure Blob Storage
-            using (var stream = file.OpenReadStream())
+            // Generate webp filename
+            var webpFileName = $"{Path.GetFileNameWithoutExtension(file.FileName)}_{Guid.NewGuid()}.webp";
+
+            // Process the image and resize it
+            using (var imageStream = file.OpenReadStream())
+            using (var image = Image.Load(imageStream))
             {
-                await blobClient.UploadAsync(stream, overwrite: true);
-            }
+                // Resize image
+                image.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Mode = ResizeMode.Max,
+                    Size = new Size(maxWidth, maxHeight)
+                }));
 
-            // Return the URL of the uploaded file
-            return blobClient.Uri.AbsoluteUri;
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    image.Save(memoryStream, new WebpEncoder { Quality = 80 });
+                    memoryStream.Position = 0;
+
+                    // Upload processed image
+                    var blobClient = containerClient.GetBlobClient(webpFileName);
+
+                    await blobClient.UploadAsync(memoryStream, overwrite: true);
+
+                    await blobClient.SetHttpHeadersAsync(new Azure.Storage.Blobs.Models.BlobHttpHeaders { ContentType = "image/webp" });
+
+                    // Return the URL of the uploaded file
+                    return blobClient.Uri.AbsoluteUri;
+                }
+            }
         }
         public async Task DeleteFileAsync(string fileName)
         {

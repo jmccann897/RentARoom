@@ -90,7 +90,6 @@ namespace RentARoom.Areas.Agent.Controllers
             {
                 try
                 {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;// Gets to wwwRoot folder
                     var imageUrls = new List<string>(); // List to hold image URLs
 
                     // Save images to Azure blob storage
@@ -98,19 +97,8 @@ namespace RentARoom.Areas.Agent.Controllers
                     {
                         foreach (var file in files)
                         {
-                            
-                            // Generate random name for file + extension from upload
-                            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-
-                            // Upload to Azure Blob Storage
-                            var blobClient = _azureBlobService.GetContainerClient().GetBlobClient(fileName);
-                            using (var stream = file.OpenReadStream())
-                            {
-                                await blobClient.UploadAsync(stream, overwrite: true);
-                            }
-
-                            // Add the image URL to the list
-                            var imageUrl = blobClient.Uri.AbsoluteUri;
+                            // Upload to Azure Blob Storage and get the URL
+                            string imageUrl = await _azureBlobService.UploadFileAsync(file, 800, 600); // Example dimensions
                             imageUrls.Add(imageUrl);
                         }
                     }

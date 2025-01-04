@@ -11,7 +11,7 @@ namespace RentARoom.DataAccess.Services.IServices
 {
     public interface IAzureBlobService
     {
-        Task<string> UploadFileAsync(IFormFile file);
+        Task<string> UploadFileAsync(IFormFile file, int maxWidth, int maxHeight);
         Task DeleteFileAsync(string fileName);
         Task<IEnumerable<string>> ListFilesAsync();
 
