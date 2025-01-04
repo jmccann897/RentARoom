@@ -43,7 +43,7 @@
                                     foreach (var image in promotedProperty.Images)
                                     {
                                         <div class="carousel-item @(index == 0 ? "active" : "")">
-                                            <img src="@image.ImageUrl" class="d-block w-100 rounded" alt="Promoted Property Image @(index + 1)" />
+                                            <img src="@image.ImageUrl" class="d-block w-100 rounded" alt="Promoted Property Image @(index + 1)" style="width: 250px; height: 250px; object-fit: scale-down" />
                                         </div>
                                         index++;
                                     }
@@ -102,7 +102,7 @@
                                     foreach (var image in property.Images)
                                     {
                                         <div class="carousel-item @(index == 0 ? "active" : "")">
-                                            <img src="@image.ImageUrl" class="d-block w-100 rounded" alt="Property Image @(index + 1)" />
+                                        <img src="@image.ImageUrl" class="d-block w-100 rounded" alt="Property Image @(index + 1)" style="width: 250px; height: 250px; object-fit: scale-down" />
                                         </div>
                                         index++;
                                     }

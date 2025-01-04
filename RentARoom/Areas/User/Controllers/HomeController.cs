@@ -74,28 +74,6 @@ namespace RentARoom.Areas.User.Controllers
             searchResultsVM.Keywords = SearchPhrase;
 
             return View("SearchResults", searchResultsVM);
-
-
-            //    // nested ternary
-            //    properties = properties.Where(m =>
-            //        SearchType.Equals("bedroom") ? m.PropertyType.Name.Equals("Bedroom") : // searchBedroom
-            //        SearchType.Equals("house") ? !m.PropertyType.Name.Equals("Bedroom") : // searchHouse = everything but bedroom
-            //        true // searchAll
-            //        );
-            //}
-
-            //// Search Phrase logic
-            //if (!string.IsNullOrEmpty(SearchPhrase))
-            //{
-            //    properties = _unitOfWork.Property.Find(m => m.Address.Contains(SearchPhrase)
-            //                                            || m.ApplicationUserId.Contains(SearchPhrase)
-            //                                            || m.Postcode.Contains(SearchPhrase)
-            //                                            || m.City.Contains(SearchPhrase));
-            //}
-
-
-
-
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
