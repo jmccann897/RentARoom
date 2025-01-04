@@ -3,14 +3,14 @@
 <div class="card shadow border-0 mb-3">
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
-        <h2 class="text-white py-2">@(Model.Property.Id!=0?"Update":"Create") Property</h2>
+        <h2 class="text-white py-2">@(Model.Property.Id != 0 ? "Update" : "Create") Property</h2>
     </div>
 
     <div class="card-body p-4">
         <form method="post" class="row" enctype="multipart/form-data">
             <input asp-for="Property.Id" hidden />
             <div class="row">
-                <div class="col-10">
+                <div class="col-12">
                     <div class="border p-3">
                         <div class="form-floating py-2 col-12">
                             <input asp-for="Property.Address" class="form-control border-0 shadow" />
@@ -72,7 +72,7 @@
                             @Html.ValidationMessageFor(model => model.Property.Images, "", new { @class = "text-danger" })
                         </div>
                         <div class="row pt-2">
-                            <div class="col-6 col-md-3">
+                            <div class="col-12 col-md-6">
                                 @if (Model.Property.Id != 0)
                                 {
                                     <button type="submit" class="btn btn-primary form-control">Update</button>
@@ -83,7 +83,7 @@
                                 }
 
                             </div>
-                            <div class="col-6 col-md-3">
+                            <div class="col-12 col-md-6">
                                 <a asp-controller="Properties" asp-action="Index" class="btn btn-secondary form-control">
                                     Back to List
                                 </a>
@@ -91,29 +91,53 @@
                         </div>
                     </div>
                 </div>
-                <!-- Display existing images -->
-                <div class="col-2">
-                    @if (Model.ImageUrls != null && Model.ImageUrls.Any())
-                    {
-                        foreach (var imageUrl in Model.ImageUrls)
-                        {
-                            <img src="@imageUrl" width="100" style="border-radius:5px; border:1px solid #bbb9b9; margin-bottom:10px;" />
-                        }
-                    }
-                    else
-                    {
-                        <p>No images available</p>
-                    }
-                </div>
             </div>
-            
+
         </form>
+        <!-- Display existing images && allow deletion -->
+        <div class="col-12 mt-4">
+            <div class="row">
+                @if (Model.ImageUrls != null && Model.ImageUrls.Any())
+                {
+                    foreach (var imageUrl in Model.ImageUrls)
+                    {
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+                            <div class="image-container" style="position: relative; display: inline-block; margin-bottom: 10px;">
+                                <!-- Display Image -->
+                                <img src="@imageUrl" class="img-fluid rounded" width="100" style="border-radius:5px; border:1px solid #bbb9b9;" />
+                                <!-- Delete Form -->
+                                <form method="post" asp-action="DeleteImage" asp-controller="Properties" style="position: absolute; top: 5px; right: 5px; padding: 0;">
+                                    <!-- Hidden input for PropertyId -->
+                                    <input type="hidden" name="propertyId" value="@Model.Property.Id" />
+
+                                    <!-- Hidden input for Image URL -->
+                                    <input type="hidden" name="imageUrl" value="@imageUrl" />
+                                    <!-- Delete Icon (X) Button -->
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm delete-image"
+                                            style="position: absolute; top: 5px; right: 5px; background-color: red; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; cursor: pointer;">
+                                        <i class="fa-solid fa-xmark" style="color: white; font-size: 18px;"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                    }
+                }
+                else
+                {
+                    <p>No images available</p>
+                }
+            </div>
+        </div>
     </div>
 
 </div>
 
-@section Scripts{
+@section Scripts {
     @{
-    <partial name="_ValidationScriptsPartial"/>
+        <partial name="_ValidationScriptsPartial" />
     }
 }
+
+

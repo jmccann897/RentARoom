@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
@@ -90,7 +91,6 @@ namespace RentARoom.Areas.Agent.Controllers
             {
                 try
                 {
-                    string wwwRootPath = _webHostEnvironment.WebRootPath;// Gets to wwwRoot folder
                     var imageUrls = new List<string>(); // List to hold image URLs
 
                     // Save images to Azure blob storage
@@ -98,19 +98,8 @@ namespace RentARoom.Areas.Agent.Controllers
                     {
                         foreach (var file in files)
                         {
-                            
-                            // Generate random name for file + extension from upload
-                            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-
-                            // Upload to Azure Blob Storage
-                            var blobClient = _azureBlobService.GetContainerClient().GetBlobClient(fileName);
-                            using (var stream = file.OpenReadStream())
-                            {
-                                await blobClient.UploadAsync(stream, overwrite: true);
-                            }
-
-                            // Add the image URL to the list
-                            var imageUrl = blobClient.Uri.AbsoluteUri;
+                            // Upload to Azure Blob Storage and get the URL
+                            string imageUrl = await _azureBlobService.UploadFileAsync(file, 800, 600); // Example dimensions
                             imageUrls.Add(imageUrl);
                         }
                     }
@@ -224,6 +213,48 @@ namespace RentARoom.Areas.Agent.Controllers
             _unitOfWork.Save();
 
             return Json(new { success = true, message = "Delete successful" });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteImage(string imageUrl, int propertyId)
+        {
+            if (string.IsNullOrEmpty(imageUrl) || propertyId == 0)
+            {
+                TempData["error"] = "Invalid image URL.";
+                return RedirectToAction("Upsert", new { id = propertyId }); // Adjust with the appropriate action
+            }
+
+            try
+            {
+                // Find the image in the database based on its URL
+                var image = _unitOfWork.Image.Get(img => img.ImageUrl == imageUrl);
+                if (image != null)
+                {
+                    // Delete the image from the database
+                    _unitOfWork.Image.Remove(image);
+                     _unitOfWork.Save();
+
+                    // Get filename for deletion from blob
+                    var fileName = Path.GetFileName(imageUrl);
+
+                    // Delete the image from Azure Blob Storage
+                    var blobClient = _azureBlobService.GetContainerClient().GetBlobClient(fileName);
+                    await blobClient.DeleteIfExistsAsync();
+
+                    TempData["success"] = "Image deleted successfully.";
+                }
+                else
+                {
+                    TempData["error"] = "Image not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "An error occurred while deleting the image.";
+                Console.WriteLine(ex.Message);
+            }
+
+            return RedirectToAction("Upsert", new { id = propertyId });
         }
 
         #endregion
