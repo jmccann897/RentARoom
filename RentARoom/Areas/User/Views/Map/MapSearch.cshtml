@@ -3,6 +3,10 @@
     // Razor variable to check if the user is logged in
     var isLoggedIn = User.Identity.IsAuthenticated;
 }
+<!-- Render Search and Filter Bar -->
+<div>
+    @Html.Partial("_SearchAndFilterBar", ViewData["SearchAndFilterBar"] as RentARoom.Models.ViewModels.SearchAndFilterBarVM)
+</div>
 
 @* https://leafletjs.com/examples/quick-start/ *@
 <!-- Load Leaflet CSS First -->
@@ -22,9 +26,9 @@
 <!-- Load MarkerCluster JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 
-<div class="container">
+<div class="container" style="position: relative;">
     <h3>Leaflet JS + Open Street Map Tile</h3>
-    <div id="map"></div>
+    <div id="map" style="position: relative;"></div>
 </div>
 
 <div class="card shadow border-0 mb-3 mt-2">

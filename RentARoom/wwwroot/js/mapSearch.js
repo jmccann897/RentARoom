@@ -101,6 +101,59 @@ function createLocationMarker(location) {
     }
 }
 
+// #region Search Functionality
+
+// Function to filter markers based on the search term
+function filterMarkers(searchTerm) {
+    // Clear all current markers from the property cluster group
+    propertyClusterGroup.clearLayers();
+
+    // Filter the property data based on the search term
+    fetch('/User/Map/GetMapProperties', {
+        method: 'GET'
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (Array.isArray(data.data)) {
+                data.data
+                    .filter(property => {
+                        const content = `
+                            ${property.address || ''} 
+                            ${property.city || ''} 
+                            ${property.postcode || ''}
+                            ${property.propertyType?.name || ''}
+                        `.toLowerCase();
+                        return content.includes(searchTerm.toLowerCase());
+                    })
+                    .forEach(createPropertyMarker); // Recreate filtered markers
+            } else {
+                console.error("Property data is not an array. Please check the response format.");
+            }
+        })
+        .catch(error => console.error("Error fetching property data:", error));
+}
+
+// Event listener for the search box input
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("Script loaded and DOM is ready");
+
+    // Get the search input element and add the event listener for 'input' event
+    const searchInput = document.getElementById('searchField');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function (e) {
+            console.log('Input detected:', e.target.value); // Ensure this logs when you type
+            const searchTerm = e.target.value.trim();
+            filterMarkers(searchTerm);
+        });
+    } else {
+        console.error("Search input element not found!");
+    }
+});
+
+// #endregion
+
 // Layer control setup with MarkerCluster groups
 L.control.layers(null,{
     'Properties': propertyClusterGroup,

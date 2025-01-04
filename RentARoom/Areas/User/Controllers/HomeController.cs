@@ -46,24 +46,25 @@ namespace RentARoom.Areas.User.Controllers
             // Get all properties
             var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
 
-            // Search Type
+            // Filter by search phrase
+            if (!string.IsNullOrEmpty(SearchPhrase))
+            {
+                properties = properties = _unitOfWork.Property.Find(m => m.Address.Contains(SearchPhrase) ||
+                                                                m.ApplicationUserId.Contains(SearchPhrase) ||
+                                                                m.Postcode.Contains(SearchPhrase) ||
+                                                                m.City.Contains(SearchPhrase));
+            }
+            // Filter by Search Type
             if (!string.IsNullOrEmpty(SearchType))
             {
                 if (SearchType.Equals("Bedroom"))
                 {
-                    properties = _unitOfWork.Property.Find(m => m.PropertyType.Name.Equals("Bedroom")
-                                                        && (m.Address.Contains(SearchPhrase)
-                                                        || m.ApplicationUserId.Contains(SearchPhrase)
-                                                        || m.Postcode.Contains(SearchPhrase)
-                                                        || m.City.Contains(SearchPhrase)));
+                    properties = _unitOfWork.Property.Find(m => m.PropertyType.Name.Equals("Bedroom"));
+                                                    
                 }
                 else if (SearchType.Equals("House"))
                 {
-                    properties = _unitOfWork.Property.Find(m => !m.PropertyType.Name.Equals("Bedroom")
-                                                        && (m.Address.Contains(SearchPhrase)
-                                                        || m.ApplicationUserId.Contains(SearchPhrase)
-                                                        || m.Postcode.Contains(SearchPhrase)
-                                                        || m.City.Contains(SearchPhrase)));
+                    properties = _unitOfWork.Property.Find(m => !m.PropertyType.Name.Equals("Bedroom"));
                 }
             }
 
@@ -71,7 +72,10 @@ namespace RentARoom.Areas.User.Controllers
 
             SearchResultsVM searchResultsVM = new();
             searchResultsVM.PropertyList = properties.ToList();
-            searchResultsVM.Keywords = SearchPhrase;
+
+            SearchAndFilterBarVM searchAndFilterBarVM = new();
+            searchAndFilterBarVM.Keywords = SearchPhrase;
+            ViewData["SearchAndFilterBar"] = searchAndFilterBarVM; // Pass to partial view
 
             return View("SearchResults", searchResultsVM);
         }
