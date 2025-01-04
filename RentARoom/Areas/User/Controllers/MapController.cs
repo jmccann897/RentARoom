@@ -29,13 +29,7 @@ namespace RentARoom.Areas.User.Controllers
 
         public IActionResult Index()
         {
-            // Should the api key be hidden - no as no charge associated to simple embed request
-            // https://stackoverflow.com/questions/38153734/do-i-need-to-hide-api-key-when-using-google-maps-js-api-if-so-how
-
-
-            // Need to dynamically change q parameter to property address, add the embedded map as a partial to details pages
-            // Need to update the view model in associated details pages and create partial for map view
-
+            // Not used - was for google embedded map examples
             return View();
         }
 
@@ -61,6 +55,10 @@ namespace RentARoom.Areas.User.Controllers
                 //List<Location> objLocationList = _unitOfWork.Location.Find(x => x.ApplicationUserId == User.Identity.Name).ToList();
 
             };
+
+            // Add in Search and filter model
+            SearchAndFilterBarVM searchAndFilterBarVM = new();
+            ViewData["SearchAndFilterBar"] = searchAndFilterBarVM; // Pass to partial view
             return View(mapSearchVM);
         }
 

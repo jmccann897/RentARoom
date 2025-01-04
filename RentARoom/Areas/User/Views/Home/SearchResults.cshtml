@@ -1,5 +1,9 @@
 ﻿@model SearchResultsVM
-<partial name="~/Views/Shared/_SearchAndFilterBar.cshtml" />
+
+<!-- Render Search and Filter Bar -->
+<div>
+    @Html.Partial("_SearchAndFilterBar", ViewData["SearchAndFilterBar"] as RentARoom.Models.ViewModels.SearchAndFilterBarVM)
+</div>
 
 <div class="container">
     @foreach (var property in Model.PropertyList)

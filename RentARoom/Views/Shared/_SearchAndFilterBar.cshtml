@@ -1,8 +1,12 @@
-﻿@model RentARoom.Models.ViewModels.SearchResultsVM
+﻿@model RentARoom.Models.ViewModels.SearchAndFilterBarVM
 
 <div class="container mt-4">
     <!-- Search and Filter Bar -->
     <div class="row align-items-center bg-light p-3 rounded">
+
+        <!-- Hidden field to retain the search phrase -->
+        <input type="hidden" name="SearchPhrase" value="@Model.Keywords" />
+
         <!-- Search Field -->
         <div class="col-md-4 col-12 mb-2 mb-md-0">           
             @if (string.IsNullOrEmpty(Model.Keywords))
@@ -12,7 +16,7 @@
             }
             else
             {
-                <input id="searchField" type="text" class="form-control" placeholder=Model.Keywords.ToString();
+                <input id="searchField" type="text" class="form-control" placeholder= "@Model.Keywords.ToString()";
                        asp-for="Keywords" />
                 
             }
