@@ -41,15 +41,16 @@ namespace RentARoom.Areas.User.Controllers
 
         // https://stackoverflow.com/questions/72476089/how-to-implement-search-functionality
         // POST: /ShowSearchResults
-        public IActionResult SearchResults(string SearchType, string SearchPhrase)
+        [HttpPost]
+        public IActionResult SearchResults(string SearchType, string SearchPhrase = "")
         {
             // Get all properties
             var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
 
-            // Filter by search phrase
+            // Filter by search phrase --> defaults to empty string so should skip if empty
             if (!string.IsNullOrEmpty(SearchPhrase))
             {
-                properties = properties = _unitOfWork.Property.Find(m => m.Address.Contains(SearchPhrase) ||
+                properties = _unitOfWork.Property.Find(m => m.Address.Contains(SearchPhrase) ||
                                                                 m.ApplicationUserId.Contains(SearchPhrase) ||
                                                                 m.Postcode.Contains(SearchPhrase) ||
                                                                 m.City.Contains(SearchPhrase));
@@ -73,9 +74,11 @@ namespace RentARoom.Areas.User.Controllers
             SearchResultsVM searchResultsVM = new();
             searchResultsVM.PropertyList = properties.ToList();
 
-            SearchAndFilterBarVM searchAndFilterBarVM = new();
-            searchAndFilterBarVM.Keywords = SearchPhrase;
-            ViewData["SearchAndFilterBar"] = searchAndFilterBarVM; // Pass to partial view
+            var searchAndFilterBarVM = new SearchAndFilterBarVM
+            {
+                Keywords = SearchPhrase
+            };
+            ViewData["SearchAndFilterBar"] = searchAndFilterBarVM; // Pass to partial 
 
             return View("SearchResults", searchResultsVM);
         }

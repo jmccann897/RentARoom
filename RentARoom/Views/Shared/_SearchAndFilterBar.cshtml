@@ -1,132 +1,121 @@
 ﻿@model RentARoom.Models.ViewModels.SearchAndFilterBarVM
 
 <div class="container mt-4">
-    <!-- Search and Filter Bar -->
-    <div class="row align-items-center bg-light p-3 rounded">
-
-        <!-- Hidden field to retain the search phrase -->
-        <input type="hidden" name="SearchPhrase" value="@Model.Keywords" />
-
-        <!-- Search Field -->
-        <div class="col-md-4 col-12 mb-2 mb-md-0">           
-            @if (string.IsNullOrEmpty(Model.Keywords))
-            {
-                <input id="searchField" type="text" class="form-control" placeholder="Enter keywords ..."
-                       asp-for="Keywords" />
-            }
-            else
-            {
-                <input id="searchField" type="text" class="form-control" placeholder= "@Model.Keywords.ToString()";
-                       asp-for="Keywords" />
-                
-            }
-            
-        </div>
-
-        <!-- Filters Button -->
-        <div class="col-md-2 col-6 text-md-center mb-2 mb-md-0">
-            <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#filtersModal">
-                <i class="bi bi-funnel-fill"></i> Filters
-            </button>
-        </div>
-
-        <!-- Sort Dropdown -->
-        <div class="col-md-2 col-6">
-            <select class="form-select" asp-for="SortBy">
-                <option value="Relevance">Relevance</option>
-                <option value="PriceLowHigh">Price (Low to High)</option>
-                <option value="PriceHighLow">Price (High to Low)</option>
-                <option value="MostRecent">Most Recent</option>
-            </select>
-        </div>
-
-        <!-- Search Button -->
-        <div class="col-md-2 col-12 mt-2 mt-md-0 text-md-end">
-            <button type="submit" asp-controller="Home" asp-action="SearchResults" class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
-                <i class="bi bi-search me-1"></i> Search
-            </button>
-        </div>
-    </div>
-
-    <!-- Filters Modal -->
-    <div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="filtersModalLabel">Advanced Filters</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Search and Filter Bar Partial -->
+        <div class="row align-items-center bg-light p-3 rounded">
+            <!-- Search and Filter Bar Partial -->
+            <div class="row align-items-center bg-light p-3 rounded">
+                <!-- Search Field -->
+                <div class="col-md-4 col-12 mb-2 mb-md-0">
+                    <input id="searchField" name="searchPhrase" type="text" class="form-control"
+                           placeholder="Enter keywords ..." asp-for="Keywords" />
                 </div>
-                <div class="modal-body">
-                    <form>
-                        <!-- Price Range -->
-                        <div class="mb-3">
-                            <label for="priceRange" class="form-label">Price Range (£)</label>
-                            <div class="row">
-                                <div class="col-6">
-                                    <input type="number" class="form-control" id="minPrice" placeholder="Min"  />
-                                </div>
-                                <div class="col-6">
-                                    <input type="number" class="form-control" id="maxPrice" placeholder="Max"  />
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Property Type -->
-                        <div class="mb-3">
-                            <label class="form-label">Property Type</label>
-                            <div>
-                                <input type="checkbox" id="typeBedroom"  value="Bedroom" />
-                                <label for="typeBedroom">Room</label>
-                                <input type="checkbox" id="typeTerrace" value="Terrace" />
-                                <label for="typeTerrace">Terrace</label>
-                                <input type="checkbox" id="typeSemiDetached" value="SemiDetached" />
-                                <label for="typeSemiDetached">SemiDetached</label>
-                                <input type="checkbox" id="typeDetached" value="Detached" />
-                                <label for="typeDetached">Detached</label>
-                                <input type="checkbox" id="typeApartment" value="Apartment" />
-                                <label for="typeApartment">Apartment</label>
-                                <input type="checkbox" id="typeBungalow" value="Bungalow" />
-                                <label for="typeBungalow">Bungalow</label>
-                            </div>
-                        </div>
+            <!-- Filters Button -->
+            <div class="col-md-2 col-6 text-md-center mb-2 mb-md-0">
+                <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#filtersModal">
+                    <i class="bi bi-funnel-fill"></i> Filters
+                </button>
+            </div>
 
-                        <!-- Travel Time -->
-                        <div class="mb-3">
-                            <label for="destination" class="form-label">Travel Time</label>
-                            <input type="text" class="form-control" id="destination" placeholder="Destination (e.g., 'University')"
-                                   />
-                            <small class="form-text text-muted">Select a travel mode and time below:</small>
-                            <div class="row mt-2">
-                                <div class="col-6">
-                                    <select class="form-select" >
-                                        <option value="Car">Car</option>
-                                        <option value="Bus">Bus</option>
-                                        <option value="Walking">Walking</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <input type="number" class="form-control" placeholder="Max minutes"  />
+            <!-- Sort Dropdown -->
+            <div class="col-md-2 col-6">
+                <select class="form-select" asp-for="SortBy">
+                    <option value="Relevance">Relevance</option>
+                    <option value="PriceLowHigh">Price (Low to High)</option>
+                    <option value="PriceHighLow">Price (High to Low)</option>
+                    <option value="MostRecent">Most Recent</option>
+                </select>
+            </div>
+
+            <!-- Search Button -->
+            <div class="col-md-2 col-12 mt-2 mt-md-0 text-md-end">
+                <button type="submit" asp-controller="Home" asp-action="SearchResults" class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+                    <i class="bi bi-search me-1"></i> Search
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters Modal -->
+        <div class="modal fade" id="filtersModal" tabindex="-1" aria-labelledby="filtersModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filtersModalLabel">Advanced Filters</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <!-- Price Range -->
+                            <div class="mb-3">
+                                <label for="priceRange" class="form-label">Price Range (£)</label>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="minPrice" placeholder="Min"  />
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" id="maxPrice" placeholder="Max"  />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Proximity Radius -->
-                        <div class="mb-3">
-                            <label for="proximityRadius" class="form-label">Proximity to Amenities</label>
-                            <input type="range" class="form-range" id="proximityRadius"  min="1" max="50" />
-                            <small class="form-text text-muted">Adjust radius in km.</small>
-                        </div>
+                            <!-- Property Type -->
+                            <div class="mb-3">
+                                <label class="form-label">Property Type</label>
+                                <div>
+                                    <input type="checkbox" id="typeBedroom"  value="Bedroom" />
+                                    <label for="typeBedroom">Room</label>
+                                    <input type="checkbox" id="typeTerrace" value="Terrace" />
+                                    <label for="typeTerrace">Terrace</label>
+                                    <input type="checkbox" id="typeSemiDetached" value="SemiDetached" />
+                                    <label for="typeSemiDetached">SemiDetached</label>
+                                    <input type="checkbox" id="typeDetached" value="Detached" />
+                                    <label for="typeDetached">Detached</label>
+                                    <input type="checkbox" id="typeApartment" value="Apartment" />
+                                    <label for="typeApartment">Apartment</label>
+                                    <input type="checkbox" id="typeBungalow" value="Bungalow" />
+                                    <label for="typeBungalow">Bungalow</label>
+                                </div>
+                            </div>
 
-                        <!-- LPS Map Toggle -->
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="showLPS"  />
-                            <label class="form-check-label" for="showLPS">Show LPS Map</label>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Clear All</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply Filters</button>
+                            <!-- Travel Time -->
+                            <div class="mb-3">
+                                <label for="destination" class="form-label">Travel Time</label>
+                                <input type="text" class="form-control" id="destination" placeholder="Destination (e.g., 'University')"
+                                       />
+                                <small class="form-text text-muted">Select a travel mode and time below:</small>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <select class="form-select" >
+                                            <option value="Car">Car</option>
+                                            <option value="Bus">Bus</option>
+                                            <option value="Walking">Walking</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" class="form-control" placeholder="Max minutes"  />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Proximity Radius -->
+                            <div class="mb-3">
+                                <label for="proximityRadius" class="form-label">Proximity to Amenities</label>
+                                <input type="range" class="form-range" id="proximityRadius"  min="1" max="50" />
+                                <small class="form-text text-muted">Adjust radius in km.</small>
+                            </div>
+
+                            <!-- LPS Map Toggle -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="showLPS"  />
+                                <label class="form-check-label" for="showLPS">Show LPS Map</label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Clear All</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Apply Filters</button>
+                    </div>
                 </div>
             </div>
         </div>
