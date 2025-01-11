@@ -9,6 +9,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     const startChatButton = document.getElementById("startChat");
+    const receiverEmailField = document.getElementById("receiverEmail");
+    const senderEmailField = document.getElementById("senderEmail");
+    const chatInfo = document.getElementById("chatInfo");
+
+    // Access data attributes
+    const recipientEmail = chatInfo.getAttribute("data-recipient-email");
+    const propertyAddress = chatInfo.getAttribute("data-property-address");
+    const propertyCity = chatInfo.getAttribute("data-property-city");
+    const propertyPrice = chatInfo.getAttribute("data-property-price");
+
+    // Modify the UI based on whether the data is present
+    if (recipientEmail && propertyAddress && propertyPrice && propertyCity) {
+        // Dynamically update the chat window with property info
+        const propertyInfoDiv = document.createElement("div");
+        propertyInfoDiv.classList.add("chat-header");
+
+        // Construct the header
+        propertyInfoDiv.innerHTML = `
+        <div class="property-info-left">
+            <p><strong>Address:</strong> ${propertyAddress}</p>
+            <p><strong>City:</strong> ${propertyCity}</p>
+            <p><strong>Price:</strong> ${propertyPrice}</p>
+        </div>
+        <div class="receiver-info-right">
+            <p><strong>Receiver:</strong> ${recipientEmail}</p>
+        </div>
+    `;
+
+        // Append the header div to the chat window
+        document.getElementById("chatWindows").appendChild(propertyInfoDiv);
+    }
 
     if (!startChatButton) {
         console.error("Start Chat button not found!");
@@ -59,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function () {
             chatWindow.classList.add("chat-window", "border", "rounded", "p-3", "mb-3");
             chatWindow.setAttribute("data-receiver", user);
             chatWindow.innerHTML = `
-                <h5>Private Chat with ${user}</h5>
                 <div class="messages-box border rounded p-3 mb-3">
                     <ul class="messages-list list-unstyled mb-0"></ul>
                 </div>
@@ -71,17 +101,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Attach event listener for sending private messages
             chatWindow.querySelector(".send-private-message").addEventListener("click", function () {
-                const senderEmail = document.getElementById("senderEmail").value;
                 const messageInput = chatWindow.querySelector(".message-input");
                 const privateMessage = messageInput.value;
                 if (privateMessage.trim() === "") return;
 
                 // Send private message
-                connectionChat.send("SendMessageToReceiver", senderEmail, user, privateMessage)
+                connectionChat.send("SendMessageToReceiver", senderEmailField.value, user, privateMessage)
                     .catch(err => console.error(err));
 
                 // Append message to the chat window
-                appendMessage(chatWindow, senderEmail, privateMessage, "sent");
+                appendMessage(chatWindow, senderEmailField.value, privateMessage, "sent");
                 messageInput.value = "";
             });
         }
@@ -91,11 +120,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // SignalR event for receiving messages
     connectionChat.on("MessageReceived", function (user, message, receiver) {
         console.log(`MessageReceived triggered. From: ${user}, Message: ${message}, To: ${receiver}`);
-        const senderEmail = document.getElementById("senderEmail").value;
 
 
         // Prevent sender from processing their own message
-        if (user === senderEmail) return;
+        if (user === senderEmailField.value) return;
 
 
         const chatWindow = getOrCreateChatWindow(user);
@@ -103,35 +131,31 @@ document.addEventListener("DOMContentLoaded", function () {
         // Append the received message to the chat window
         appendMessage(chatWindow, user, message, "received");
 
-        //const li = document.createElement("li");
-        //li.classList.add(user === document.getElementById("senderEmail").value ? "sent" : "received");
-        //li.textContent = `${user}: ${message}`;
-        //document.getElementById("messagesList").appendChild(li);
-
-        //// Scroll to the bottom of the chat box
-        //const chatBox = document.querySelector(".chat-box");
-        //chatBox.scrollTop = chatBox.scrollHeight;
     });
 
     // Event listener for "Start Chat" button
     document.getElementById("startChat").addEventListener("click", function () {
-        console.log("Start chat triggered");
-        const receiver = document.getElementById("receiverEmail").value;
 
         // Validate receiver email
-        if (!receiver || receiver.trim() === "") {
+        if (!receiverEmailField.value || receiverEmailField.value.trim() === "") {
             alert("Please enter a recipient's email to start a chat.");
             return;
         }
 
         // Open or create a new chat window for the specified receiver
-        getOrCreateChatWindow(receiver);
+        getOrCreateChatWindow(receiverEmailField.value);
     });
+
+    // Check if the receiver email is pre-populated
+    if (receiverEmailField.value) {
+        console.log("Receiver email is pre-populated: ", receiverEmailField.value);
+        startChatButton.disabled = false;
+        startChatButton.click();
+    }
 
     connectionChat.start().then(function () {
         console.log("SignalR Connected");
 
-        const startChatButton = document.getElementById("startChat");
         if (startChatButton) {
             startChatButton.disabled = false; // Enable the button only if it exists
         } else {

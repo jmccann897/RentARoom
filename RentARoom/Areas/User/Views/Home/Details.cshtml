@@ -1,10 +1,8 @@
 ﻿
 @model Property
 
-@await Html.PartialAsync("_PrivateChat")
-
-<form method="post">
     <div class="card shadow border-0 mt-4 mb-4">
+
         <div class="card-header bg-warning bg-gradient text-light py-4">
             <div class="row">
                 <div class="col-12 text-center">
@@ -13,6 +11,7 @@
                 </div>
             </div>
         </div>
+
         <div class="card-body">
             <div class="property-image-carousel">
                 <div id="propertyImageCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -76,40 +75,49 @@
                     </div>
                 </div>
             </div>
-            <div class="contact-agent-details">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-12 col-lg-6 offset-lg-1">
-                        <h5> Contact Agent Details</h5>
-                        <div class="row">
-                            <div class="col-12 col-md-8">
-                                <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
-                                    <i class="bi bi-telephone-fill"></i>@Model.ApplicationUser.PhoneNumber
-                                </button>
-                                <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
-                                    <i class="bi bi-envelope-arrow-up-fill"></i> @Model.ApplicationUser.Email
-                                </button>
-                                <button type="button" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold"
-                                        data-bs-toggle="modal" data-bs-target="#chatModal">
-                                    <i class="bi bi-chat-left-text-fill"></i> Chat
-                                </button>
+
+            <form method="post">
+                <div class="contact-agent-details">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-12 col-lg-6 offset-lg-1">
+                            <h5> Contact Agent Details</h5>
+                            <div class="row">
+                                <div class="col-12 col-md-8">
+                                    <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
+                                        <i class="bi bi-telephone-fill"></i>@Model.ApplicationUser.PhoneNumber
+                                    </button>
+                                    <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
+                                        <i class="bi bi-envelope-arrow-up-fill"></i> @Model.ApplicationUser.Email
+                                    </button>
+                                    <!-- Hidden fields for necessary data -->
+                                    <input type="hidden" name="recipientEmail" value="@Model.ApplicationUser.Email" />
+                                    <input type="hidden" name="propertyAddress" value="@Model.Address" />
+                                    <input type="hidden" name="propertyCity" value="@Model.City" />   
+                                    <input type="hidden" name="propertyPrice" value="@Model.Price" />
+                                    <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold"
+                                            asp-controller="Notification"
+                                            asp-action="Chat">
+                                        <i class="bi bi-chat-left-text-fill"></i> Chat                                   
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row pl-2 mb-3">
-                            <div class="col-md-4">
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text bg-primary text-white border-0 fw-semibold"
-                                          id="inputGroup-sizing-default">
-                                        Count
-                                    </span>
-                                    <input type="number" value="1" class="form-control text-end"
-                                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                            <div class="row pl-2 mb-3">
+                                <div class="col-md-4">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-primary text-white border-0 fw-semibold"
+                                              id="inputGroup-sizing-default">
+                                            Count
+                                        </span>
+                                        <input type="number" value="1" class="form-control text-end"
+                                               aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
-</form>
+
 

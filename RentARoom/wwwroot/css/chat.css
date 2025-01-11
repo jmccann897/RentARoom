@@ -85,3 +85,39 @@
         margin-left: auto;
     }
 }
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom:2px;
+}
+
+.property-info-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.receiver-info-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    text-align: right;
+    word-wrap: break-word;
+}
+
+    .property-info-left p,
+    .receiver-info-right p {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+    }
+
+    .property-info-left strong,
+    .receiver-info-right strong {
+        font-weight: bold;
+    }
