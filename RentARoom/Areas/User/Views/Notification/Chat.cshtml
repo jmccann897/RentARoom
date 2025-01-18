@@ -1,9 +1,18 @@
-﻿@{
+﻿@model ChatVM
+@{
     var recipientEmail = ViewBag.RecipientEmail as string ?? string.Empty;
     var propertyAddress = ViewBag.PropertyAddress as string ?? string.Empty;
     var propertyCity = ViewBag.PropertyCity as string ?? string.Empty;
     var propertyPrice = ViewBag.PropertyPrice as string ?? string.Empty;
 }
+
+<!-- Pass conversation Ids to JavaScript -->
+<script>
+    // Pass the conversation Ids to JavaScript via the ViewModel
+    const conversationIds = @Html.Raw(Json.Serialize(Model.ConversationIds));
+    console.log("User's conversation IDs: ", conversationIds);
+    window.currentUserId = '@Model.UserId';
+</script>
 
 <div class="container mt-4">
     <div class="row mb-3">

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository;
 using RentARoom.DataAccess.Repository.IRepository;
+using RentARoom.DataAccess.Services;
 using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Hubs;
 using RentARoom.Models;
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IAzureBlobService, AzureBlobService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 
 builder.Services.AddRazorPages(); // needed for identity
