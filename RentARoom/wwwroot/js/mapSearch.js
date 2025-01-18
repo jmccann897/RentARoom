@@ -7,8 +7,47 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Create marker cluster groups for properties and locations
-const propertyClusterGroup = L.markerClusterGroup();
-const locationClusterGroup = L.markerClusterGroup();
+const propertyClusterGroup = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+        const count = cluster.getChildCount(); // Get number of markers in the cluster
+        let colour = 'rgba(255,0,0,0.4)'; // Set a default color for property clusters
+
+        return L.divIcon({
+            html: `<div style="
+                background-color: ${colour};
+                color: white;
+                border-radius: 50%;
+                width: 40px; /* Fixed size for property clusters */
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                font-weight: bold;
+            ">${count}</div>`,
+            className: '', // Optional, for additional styling
+        });
+    },
+});
+
+const locationClusterGroup = L.markerClusterGroup({
+    iconCreateFunction: function (cluster) {
+        const count = cluster.getChildCount(); // Get number of markers in the cluster
+        let colour = 'rgba(255,0,255,0.4)'; // Set a default color for location clusters
+
+        return L.divIcon({
+            html: `<div style="
+                background-color: ${colour};
+                color: white;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                font-weight: bold;
+            ">${count}</div>`,
+            className: '',
+        });
+    },
+});
 
 // Property icon
 const propertyIcon = L.divIcon({
@@ -304,7 +343,8 @@ function loadLocationsTable() {
                 },
                 "width": "10%"
             }
-        ]
+        ], 
+        responsive: true // Enable responsive mode
     });
 }
 

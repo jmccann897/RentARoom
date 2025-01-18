@@ -24,10 +24,10 @@ function loadDataTable() {
                 <a onClick=Delete('properties/delete/${data}') class="btn btn-secondary mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
                 </div>`
             },
-            "width": "25%"
+            "width": "25%", responsivePriority: 1
         }
-
-        ]
+        ],
+        responsive: true // Enable responsive mode
     });
 }
 

@@ -6,20 +6,17 @@
         var promotedProperty = Model.FirstOrDefault();
 
         <div class="row home-banner-container">
-            <div class="col-4 square-box pt-5">
-                <h2 class="text-center">Search for</h2>
+            <div class="col-12 col-md-4 pt-5">
+                <h2 class="text-center">Find Your Perfect Place, Right Where You Want It</h2>
                 <form method="post" asp-controller="Home" asp-action="SearchResults" class="p-3">
                     <!-- Button group for radio buttons -->
-                    <div class="btn-group d-flex justify-content-center" role="group" aria-label="Search Type">
-                        <input type="radio" class="btn-check" name="searchType" id="searchAll" value="All" autocomplete="off" checked>
-                        <label class="btn btn-outline-success" for="searchAll">All</label>
-                        
-                        <input type="radio" class="btn-check" name="searchType" id="searchHouse" value="House" autocomplete="off">
+                    <div class="btn-group d-flex justify-content-center flex-wrap" role="group" aria-label="Search Type">
+                        <input type="radio" class="btn-check" name="searchType" id="searchHouse" value="House" autocomplete="off" checked>
                         <label class="btn btn-outline-success" for="searchHouse">House</label>
-
                         <input type="radio" class="btn-check" name="searchType" id="searchBedroom" value="Bedroom" autocomplete="off">
-                        <label class="btn btn-outline-success" for="searchBedroom">Bedroom</label>
-
+                        <label class="btn btn-outline-success" for="searchBedroom">Room Only</label>
+                        <input type="radio" class="btn-check" name="searchType" id="searchAll" value="All" autocomplete="off">
+                        <label class="btn btn-outline-success" for="searchAll">All</label>
                     </div>
                     <div class="mt-3">
                         <input id="searchPhrase" name="searchPhrase" class="form-control"
@@ -33,7 +30,7 @@
 
             @if(promotedProperty != null)
             {
-                <div class="col-sm-6">
+                <div class="col-12 col-sm-6">
                     <div class="card border-0 p-3 shadow border-top border-5 rounded">
                         <div id="carouselPromotedProperty" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
                             <div class="carousel-inner">
@@ -89,7 +86,7 @@
     <div class="card-deck home-card-list-container pt-3">
             @foreach (var property in Model)
             {
-            <div class="col p-1">
+            <div class="col-12 col-sm-6 col-md-4 p-1">
                 <div class="card border-0 p-3 shadow border-top border-5 rounded">
                     @{
                         string carouselId = "carouselProperty" + @property.Id;
