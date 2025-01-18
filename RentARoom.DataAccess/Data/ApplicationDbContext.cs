@@ -23,23 +23,79 @@ namespace RentARoom.DataAccess.Data
         public DbSet<Location> Location { get; set; }
         public DbSet<Image> Image { get; set; }
 
+        public DbSet<ChatConversation> ChatConversations { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<ChatConversationParticipant> ChatConversationParticipants { get; set; }
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); //needed for identities to build properly
 
             //https://learn.microsoft.com/en-us/ef/core/modeling/relationships/one-to-many
             //https://stackoverflow.com/questions/62110667/cannot-resolve-symbol-hasrequired-entity-framework-core
+
+            // One-to-many relationship between Property and ApplicationUser
+            // Each Property is associated with one ApplicationUser (owner), 
+            // and each ApplicationUser can own many Properties.
             modelBuilder.Entity<Property>()
                 .HasOne(c => c.ApplicationUser)
                 .WithMany(t => t.Properties)
                 .HasForeignKey(m => m.ApplicationUserId)
                 .IsRequired();
 
-            // Configure the one-to-many relationship between Property and Image
+            // One-to-many relationship between Property and Image
+            // Each Property can have many Images, and each Image is associated with one Property.
             modelBuilder.Entity<Property>()
                 .HasMany(p => p.Images)
                 .WithOne(i => i.Property)
                 .HasForeignKey(i => i.PropertyId);
+
+            // Many-to-many relationship between ChatConversation and ApplicationUser
+            // Via ChatConversationParticipant join table
+            // Each ChatConversation can have many ApplicationUsers, and each ApplicationUser can participate in many ChatConversations.
+            modelBuilder.Entity<ChatConversationParticipant>()
+                .HasKey(cp => new { cp.ChatConversationId, cp.UserId }); // Composite key for the join table
+
+            // Relationship between ChatConversationParticipant and ChatConversation
+            // Each ChatConversationParticipant is associated with one ChatConversation,
+            // and each ChatConversation can have many ChatConversationParticipants.
+            modelBuilder.Entity<ChatConversationParticipant>()
+                .HasOne(cp => cp.ChatConversation)
+                .WithMany(c => c.Participants)
+                .HasForeignKey(cp => cp.ChatConversationId);
+
+            // Relationship between ChatConversationParticipant and ApplicationUser
+            // Each ChatConversationParticipant is associated with one ApplicationUser (the participant),
+            // and each ApplicationUser can have many ChatConversationParticipants.
+            modelBuilder.Entity<ChatConversationParticipant>()
+                .HasOne(cp => cp.User)
+                .WithMany(u => u.ChatConversationParticipants)
+                .HasForeignKey(cp => cp.UserId);
+
+            // One-to-many relationship between ChatMessage and ChatConversation
+            // Each ChatMessage belongs to one ChatConversation, and each ChatConversation can have many ChatMessages.
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(cm => cm.Conversation)
+                .WithMany(c => c.ChatMessages)
+                .HasForeignKey(cm => cm.ChatConversationId);
+
+            // One-to-many relationship between ChatMessage and ApplicationUser (Sender)
+            // Each ChatMessage is sent by one ApplicationUser (Sender), and each ApplicationUser can send many ChatMessages.
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(cm => cm.Sender)
+                .WithMany(u => u.SentMessages)
+                .HasForeignKey(cm => cm.SenderId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent delete cascade for user
+            
+            // One-to-many relationship between ChatMessage and ApplicationUser (Recipient)
+            // Each ChatMessage is sent to one ApplicationUser (Recipient), and each ApplicationUser can receive many ChatMessages.
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(cm => cm.Recipient)
+                .WithMany(u => u.ReceivedMessages)
+                .HasForeignKey(cm => cm.RecipientId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent delete cascade for user
         }
 
         // Helper methods to check existence and add data

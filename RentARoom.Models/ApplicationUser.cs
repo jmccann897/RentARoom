@@ -22,6 +22,9 @@ namespace RentARoom.Models
         // initialises on get so can't be null by default - see https://learn.microsoft.com/en-us/ef/core/modeling/relationships/navigations
         public ICollection<Property> Properties { get; } = new List<Property>();
 
+        public ICollection<ChatMessage> SentMessages { get; set; } = new List<ChatMessage>();
+        public ICollection<ChatMessage> ReceivedMessages { get; set; } = new List<ChatMessage>();
+        public ICollection<ChatConversationParticipant> ChatConversationParticipants { get; set; } = new List<ChatConversationParticipant>();
 
     }
 }
