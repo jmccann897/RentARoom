@@ -238,10 +238,10 @@ function initializeModal(data = {}) {
     const saveButton = document.getElementById('saveLocationBtn');
 
     if (data.id) {
-        modalTitle.textContent = 'Edit Location';
+        modalTitle.textContent = 'Edit Point of Interest';
         saveButton.textContent = 'Save Changes';
     } else {
-        modalTitle.textContent = 'Add Location';
+        modalTitle.textContent = 'Add Point of Interest';
         saveButton.textContent = 'Save';
     }
 

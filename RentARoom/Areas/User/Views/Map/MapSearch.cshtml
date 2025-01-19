@@ -27,7 +27,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 
 <div class="container" style="position: relative;">
-    <h3>Browse rental properties on maps</h3>
+    <h3>Browse rental properties on map in relation to your Points of Interest</h3>
     <div id="map" style="position: relative;"></div>
 </div>
 
@@ -35,7 +35,7 @@
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
         <div class="d-flex flex-row">
-            <h2 class="text-white py-2">Add or Edit locations below to get transport information</h2>
+            <h2 class="text-white py-2">My Points of Interest</h2>
         </div>
     </div>
 
@@ -45,10 +45,10 @@
         <table id="tblLocations" class="display table-striped table-bordered pt-2" style="width:100%">
             <thead>
                 <tr>
-                    <th>Enter a name for your location</th>
+                    <th>Enter a name for your point of interest</th>
                     <th>Address</th>
                     <th>City</th>
-                    <th>Edit or Delete Locations as you need to</th>
+                    <th></th>
                 </tr>
             </thead>
         </table>
@@ -61,13 +61,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="locationModalLabel">Location Details</h5>
+                <h5 class="modal-title" id="locationModalLabel">Add Point of Interest</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="locationForm">
                     <div class="mb-3">
-                        <label for="locationName" class="form-label">Location Name</label>
+                        <label for="locationName" class="form-label">Name</label>
                         <input type="text" class="form-control" id="locationName" required />
                     </div>
                     <div class="mb-3">

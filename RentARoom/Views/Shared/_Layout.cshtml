@@ -35,16 +35,10 @@
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="User" asp-controller="Notification" asp-action="Index">Notifications</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-light" asp-area="User" asp-controller="Notification" asp-action="Chat">Chat</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="User" asp-controller="Map" asp-action="MapSearch">Map</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="User" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
@@ -52,18 +46,10 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            <partial name="_Notification" />
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            RentARoom
-        </div>
-    </footer>
+    <main role="main" class="container pb-3">
+        <partial name="_Notification" />
+        @RenderBody()
+    </main>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

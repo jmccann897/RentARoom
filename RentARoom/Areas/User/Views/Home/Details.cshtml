@@ -59,10 +59,10 @@
                         </div>
                         <div class="row ps-2">
                             @{
-                                double areaBySingleBeds = (Model.FloorArea / 1.71);
-                                double roundedAreaBySingleBeds = Math.Round(areaBySingleBeds, 2);
+                            double areaInSqFt2 = (Model.FloorArea * 10.764);
+                            double roundedAreaInSqFt2 = Math.Round(areaInSqFt2, 2);
                             }
-                            <h6 class="text-dark text-opacity-50">Floor Area: @Model.FloorArea (m<sup>2</sup>) (Same area as @roundedAreaBySingleBeds single beds)</h6>
+                            <h6 class="text-dark text-opacity-50">Floor Area: @Model.FloorArea m<sup>2</sup> (@roundedAreaInSqFt2 sqft)</h6>
                         </div> 
                         <div class="row ps-2">
                             <h6 class="text-dark text-opacity-50  pb-2">
