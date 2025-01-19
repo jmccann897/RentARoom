@@ -3,25 +3,28 @@
 <div class="card shadow border-0 mb-3">
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
-       <div class="d-flex flex-row">
-            <h2 class="text-white py-2">@(User.IsInRole(SD.Role_Agent) ? "Agent Property List" : "All Properties listed on RentARoom") </h2>
-           <button type="button" class="btn btn-secondary ms-auto">
-               <i class="bi bi-bell-fill"></i>
-                Notifications
-           </button>
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Title -->
+            <h2 class="text-white py-2">
+                @(User.IsInRole(SD.Role_Agent) ? "Agent Property List" : "All Properties listed on RentARoom") 
+            </h2>
+            
+            <!-- Buttons -->
+            <div class="d-flex">
+                <!-- Notifications Button -->
+                <button type="button" class="btn btn-secondary me-2">
+                    <i class="bi bi-bell-fill"></i>
+                    Notifications
+                </button>
+                <!-- Property Create Button -->
+                <a asp-area="Agent" asp-controller="Properties" asp-action="Upsert" class="btn btn-secondary">
+                    <i class="bi bi-house-add-fill"></i>  Create New Property
+                </a>
+            </div>
        </div>
     </div>
 
     <div class="card-body p-4">
-        <div class="row pb-3">
-            <div class="col-6">
-            </div>
-            <div class="col-6 text-end">
-                <a asp-area="Agent" asp-controller="Properties" asp-action="Upsert" class="btn btn-primary">
-                    <i class="bi bi-house-add-fill"></i>  Create New Property
-                </a>
-            </div>
-        </div>
         @* https://datatables.net/ *@
         <table id="tblData" class="display table-striped table-bordered table-hover pt-2" style="width:100%">
             <thead>
