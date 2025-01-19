@@ -4,7 +4,7 @@
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
        <div class="d-flex flex-row">
-           <h2 class="text-white py-2">@(User.IsInRole(SD.Role_Agent)?"My":"All") Property List</h2>
+            <h2 class="text-white py-2">@(User.IsInRole(SD.Role_Agent) ? "Agent Property List" : "All Properties listed on RentARoom") </h2>
            <button type="button" class="btn btn-secondary ms-auto">
                <i class="bi bi-bell-fill"></i>
                 Notifications
