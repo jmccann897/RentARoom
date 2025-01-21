@@ -33,6 +33,8 @@ namespace RentARoom.DataAccess.Repository
                 objFromDb.FloorArea = obj.FloorArea;
                 objFromDb.City = obj.City;
                 objFromDb.PropertyTypeId = obj.PropertyTypeId;
+                objFromDb.Latitude = obj.Latitude;
+                objFromDb.Longitude = obj.Longitude;
             }
         }
     }
