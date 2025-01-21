@@ -1,5 +1,12 @@
 ﻿@model PropertyVM
 
+@* https://leafletjs.com/examples/quick-start/ *@
+<!-- Load Leaflet CSS First -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="" />
+
+
 <div class="card shadow border-0 mb-3">
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
@@ -7,93 +14,152 @@
     </div>
 
     <div class="card-body p-4">
-        <form method="post" class="row" enctype="multipart/form-data">
+        <form method="post" class="row g-3" enctype="multipart/form-data">
             <input asp-for="Property.Id" hidden />
-            <div class="row">
-                <div class="col-12">
-                    <div class="border p-3">
-                        <div class="form-floating py-2 col-12">
-                            <input asp-for="Property.Address" class="form-control border-0 shadow" />
-                            <label asp-for="Property.Address" class="ms-2"></label>
-                            <span asp-validation-for="Property.Address" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <input asp-for="Property.Postcode" class="form-control border-0 shadow" />
-                            <label asp-for="Property.Postcode" class="ms-2"></label>
-                            <span asp-validation-for="Property.Postcode" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <input asp-for="Property.Price" class="form-control border-0 shadow" />
-                            <label asp-for="Property.Price" class="ms-2"></label>
-                            <span asp-validation-for="Property.Price" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
+
+
+                <!-- Address and Postcode -->
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2">
+                        <input asp-for="Property.Address" class="form-control border-0 shadow" />
+                        <label asp-for="Property.Address" class="ms-2"></label>
+                        <span asp-validation-for="Property.Address" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2">
+                        <input asp-for="Property.Postcode" class="form-control border-0 shadow" />
+                        <label asp-for="Property.Postcode" class="ms-2"></label>
+                        <span asp-validation-for="Property.Postcode" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- City and Price -->
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Property.City" class="form-control border-0 shadow" />
+                        <label asp-for="Property.City" class="ms-2"></label>
+                        <span asp-validation-for="Property.City" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Property.Price" class="form-control border-0 shadow" />
+                        <label asp-for="Property.Price" class="ms-2"></label>
+                        <span asp-validation-for="Property.Price" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Bedrooms and Floor Area -->
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2 col-12">
                             <input asp-for="Property.NumberOfBedrooms" class="form-control border-0 shadow" />
                             <label asp-for="Property.NumberOfBedrooms" class="ms-2"></label>
                             <span asp-validation-for="Property.NumberOfBedrooms" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <input asp-for="Property.NumberOfBathrooms" class="form-control border-0 shadow" />
-                            <label asp-for="Property.NumberOfBathrooms" class="ms-2"></label>
-                            <span asp-validation-for="Property.NumberOfBathrooms" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <input asp-for="Property.NumberOfEnsuites" class="form-control border-0 shadow" />
-                            <label asp-for="Property.NumberOfEnsuites" class="ms-2"></label>
-                            <span asp-validation-for="Property.NumberOfEnsuites" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2 col-12">
                             <input asp-for="Property.FloorArea" class="form-control border-0 shadow" />
                             <label asp-for="Property.FloorArea" class="ms-2"></label>
                             <span asp-validation-for="Property.FloorArea" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <input asp-for="Property.City" class="form-control border-0 shadow" />
-                            <label asp-for="Property.City" class="ms-2"></label>
-                            <span asp-validation-for="Property.City" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <select asp-for="Property.ApplicationUserId" asp-items="@Model.ApplicationUserList" class="form-control border-0 shadow">
-                                <option disabled selected>--Select User Id--</option>
-                            </select>
-                            <label asp-for="Property.ApplicationUserId" class="ms-2"></label>
-                            <span asp-validation-for="Property.ApplicationUserId" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <select asp-for="Property.PropertyTypeId" asp-items="@Model.PropertyTypeList" class="form-control border-0 shadow">
-                                <option disabled selected>--Select Property Type--</option>
-                            </select>
-                            <label asp-for="Property.PropertyTypeId" class="ms-2"></label>
-                            <span asp-validation-for="Property.PropertyTypeId" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <input type="file" name="files" class="form-control border-0 shadow" multiple />
-                            <label class="ms-2">Upload Images</label>
-                            @Html.ValidationMessageFor(model => model.Property.Images, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="row pt-2">
-                            <div class="col-12 col-md-6">
-                                @if (Model.Property.Id != 0)
-                                {
-                                    <button type="submit" class="btn btn-primary form-control">Update</button>
-                                }
-                                else
-                                {
-                                    <button type="submit" class="btn btn-primary form-control">Create</button>
-                                }
-
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <a asp-controller="Properties" asp-action="Index" class="btn btn-secondary form-control">
-                                    Back to List
-                                </a>
-                            </div>
-                        </div>
                     </div>
                 </div>
-            </div>
 
+                 <!-- Bathrooms and Ensuites -->
+                <div class="col-12 col-md-6">
+                     <div class="form-floating py-2 col-12">
+                        <input asp-for="Property.NumberOfBathrooms" class="form-control border-0 shadow" />
+                        <label asp-for="Property.NumberOfBathrooms" class="ms-2"></label>
+                        <span asp-validation-for="Property.NumberOfBathrooms" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Property.NumberOfEnsuites" class="form-control border-0 shadow" />
+                        <label asp-for="Property.NumberOfEnsuites" class="ms-2"></label>
+                        <span asp-validation-for="Property.NumberOfEnsuites" class="text-danger"></span>
+                    </div>
+                </div>
+
+                 <!-- Property Type and Agent -->
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2 col-12">
+                        <select asp-for="Property.PropertyTypeId" asp-items="@Model.PropertyTypeList" class="form-control border-0 shadow">
+                            <option disabled selected>--Select Property Type--</option>
+                        </select>
+                        <label asp-for="Property.PropertyTypeId" class="ms-2"></label>
+                        <span asp-validation-for="Property.PropertyTypeId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2 col-12">
+                        <select asp-for="Property.ApplicationUserId" asp-items="@Model.ApplicationUserList" class="form-control border-0 shadow">
+                            <option disabled selected>--Select User Id--</option>
+                        </select>
+                        <label asp-for="Property.ApplicationUserId" class="ms-2"></label>
+                        <span asp-validation-for="Property.ApplicationUserId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-12 ">
+                    <!-- Button to Open Map Modal -->
+                    <div class="py-2 d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#mapModal">
+                            Select the Property's Location on a Map
+                        </button>
+                    </div>
+                </div>
+
+                 <!-- Long and Lat -->
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Property.Latitude" id="latitude" class="form-control border-0 shadow" readonly />
+                        <label asp-for="Property.Latitude" class="ms-2">Latitude</label>
+                        <span asp-validation-for="Property.Latitude" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Property.Longitude" id="longitude" class="form-control border-0 shadow" readonly />
+                        <label asp-for="Property.Longitude" class="ms-2">Longitude</label>
+                        <span asp-validation-for="Property.Longitude" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                
+             
+                <!-- Images -->
+                <div class="col-12">
+                    <div class="form-floating py-2">
+                        <input type="file" name="files" class="form-control border-0 shadow" multiple />
+                        <label class="ms-2">Upload Images</label>
+                        @Html.ValidationMessageFor(model => model.Property.Images, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="row pt-2">
+                    <div class="col-12 col-md-6">
+                        @if (Model.Property.Id != 0)
+                        {
+                            <button type="submit" class="btn btn-primary form-control">Update</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary form-control">Create</button>
+                        }
+
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <a asp-controller="Properties" asp-action="Index" class="btn btn-secondary form-control">
+                            Back to List
+                        </a>
+                    </div>
+                </div>
         </form>
+    </div>
+
         <!-- Display existing images && allow deletion -->
         <div class="col-12 mt-4">
             <div class="row">
@@ -134,10 +200,35 @@
 
 </div>
 
+<!-- Map Modal -->
+<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mapModalLabel">Click on the Property's Location</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="map" style="height: 500px; width: 100%;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="saveLocation" data-bs-dismiss="modal">Add Property Location</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{
         <partial name="_ValidationScriptsPartial" />
     }
+    <!-- Load Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="">
+    </script>
+    <script src="~/js/propertyUpsertMap.js"></script>       
 }
 
 
