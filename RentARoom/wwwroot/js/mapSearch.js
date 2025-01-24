@@ -10,20 +10,11 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const propertyClusterGroup = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
         const count = cluster.getChildCount(); // Get number of markers in the cluster
-        let colour = 'rgba(255,0,0,0.4)'; // Set a default color for property clusters
 
         return L.divIcon({
-            html: `<div style="
-                background-color: ${colour};
-                color: white;
-                border-radius: 50%;
-                width: 40px; /* Fixed size for property clusters */
-                height: 40px;
-                line-height: 40px;
-                text-align: center;
-                font-weight: bold;
-            ">${count}</div>`,
-            className: '', // Optional, for additional styling
+            html: `<div class="cluster-icon property-cluster">${count}</div>`,
+            className: '',
+            iconSize: [50, 50],
         });
     },
 });
@@ -31,20 +22,11 @@ const propertyClusterGroup = L.markerClusterGroup({
 const locationClusterGroup = L.markerClusterGroup({
     iconCreateFunction: function (cluster) {
         const count = cluster.getChildCount(); // Get number of markers in the cluster
-        let colour = 'rgba(255,0,255,0.4)'; // Set a default color for location clusters
 
         return L.divIcon({
-            html: `<div style="
-                background-color: ${colour};
-                color: white;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                line-height: 40px;
-                text-align: center;
-                font-weight: bold;
-            ">${count}</div>`,
+            html: `<div class="cluster-icon location-cluster">${count}</div>`,
             className: '',
+            iconSize: [100, 100],
         });
     },
 });
@@ -115,9 +97,16 @@ function createPropertyMarker(property) {
         const marker = L.marker([property.latitude, property.longitude], { icon: propertyIcon });
         // Add a popup with property details
         marker.bindPopup(`
+        <div class="popup-content">
             <strong>${property.address}</strong>, <strong>${property.city}</strong>, <strong>${property.postcode}</strong><br>
             Price: £${property.price || "Unknown"}<br>
-            Type: ${property.propertyType?.name || "Unknown"}
+            Type: ${property.propertyType?.name || "Unknown"} </br>
+            <button
+                class="btn btn-primary mt-2"
+                onclick="redirectToPropertyDetails(${property.id})">
+                View Details
+           </button>
+        </div>   
         `);
         propertyClusterGroup.addLayer(marker); // Add marker to the cluster group
     } else {
@@ -131,13 +120,20 @@ function createLocationMarker(location) {
         const marker = L.marker([location.latitude, location.longitude]);
         // Add a popup with property details
         marker.bindPopup(`
+        <div class="popup-content">
             <strong>${location.locationName || "Unknown"}</strong><br>
             ${location.address || "No description available."}
+        </div>
         `);
         locationClusterGroup.addLayer(marker); // Add marker to the cluster group
     } else {
         console.warn(`Location with ID ${location.id} is missing latitude/longitude.`);
     }
+}
+
+function redirectToPropertyDetails(propertyId) {
+    // Redirect to the property details page with the property ID as a query parameter
+    window.location.href = `/User/Home/Details/${propertyId}`;
 }
 
 // #region Search Functionality
@@ -193,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // #endregion
 
+
 // Layer control setup with MarkerCluster groups
 L.control.layers(null,{
     'Properties': propertyClusterGroup,
@@ -202,6 +199,7 @@ L.control.layers(null,{
 // Add cluster groups to the map (this will enable clustering and visibility)
 propertyClusterGroup.addTo(map);
 locationClusterGroup.addTo(map);
+
 // #endregion
 
 // #region Map Refresh Function
