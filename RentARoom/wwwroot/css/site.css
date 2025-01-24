@@ -20,6 +20,18 @@ body {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+/* NavBar styles*/
+.navbar-brand {
+    font-size: 2rem; /* Adjust the size as needed */
+    font-weight: bold;
+    margin-right: 2rem; /* Space between title and other navbar items */
+    color: #ffffff; /* Set color */
+}
+
+    .navbar-brand:hover {
+        text-decoration: none; /* Prevent underline on hover */
+    }
+
 /* Home styles */
 .home-banner-container,
 .home-card-list-container {
