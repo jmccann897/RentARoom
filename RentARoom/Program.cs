@@ -14,6 +14,11 @@ using System;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+// Ensure User Secrets are loaded in Development mode
+if (builder.Environment.IsDevelopment())
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -44,6 +49,7 @@ builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IAzureBlobService, AzureBlobService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddTransient<ITravelTimeService, TravelTimeService>();
 
 
 builder.Services.AddRazorPages(); // needed for identity
