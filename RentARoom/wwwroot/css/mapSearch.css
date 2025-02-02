@@ -34,3 +34,20 @@
 .location-cluster {
     background-color: rgba(255, 0, 255, 0.4);
 }
+
+.map-textbox {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    font-size: 12px;
+    max-width: 200px;
+}
+.map-textbox .item {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.map-textbox .item:last-child {
+    border-bottom: none;
+}

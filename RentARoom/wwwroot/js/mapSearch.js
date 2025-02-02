@@ -193,8 +193,36 @@ document.addEventListener('DOMContentLoaded', function () {
 // Layer control setup with MarkerCluster groups
 L.control.layers(null,{
     'Properties': propertyClusterGroup,
-    'Locations': locationClusterGroup,
+    'Points of Interest': locationClusterGroup,
 }).addTo(map);
+
+
+// Map key custom control
+L.Control.TextBox = L.Control.extend({
+    onAdd: function (map) {
+        var div = L.DomUtil.create('div', 'map-textbox');
+        div.innerHTML = `
+            <b>Map Controls:</b> <br>
+            <div class="item">Click markers for details.</div>
+            <div class="item"><i class="bi bi-house-fill"></i> Property, <i class="bi bi-geo-alt"></i> Point of Interest.</div>
+            <div class="item">Zoom in / out using <i class="bi bi-plus"></i> / <i class="bi bi-dash"></i> above.</div>
+            <div class="item">Properties and Points of Interests will combine into circles when zooming out.</div>
+            <div class="item">Click on map to add new Point of Interest.</div>
+            <div class="item">Show only Properties or Points of Interest at top right.</div>        
+            `
+        return div;
+    },
+    onRemove: function (map) {
+        // Nothing to do here
+    }
+});
+
+// Add the control to the map
+L.control.textbox = function (opts) {
+    return new L.Control.TextBox(opts);
+}
+
+map.addControl(L.control.textbox({ position: 'topleft' }));
 
 // Add cluster groups to the map (this will enable clustering and visibility)
 propertyClusterGroup.addTo(map);
