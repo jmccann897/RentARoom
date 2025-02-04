@@ -57,6 +57,9 @@ namespace RentARoom.Models
         // Navigation property for Images
         public ICollection<Image> Images { get; set; } = new List<Image>();
 
+        // Navigation property for Views
+        public ICollection<PropertyView> PropertyViews { get; set; }
+
         //default constructor
         public Property()
         {           

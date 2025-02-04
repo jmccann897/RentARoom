@@ -101,15 +101,13 @@
                                         </div>
                                     </div>
                                     <div class="row pl-2 mb-3">
-                                        <div class="col-md-4">
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text bg-primary text-white border-0 fw-semibold"
-                                                      id="inputGroup-sizing-default">
-                                                    Count
+                                        <div class="col-md-4 col-6">           
+                                            <p id="viewCount" data-property-id="@Model.Property.Id" class="fs-5 fw-bold text-primary">
+                                                Views: <span id="viewCountNumber">@Model.TotalViews</span>
+                                                <span id="loadingSpinner" class="spinner-border spinner-border-sm text-primary d-none" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
                                                 </span>
-                                                <input type="number" value="1" class="form-control text-end"
-                                                       aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
-                                            </div>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -161,6 +159,7 @@
 
 @section Scripts {
     <script src = "~/js/travelTime.js"></script>
+    <script src="~/js/propertyDetails.js"></script>
 }
 
 

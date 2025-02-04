@@ -13,6 +13,8 @@ using System.Linq.Expressions;
 using System.Security.Claims;
 using Property = RentARoom.Models.Property;
 using Coordinate = RentARoom.Models.Coordinate;
+using RentARoom.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace RentARoom.Areas.User.Controllers
 {
@@ -22,12 +24,18 @@ namespace RentARoom.Areas.User.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITravelTimeService _travelTimeService;
+        private readonly IHubContext<PropertyViewHub> _propertyViewHub;
 
-        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork, ITravelTimeService travelTimeService)
+        public HomeController(
+            ILogger<HomeController> logger, 
+            IUnitOfWork unitOfWork, 
+            ITravelTimeService travelTimeService, 
+            IHubContext<PropertyViewHub> propertyViewHub)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _travelTimeService = travelTimeService;
+            _propertyViewHub = propertyViewHub;
         }
 
         public IActionResult Index()
@@ -38,7 +46,29 @@ namespace RentARoom.Areas.User.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            Property property = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "PropertyType,ApplicationUser,Images");
+            Property property = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "PropertyType,ApplicationUser,Images,PropertyViews");
+
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            // Log the property view
+            var propertyView = new PropertyView
+            {
+                PropertyId = id,
+                ViewedAt = DateTime.UtcNow
+            };
+
+            // Save view to DB
+            _unitOfWork.PropertyView.Add(propertyView);
+            _unitOfWork.Save();
+
+            // Get updated view count
+            int totalViews = _unitOfWork.PropertyView.Find(v => v.PropertyId == id).Count();
+
+            // Notify all clients about the new view count
+            await _propertyViewHub.Clients.All.SendAsync("UpdateViewCount", id, totalViews);
 
             // Check if user is logged in and has locations saved
             var userLocations = new List<Location>(); // Initialise as empty
@@ -59,7 +89,8 @@ namespace RentARoom.Areas.User.Controllers
             {
                 Property = property,
                 UserLocations = userLocations,
-                UserId = userId
+                UserId = userId,
+                TotalViews = totalViews
             };
 
             return View(viewModel);

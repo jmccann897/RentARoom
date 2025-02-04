@@ -93,7 +93,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages(); // needed for identity which use razor pages
-app.MapHub<ChatHub>("/chatHub"); // needed for signalR
+app.MapHub<ChatHub>("/chatHub"); // needed for signalR - chat
+app.MapHub<PropertyViewHub>("/propertyViewHub"); // needed for signalR - propertyViews
 
 //Route for MVC
 app.MapControllerRoute(

@@ -26,6 +26,7 @@ namespace RentARoom.DataAccess.Data
         public DbSet<ChatConversation> ChatConversations { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<ChatConversationParticipant> ChatConversationParticipants { get; set; }
+        public DbSet<PropertyView> PropertyViews { get; set; }
 
 
 
@@ -96,6 +97,13 @@ namespace RentARoom.DataAccess.Data
                 .WithMany(u => u.ReceivedMessages)
                 .HasForeignKey(cm => cm.RecipientId)
                 .OnDelete(DeleteBehavior.Restrict); // Prevent delete cascade for user
+
+            // One-to-many relationship between Property and PropertyViews
+            // Each PropertyView is associated to one Property and each Property can have many PropertyViews.
+            modelBuilder.Entity<PropertyView>()
+                .HasOne(pv => pv.Property)
+                .WithMany(p => p.PropertyViews)
+                .HasForeignKey(pv => pv.PropertyId);
         }
 
         // Helper methods to check existence and add data
