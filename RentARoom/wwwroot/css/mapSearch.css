@@ -36,12 +36,17 @@
 }
 
 .map-textbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background: white;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
     font-size: 12px;
     max-width: 200px;
+    height: 100%;
 }
 .map-textbox .item {
     padding: 5px;
@@ -51,3 +56,16 @@
 .map-textbox .item:last-child {
     border-bottom: none;
 }
+
+#mapControlButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+    /* Add space between the text and the icon */
+    #mapControlButton .icon-spacing {
+        margin-left: 8px; /* Adjust the spacing as needed */
+    }
