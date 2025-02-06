@@ -100,16 +100,6 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="row pl-2 mb-3">
-                                        <div class="col-md-4 col-6">           
-                                            <p id="viewCount" data-property-id="@Model.Property.Id" class="fs-5 fw-bold text-primary">
-                                                Views: <span id="viewCountNumber">@Model.TotalViews</span>
-                                                <span id="loadingSpinner" class="spinner-border spinner-border-sm text-primary d-none" role="status">
-                                                    <span class="visually-hidden">Loading...</span>
-                                                </span>
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -152,14 +142,31 @@
                         <input type="hidden" id="userLocations" value='@Html.Raw(Json.Serialize(Model.UserLocations))' />
                     </div>
                 </div>
+
+                <div class="viewSection">
+                    <div class="row pl-2 mb-3">
+                        <div class="col-md-4 col-6">
+                            <p id="viewCount" data-property-id="@Model.Property.Id" class="fs-5 fw-bold text-primary">
+                                Total Views: <span id="viewCountNumber">@Model.TotalViews</span>
+                                <span id="loadingSpinner" class="spinner-border spinner-border-sm text-primary d-none" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <canvas id="viewsChart"></canvas>
+                </div>
+                
            
         </div>
    
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src = "~/js/travelTime.js"></script>
-    <script src="~/js/propertyDetails.js"></script>
+    <script src="~/js/propertyDetailsSignalR.js"></script>
+    <script src="~/js/propertyDetailsChart.js"></script>
 }
 
 

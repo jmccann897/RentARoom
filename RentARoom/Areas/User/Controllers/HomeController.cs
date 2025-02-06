@@ -220,6 +220,24 @@ namespace RentARoom.Areas.User.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult GetViewsPerDay(int propertyId)
+        {
+            var viewsPerDay = _unitOfWork.PropertyView
+                .Find(pv => pv.PropertyId == propertyId)
+                .GroupBy(pv => pv.ViewedAt.Date)
+                .Select(g => new
+                {
+                    Date = g.Key.ToString("yyyy-MM-dd"),
+                    Views = g.Count()
+                })
+                .OrderBy(v => v.Date)
+                .ToList();
+
+            return Json(viewsPerDay);
+        }
+
+
         #endregion
 
     }
