@@ -12,5 +12,6 @@ namespace RentARoom.Models.ViewModels
         public List<Location> UserLocations { get; set; }
 
         public string UserId { get; set; }
+        public int TotalViews { get; set; }
     }
 }

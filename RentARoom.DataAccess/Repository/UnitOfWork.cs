@@ -16,6 +16,8 @@ namespace RentARoom.DataAccess.Repository
         public IPropertyTypeRepository PropertyType { get; private set; }
         public ILocationRepository Location { get; private set; }
         public IImageRepository Image { get; private set; }
+        public IPropertyViewRepository PropertyView { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -23,6 +25,7 @@ namespace RentARoom.DataAccess.Repository
             PropertyType = new PropertyTypeRepository(_db);
             Location = new LocationRepository(_db);
             Image = new ImageRepository(_db);
+            PropertyView = new PropertyViewRepository(_db);
         }
 
         public void Save()
