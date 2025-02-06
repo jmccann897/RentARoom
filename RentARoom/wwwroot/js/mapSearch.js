@@ -202,13 +202,17 @@ L.Control.TextBox = L.Control.extend({
     onAdd: function (map) {
         var div = L.DomUtil.create('div', 'map-textbox');
         div.innerHTML = `
-            <b>Map Controls:</b> <br>
-            <div class="item">Click markers for details.</div>
-            <div class="item"><i class="bi bi-house-fill"></i> Property, <i class="bi bi-geo-alt"></i> Point of Interest.</div>
-            <div class="item">Zoom in / out using <i class="bi bi-plus"></i> / <i class="bi bi-dash"></i> above.</div>
-            <div class="item">Properties and Points of Interests will combine into circles when zooming out.</div>
-            <div class="item">Click on map to add new Point of Interest.</div>
-            <div class="item">Show only Properties or Points of Interest at top right.</div>        
+            <button id="mapControlButton" class="btn btn-outline-primary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#mapControls" aria-expanded="false" aria-controls="mapControls">
+                Click for Map Controls<i class="bi bi-arrows-angle-expand icon-spacing"></i>
+            </button>
+            <div id="mapControls" class="collapse">
+                <div class="item">Click markers for details.</div>
+                <div class="item"><i class="bi bi-house-fill"></i> Property, <i class="bi bi-geo-alt"></i> Point of Interest.</div>
+                <div class="item">Zoom in / out using <i class="bi bi-plus"></i> / <i class="bi bi-dash"></i> above.</div>
+                <div class="item">Properties and Points of Interests will combine into circles when zooming out.</div>
+                <div class="item">Click on map to add new Point of Interest.</div>
+                <div class="item">Show only Properties or Points of Interest at top right.</div>
+            </div>
             `
         return div;
     },
@@ -243,6 +247,11 @@ function mapRefresh() {
 
 
 // #region Event Handlers & Listeners
+
+// Ensure that clicks on the map control button do not propagate to the map
+document.getElementById('mapControlButton').addEventListener('click', (e) => {
+    e.stopPropagation();  // Stop event from propagating to the map
+});
 
 // Click on map event --> Show add location version of modal
 map.on('click', (e) => {
