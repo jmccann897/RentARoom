@@ -367,12 +367,13 @@ function loadLocationsTable() {
             {
                 data: 'id',
                 "render": function (data) {
-                    return `<div class="w-75 btn-group" role="group">
-                        <button class="btn btn-primary mx-2" onclick="editLocation(${data})"> 
-                            <i class="bi bi-pencil-square"></i> Edit
+                    return `
+                    <div class="w-75 btn-group" role="group">
+                        <button class="btn btn-primary mx-2" onclick="editLocation(${data})" data-bs-toggle="tooltip" title="Edit"> 
+                            <i class="bi bi-pencil-square"></i>
                         </button>
-                        <button class="btn btn-secondary mx-2" onclick="deleteLocation(${data})">
-                            <i class="bi bi-trash-fill"></i> Delete
+                        <button class="btn btn-secondary mx-2" onclick="deleteLocation(${data})" data-bs-toggle="tooltip" title="Delete">
+                            <i class="bi bi-trash-fill"></i>
                         </button>
                     </div>`;
                 },
