@@ -19,12 +19,17 @@ function loadDataTable() {
         {
             data: 'id',
             "render": function (data) {
-                return `<div class="w-75 btn-group" role="group">
-                <a href="properties/upsert/?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
-                <a onClick=Delete('properties/delete/${data}') class="btn btn-secondary mx-2"> <i class="bi bi-trash-fill"></i> Delete</a>
+                return `
+                <div class="w-75 btn-group" role="group">
+                    <a href="properties/upsert/?id=${data}" class="btn btn-primary mx-2" data-bs-toggle="tooltip" title="Edit Property"> 
+                    <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <a onClick=Delete('properties/delete/${data}') class="btn btn-secondary mx-2" data-bs-toggle="tooltip" title="Delete Property">
+                    <i class="bi bi-trash-fill"></i>
+                    </a>
                 </div>`
             },
-            "width": "25%", responsivePriority: 1
+            "width": "15%", responsivePriority: 1
         }
         ],
         responsive: true // Enable responsive mode
