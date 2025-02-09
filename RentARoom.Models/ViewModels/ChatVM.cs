@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RentARoom.Models.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,6 @@ namespace RentARoom.Models.ViewModels
         public List<string> ConversationIds { get; set; }
 
         public Property? property { get; set; }
+        public List<ChatConversationDTO> Conversations { get; set; } = new();
     }
 }

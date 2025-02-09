@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
+using RentARoom.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,7 @@ namespace RentARoom.DataAccess.Services
         {
             return await _db.ChatConversations
                 .Include(c => c.Participants)
+                .ThenInclude(p => p.User)
                 .Where(c => c.Participants.Any(p => p.UserId == userId))
                 .ToListAsync();
         }
@@ -121,6 +123,28 @@ namespace RentARoom.DataAccess.Services
         {
             return await _db.ChatConversationParticipants
         .AnyAsync(participant => participant.UserId == userId && participant.ChatConversationId == conversationId);
+        }
+
+        public async Task<IEnumerable<ChatConversationDTO>> GetUserExistingConversationsAsync(string userId)
+        {
+            var conversations = await _db.ChatConversations
+                .Where(c => c.Participants.Any(p => p.UserId == userId))
+                .Include(c => c.Participants)
+                .Include(c => c.ChatMessages)
+                .OrderByDescending(c => c.CreatedAt)
+                .ToListAsync();
+
+
+            var result = conversations.Select(c => new ChatConversationDTO
+            {
+                ChatConversationId = c.ChatConversationId,
+                RecipientEmail = c.Participants
+                    .FirstOrDefault(p => p.UserId != userId)?.User.Email,
+                LastMessage = c.ChatMessages.OrderByDescending(m => m.Timestamp).FirstOrDefault()?.Content,
+                LastMessageTimestamp = c.ChatMessages.OrderByDescending(m => m.Timestamp).FirstOrDefault()?.Timestamp
+            });
+
+            return result;
         }
     }
 }

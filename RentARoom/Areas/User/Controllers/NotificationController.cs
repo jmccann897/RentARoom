@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.DataAccess.Services.IServices;
+using RentARoom.Models.DTOs;
 using RentARoom.Models.ViewModels;
 using System.Security.Claims;
 
@@ -46,10 +47,18 @@ namespace RentARoom.Areas.User.Controllers
             // Fetch the user's conversation IDs
             var conversationIds = await _chatService.GetUserConversationIdsAsync(userId);
 
+            // Fetch the users conversations
+            var conversations = await _chatService.GetUserConversationsAsync(userId);
+
+            // Convert to DTOs for view
+            var conversationsDTO = await _chatService.GetUserExistingConversationsAsync(userId);
+
+
             var chatVM = new ChatVM
             {
                 UserId = userId,
-                ConversationIds = conversationIds
+                ConversationIds = conversationIds,
+                Conversations = conversationsDTO.ToList()
             };
 
             return View(chatVM);
