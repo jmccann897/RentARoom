@@ -1,4 +1,5 @@
 ﻿using RentARoom.Models;
+using RentARoom.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace RentARoom.DataAccess.Services.IServices
         Task<List<string>> GetUserConversationIdsAsync(string userId);
         Task<IEnumerable<ChatMessage>> GetMessagesByConversationIdAsync(string userId, string conversationId);
         Task<bool> IsUserPartOfConversationAsync(string userId, string conversationId);
+        Task<IEnumerable<ChatConversationDTO>> GetUserExistingConversationsAsync(string userId);
 
     }
 }

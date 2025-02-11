@@ -1,4 +1,5 @@
 ﻿@model ChatVM
+
 @{
     var recipientEmail = ViewBag.RecipientEmail as string ?? string.Empty;
     var propertyAddress = ViewBag.PropertyAddress as string ?? string.Empty;
@@ -15,44 +16,75 @@
 </script>
 
 <div class="container mt-4">
-    <div class="row mb-3">
-        <div class="col text-center">
-            <h3>Chat Home</h3>
-        </div>
-    </div>
 
     <!-- Chat Control Panel -->
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="senderEmail" class="form-label">Your Email</label>
-            <input type="text" class="form-control" id="senderEmail" value="@User.Identity.Name" readonly />
-        </div>
+    <div class="row mb-3">      
+
+        <!-- Hidden input for User's email -->
+        <input type="hidden" id="senderEmail" value="@User.Identity.Name" />   
+        
         <div class="col-md-6">
             <label for="receiverEmail" class="form-label">Start Chat with (Email)</label>
             <!-- Prepopulate if provided -->
             <input type="text" class="form-control" 
-            id="receiverEmail" value="@recipientEmail" 
-            placeholder="Enter email to start a private chat" />
+                id="receiverEmail" value="@recipientEmail" 
+                placeholder="Enter email to start a private chat" />
         </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col text-end">
+        <div class="col-md-6 d-flex align-items-end mt-3 mt-md-0">
             <button id="startChat" class="btn btn-success px-4" disabled>Start Chat</button>
         </div>
     </div>
 
-    <!-- Dynamic Chat Windows -->
-    <div id="chatWindows" class="mt-3">
-        <div id="chatInfo" 
-             data-recipient-email = "@ViewBag.RecipientEmail"
-             data-property-address = "@ViewBag.PropertyAddress"
-             data-property-city = "@ViewBag.PropertyCity"
-             data-property-price = "@ViewBag.PropertyPrice">
+
+    <!-- Chat Area -->
+    <div class="row">
+        <!-- Conversation SideBar-->
+        <div class="col-md-3">
+            <h3>Your Conversations</h3>
+            <!-- Conversation List -->
+            <div id="conversation-list">
+                @if (Model.Conversations.Any())
+                {
+                    @foreach (var conversation in Model.Conversations)
+                    {
+                        <div class="conversation-item" data-conversation-id="@conversation.ChatConversationId" 
+                        data-recipient-email="@conversation.RecipientEmail">
+                            <div class="recipient">@conversation.RecipientEmail</div>
+                            <div class="last-message">@conversation.LastMessage</div>
+                            <div class="timestamp">
+                                @if (conversation.LastMessageTimestamp.HasValue)
+                                {
+                                    @conversation.LastMessageTimestamp.Value.ToString("g")
+                                }
+                                else
+                                {
+                                    @:No timestamp available
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Chat Window -->
+        <div class="col-md-9">
+            <div id="chatWindows">
+                <p class="text-muted">Click a conversation to resume chat or enter email above to start a chat.</p>
+                <div id="chatInfo"
+                     data-recipient-email="@ViewBag.RecipientEmail"
+                     data-property-address="@ViewBag.PropertyAddress"
+                     data-property-city="@ViewBag.PropertyCity"
+                     data-property-price="@ViewBag.PropertyPrice">
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script src="~/js/chat.js"></script>
+    <script type="module" src="~/js/chatSignalR.js"></script>
+    <script type="module" src="~/js/chatMessages.js"></script>
+    <script type="module" src="~/js/chat.js"></script>
 }
 

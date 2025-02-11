@@ -1,19 +1,35 @@
 /* ChatWindow that shows messages*/
-.chat-window .messages-box {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    height: 400px;
+
+.chat-window{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.messages-box {
+    flex-grow: 1;
     overflow-y: auto;
     padding: 10px;
     display: flex;
-    flex-direction: column-reverse; /* Start at the bottom of the container */
+    flex-direction: column-reverse;
+    max-height: 200px; /* Adjust this value to control the height */
 }
+
+    .chat-window .messages-box {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        max-height: 500px; /* Constrain the height for scrolling */
+    }
 
 /* Messages list styles */
 .messages-box ul {
+    list-style: none;
     padding: 0;
     margin: 0;
+    flex-grow: 1; /* Allow messages list to expand */
+    display: flex;
+    flex-direction: column;
 }
 
  /*List item for each message */
@@ -26,6 +42,13 @@
     flex-direction: column; /* Stack text and timestamp vertically */
     width: fit-content;
     max-width: 60%;
+}
+
+.message-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background: #fff;
 }
 
 /* Sent messages */
@@ -57,35 +80,68 @@
     align-self: flex-end; /* Align to the end of the container */
 }
 
-
-/* Mobile View Adjustments */
-@media (max-width: 768px) {
-    /* Stack messages vertically */
-    .messages-box li {
-        max-width: 90%; /* Increase width for mobile to take more space */
-        min-width: 40%;
-    }
-
-    /* Timestamp for mobile */
-    .timestamp {
-        font-size: 0.7em; /* Adjust font size for mobile */
-        text-align: right; /* Keep it right aligned */
-        margin-top: 5px; /* Add some space from message text */
-    }
-
-    /* Align sent messages correctly */
-    .sent-message {
-        margin-left: 0;
-        margin-right: auto;
-    }
-
-    /* Align received messages correctly */
-    .received-message {
-        margin-right: 0;
-        margin-left: auto;
-    }
+/* Sidebar styles for the conversation list */
+.conversation-list {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
+.conversation-item {
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+    .conversation-item:hover {
+        background-color: #e9ecef;
+    }
+
+    .conversation-item .recipient {
+        font-weight: bold;
+        font-size: 1em;
+    }
+
+    .conversation-item .last-message {
+        font-size: 0.9em;
+        color: #555;
+        margin-top: 5px;
+    }
+
+    .conversation-item .timestamp {
+        font-size: 0.8em;
+        color: #888;
+        text-align: right;
+        margin-top: 5px;
+    }
+
+/* Add spacing between the chat sidebar and chat window */
+.chat-container {
+    display: flex;
+}
+
+.chat-sidebar {
+    width: 300px;
+    padding: 10px;
+}
+
+.chat-window {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+/* Additonal components for when property is included*/
 .chat-header {
     display: flex;
     justify-content: space-between;
@@ -121,3 +177,46 @@
     .receiver-info-right strong {
         font-weight: bold;
     }
+
+
+/* Mobile View Adjustments */
+@media (max-width: 768px) {
+    /* Stack messages vertically */
+    .messages-box li {
+        max-width: 90%; /* Increase width for mobile to take more space */
+        min-width: 40%;
+    }
+
+    /* Timestamp for mobile */
+    .timestamp {
+        font-size: 0.7em; /* Adjust font size for mobile */
+        text-align: right; /* Keep it right aligned */
+        margin-top: 5px; /* Add some space from message text */
+    }
+
+    /* Align sent messages correctly */
+    .sent-message {
+        margin-left: 0;
+        margin-right: auto;
+    }
+
+    /* Align received messages correctly */
+    .received-message {
+        margin-right: 0;
+        margin-left: auto;
+    }
+
+    conversation-item {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+
+    .conversation-item .timestamp {
+        font-size: 0.7em;
+    }
+
+    .conversation-sidebar {
+        width: 100%;
+        height: auto;
+    }
+}

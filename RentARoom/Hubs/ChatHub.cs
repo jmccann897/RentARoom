@@ -94,11 +94,15 @@ namespace RentARoom.Hubs
                 SenderEmail = senderEmail,
                 ReceiverEmail = receiverEmail,
                 Content = message,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                SenderId = senderId
             };
 
             // Send message to the specified receiver
             await Clients.User(receiverId).SendAsync("MessageReceived", messagePayload);
+
+            // Notify the sender's client to update the chat window
+            await Clients.User(senderId).SendAsync("MessageAppended", messagePayload);
         }
 
         public async Task AddToConversationOnMessage(string conversationId)
