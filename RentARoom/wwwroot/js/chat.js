@@ -71,9 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // Ensure userConversationIds is loaded
-    console.log("UserConversationIds loaded in JS: ", userConversationIds);
-
     // Associate UI to vars
     const startChatButton = document.getElementById("startChat");
     const receiverEmailField = document.getElementById("receiverEmail");
@@ -118,17 +115,15 @@ document.addEventListener("DOMContentLoaded", function () {
             conversationId = selectedConversationId;
             receiverEmail = selectedReceiverEmail;
 
-            console.log("Receiver Email from conversation click:", receiverEmail);
+            // console.log("Receiver Email from conversation click:", receiverEmail);
 
             // Initialize the SignalR connection
             connectionChat = initialiseChatConnection();
 
             // Start the SignalR connection
             connectionChat.start().then(() => {
-                console.log("SignalR Connected");
+                console.log("SignalR Connected for chat");
 
-                // Check if this log shows up
-                console.log("Inside the then block - Setting up listener for 'MessageAppended'...");
                 // Now, start listening for new messages
                 listenForNewMessage(connectionChat, currentUserId); // Listen for incoming messages
 
@@ -138,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Get or create a chat window
                 chatWindow = getOrCreateChatWindow(receiverEmail, conversationId);
             }).catch(err => {
-                console.error("Error starting SignalR connection:", err);
+                console.error("Error starting SignalR chat connection:", err);
             });
         });
     });
@@ -197,14 +192,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Start the SignalR connection
         connectionChat.start().then(() => {
-            console.log("SignalR Connected");
+            console.log("SignalR Chat Connected");
 
-            // Check if this log shows up
-            console.log("Inside the then block - Setting up listener for 'MessageAppended'...");
             // Now, start listening for new messages
-            listenForNewMessage(connectionChat, currentUserId); // Listen for incoming messages
-
-            console.log("After listen for new message");
+            listenForNewMessage(connectionChat, currentUserId);
 
             // Join the conversation (use the conversationId)
             joinConversation(connectionChat, conversationId);

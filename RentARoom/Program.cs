@@ -58,7 +58,7 @@ builder.Services.AddControllersWithViews();
 // adding signal r - https://learn.microsoft.com/en-us/aspnet/core/tutorials/signalr?view=aspnetcore-8.0&tabs=visual-studio
 // https://learn.microsoft.com/en-us/aspnet/core/signalr/hubcontext?view=aspnetcore-2.2
 
-// Chat
+// SignalR
 builder.Services.AddSignalR();
 
 //https://medium.com/@nizzola.dev/how-to-solve-jsonexception-a-possible-object-cycle-was-detected-9a349439c3cd
@@ -95,6 +95,7 @@ app.UseAuthorization();
 app.MapRazorPages(); // needed for identity which use razor pages
 app.MapHub<ChatHub>("/chatHub"); // needed for signalR - chat
 app.MapHub<PropertyViewHub>("/propertyViewHub"); // needed for signalR - propertyViews
+app.MapHub<NotificationHub>("/notificationHub"); // needed for signalR - chatmessage notifications
 
 //Route for MVC
 app.MapControllerRoute(

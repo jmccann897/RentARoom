@@ -130,3 +130,68 @@ body {
     padding-left: 15px; /* Optional: some padding for small screen adjustments */
     padding-right: 15px;
 }
+
+
+/* Notification styling */
+/* Notification Badge - Bigger & More Visible */
+.notification-badge {
+    font-size: 14px;
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: white; /* Change to contrast with orange */
+    color: #ff9800; /* Use navbar color for consistency */
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(255, 152, 0, 0.8);
+    animation: pulse 1.5s infinite alternate;
+}
+
+/* Pulsing effect for better visibility */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+    }
+
+    100% {
+        transform: scale(1.2);
+        box-shadow: 0 0 10px rgba(255, 0, 0, 1);
+    }
+}
+
+/* Notification Icon Styling */
+.notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Circular Background for Notification Icon */
+.notification-bg {
+    background-color: white; /* Stand out on orange navbar */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    /* Ensure Bell Icon is Visible */
+    .notification-bg i {
+        color: #ff9800; /* Matches navbar */
+        font-size: 1.2rem;
+    }
+
+/* Hide Notification Icon by Default */
+#notificationIcon {
+    display: none;
+}
+
+    /* Show Notification Icon when Needed */
+    #notificationIcon.show {
+        display: flex;
+    }
