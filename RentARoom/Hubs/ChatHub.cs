@@ -106,9 +106,8 @@ namespace RentARoom.Hubs
             // Notify the sender's client to update the chat window
             await Clients.User(senderId).SendAsync("MessageAppended", messagePayload);
 
-
             // Call notification hub to send user notification
-            await _notificationHub.Clients.User(receiverId).SendAsync("ReceiveChatMessageNotification", message);
+            await _notificationHub.Clients.User(receiverId).SendAsync("ReceiveChatMessageNotification", message, conversationId);
         }
 
         public async Task AddToConversationOnMessage(string conversationId)

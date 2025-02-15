@@ -29,10 +29,10 @@ namespace RentARoom.Hubs
         }
 
 
-        public async Task SendNewChatMessageNotification(string userId, string message)
+        public async Task SendNewChatMessageNotification(string userId, string message, string conversationId)
         {
             // Send notification to the specific user
-            await Clients.User(userId).SendAsync("ReceiveChatMessageNotification", message);
+            await Clients.User(userId).SendAsync("ReceiveChatMessageNotification", message, conversationId);
         }
 
        

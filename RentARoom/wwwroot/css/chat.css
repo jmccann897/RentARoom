@@ -94,9 +94,9 @@
 
 .conversation-item {
     background-color: #fff;
-    border-bottom: 1px solid #ddd;
     padding: 10px;
     margin-bottom: 5px;
+    border: 1px solid #ddd;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -218,5 +218,35 @@
     .conversation-sidebar {
         width: 100%;
         height: auto;
+    }
+}
+
+/* Highlight the conversation item when it has a new message */
+.conversation-item.highlight {
+    background-color: orangered;
+    color: white;
+    animation: highlight-animation 0.5s ease-in-out; /* Animation for smooth highlighting */
+}
+
+.highlight .recipient,
+.highlight .last-message,
+.highlight .timestamp {
+    color: white !important; /* Ensure text is white */
+}
+
+/* Add an animation effect for smooth transition */
+@keyframes highlight-animation {
+    0% {
+        background-color: #ffffff; /* Original background color */
+        border-color: #ddd; /* Original border color */
+    }
+
+    50% {
+        background-color: orangered;
+    }
+
+    100% {
+        background-color: #ffffff; /* Reset to the original background */
+        border-color: #ddd; /* Reset to the original border */
     }
 }

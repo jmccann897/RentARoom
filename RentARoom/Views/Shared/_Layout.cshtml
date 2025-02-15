@@ -47,9 +47,12 @@
 
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link position-relative d-none me-3 notification-icon" href="#" id="notificationIcon">
-                                <span class="notification-bg">
+                            <a class="nav-link position-relative me-3 notification-icon" id="notificationIcon"
+                               asp-area="User" asp-controller="Notification" asp-action="Chat" 
+                               data-bs-toggle="tooltip" title="You have new notifications">
+                                <span class="notification-container">
                                     <i class="bi bi-bell-fill text-primary"></i>
+                                    <span class="notification-badge">0</span>
                                 </span>
                             </a>
                         </li>
