@@ -12,12 +12,14 @@ namespace RentARoom.Hubs
         private readonly ApplicationDbContext _db;
         private readonly ILogger<ChatHub> _logger;
         private readonly IChatService _chatService;
+        private readonly IHubContext<NotificationHub> _notificationHub;
 
-        public ChatHub(ApplicationDbContext db, ILogger<ChatHub> logger, IChatService chatService)
+        public ChatHub(ApplicationDbContext db, ILogger<ChatHub> logger, IChatService chatService, IHubContext<NotificationHub> notificationHub)
         {
             _db = db;
             _logger = logger;
             _chatService = chatService;
+            _notificationHub = notificationHub;
         }
 
         // Join conversation (SignalR Group)
@@ -103,6 +105,9 @@ namespace RentARoom.Hubs
 
             // Notify the sender's client to update the chat window
             await Clients.User(senderId).SendAsync("MessageAppended", messagePayload);
+
+            // Call notification hub to send user notification
+            await _notificationHub.Clients.User(receiverId).SendAsync("ReceiveChatMessageNotification", message, conversationId);
         }
 
         public async Task AddToConversationOnMessage(string conversationId)

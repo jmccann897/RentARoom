@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.11.2/css/jquery.dataTables.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body data-user-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary border-bottom box-shadow mb-3" data-bs-theme="dark">
             <div class="container-fluid">
@@ -35,13 +35,29 @@
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="User" asp-controller="Notification" asp-action="Chat">Chat</a>
+                            <a class="nav-link text-light" asp-area="User" asp-controller="Notification" asp-action="Chat">
+                                Chat
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="User" asp-controller="Map" asp-action="MapSearch">Map</a>
                         </li>
+                        
                     </ul>
-                    <partial name="_LoginPartial" />
+
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link position-relative me-3 notification-icon" id="notificationIcon"
+                               asp-area="User" asp-controller="Notification" asp-action="Chat" 
+                               data-bs-toggle="tooltip" title="You have new notifications">
+                                <span class="notification-container">
+                                    <i class="bi bi-bell-fill text-primary"></i>
+                                    <span class="notification-badge">0</span>
+                                </span>
+                            </a>
+                        </li>
+                        <partial name="_LoginPartial" />
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -50,12 +66,14 @@
         <partial name="_Notification" />
         @RenderBody()
     </main>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/js/homeNotificationSignalR.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

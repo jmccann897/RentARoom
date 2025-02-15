@@ -130,3 +130,46 @@ body {
     padding-left: 15px; /* Optional: some padding for small screen adjustments */
     padding-right: 15px;
 }
+
+
+/* Notification styling */
+
+.notification-container {
+    position: relative;
+    background-color: #f8f9fa; /* Light background color */
+    padding: 5px 10px; /* Padding around the icon */
+    border-radius: 50px; /* Rounded corners for the container */
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Notification Icon Styling */
+.notification-icon {
+    display: flex;
+    align-items: center;
+    position: relative;
+    font-size: 20px;
+}
+
+/* Notification Badge Styling */
+.notification-badge {
+    font-size: 12px; /* Adjust font size */
+    padding: 2px 8px; /* Padding for the badge */
+    background-color: red; /* red background */
+    color: white; /* Red font color */
+    border-radius: 50%; /* Rounded corners */
+    margin-left: 8px; /* Space between icon and badge */
+    font-weight: bold; /* Bold text */
+    min-width: 12px; /* Ensure badge has a minimum width */
+    text-align: center; /* Center the text inside the badge */
+}
+
+/* Hide Notification Icon by Default */
+#notificationIcon {
+    display: none;
+}
+
+    /* Show Notification Icon when Needed */
+    #notificationIcon.show {
+        display: flex;
+    }

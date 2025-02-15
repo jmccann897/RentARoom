@@ -11,9 +11,6 @@ export function initialiseChatConnection() {
 
     // SignalR MessageReceived function  - event handler for receiving messages
     connectionChat.on("MessageReceived", function (messagePayload) {
-        console.log("Message Payload:", messagePayload);
-        console.log(`MessageReceived triggered. From: ${messagePayload.senderEmail}, Message: ${messagePayload.content}, To: ${messagePayload.receiverEmail}`);
-
         // Prevent sender from processing their own message
         const senderEmailField = document.querySelector("#senderEmail");
         if (senderEmailField && messagePayload.senderEmail === senderEmailField.value) return;
@@ -94,8 +91,6 @@ export function listenForNewMessage(connectionChat, currentUserId) {
 
     console.log("Setting up listener for 'MessageAppended'...");
     connectionChat.on("MessageAppended", function (message) {
-        console.log("Message received and appended:", message);
-        console.log("Sender ID:", message.senderId);
         // Get or create chat window based on conversationId
         const chatWindow = getOrCreateChatWindow(message.senderEmail, message.conversationId);
 

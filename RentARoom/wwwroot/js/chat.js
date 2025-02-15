@@ -2,8 +2,6 @@
 import { initialiseChatConnection, joinConversation, sendMessage, listenForNewMessage } from './chatSignalR.js';
 import { loadChatMessages, appendMessage } from './chatMessages.js';
 
-// #region
-
 // Global variables
 let connectionChat;
 let conversationId;
@@ -11,7 +9,7 @@ let senderEmail;
 let receiverEmail;
 let chatWindow;
 
-// Handler for sending messages
+// #region Handler for sending messages
 function sendMessageHandler(chatWindow, receiverEmail) {
     const messageInput = chatWindow.querySelector(".message-input"); // Adjust selector for the message input
     const privateMessage = messageInput.value.trim();
@@ -55,7 +53,9 @@ function sendMessageHandler(chatWindow, receiverEmail) {
             console.error("Error sending the message: ", err);
         });
 }
+// #endregion
 
+// #region Listeners on page load
 document.addEventListener("DOMContentLoaded", function () {
     "use strict";
 
@@ -71,8 +71,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    // Ensure userConversationIds is loaded
-    console.log("UserConversationIds loaded in JS: ", userConversationIds);
+    // Retrieve stored conversation Ids with new messages
+    let storedConvosWithNewMessages = JSON.parse(sessionStorage.getItem("conversationsWithNewMessages")) || [];
+
+    // Highlight conversations that have new messages
+    storedConvosWithNewMessages.forEach(convoId => {
+        const conversationItem = document.querySelector(`.conversation-item[data-conversation-id="${convoId}"]`);
+        if (conversationItem) {
+            conversationItem.classList.add('highlight');
+        }
+    });
 
     // Associate UI to vars
     const startChatButton = document.getElementById("startChat");
@@ -114,21 +122,30 @@ document.addEventListener("DOMContentLoaded", function () {
             const selectedConversationId = this.dataset.conversationId;
             const selectedReceiverEmail = item.getAttribute('data-recipient-email');
 
+            // Remove the highlight from the clicked conversation
+            document.querySelectorAll('.conversation-item.highlight').forEach(item => {
+                if (item.dataset.conversationId === selectedConversationId) {
+                    item.classList.remove('highlight');
+                }
+            });
+
+            // Update session storage to remove this conversation from the new message list
+            storedConvosWithNewMessages = storedConvosWithNewMessages.filter(id => id !== selectedConversationId);
+            sessionStorage.setItem("conversationsWithNewMessages", JSON.stringify(storedConvosWithNewMessages));
+
             // Set conversationId and receiver email
             conversationId = selectedConversationId;
             receiverEmail = selectedReceiverEmail;
 
-            console.log("Receiver Email from conversation click:", receiverEmail);
+            // console.log("Receiver Email from conversation click:", receiverEmail);
 
             // Initialize the SignalR connection
             connectionChat = initialiseChatConnection();
 
             // Start the SignalR connection
             connectionChat.start().then(() => {
-                console.log("SignalR Connected");
+                console.log("SignalR Connected for chat");
 
-                // Check if this log shows up
-                console.log("Inside the then block - Setting up listener for 'MessageAppended'...");
                 // Now, start listening for new messages
                 listenForNewMessage(connectionChat, currentUserId); // Listen for incoming messages
 
@@ -138,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Get or create a chat window
                 chatWindow = getOrCreateChatWindow(receiverEmail, conversationId);
             }).catch(err => {
-                console.error("Error starting SignalR connection:", err);
+                console.error("Error starting SignalR chat connection:", err);
             });
         });
     });
@@ -197,14 +214,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Start the SignalR connection
         connectionChat.start().then(() => {
-            console.log("SignalR Connected");
+            console.log("SignalR Chat Connected");
 
-            // Check if this log shows up
-            console.log("Inside the then block - Setting up listener for 'MessageAppended'...");
             // Now, start listening for new messages
-            listenForNewMessage(connectionChat, currentUserId); // Listen for incoming messages
-
-            console.log("After listen for new message");
+            listenForNewMessage(connectionChat, currentUserId);
 
             // Join the conversation (use the conversationId)
             joinConversation(connectionChat, conversationId);
@@ -218,6 +231,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 // #endregion
+
+// #region Helper functions
 
 // Helper function to get or create a chat window
 export function getOrCreateChatWindow(receiverEmail, conversationId) {
@@ -289,3 +304,5 @@ function hideOtherChatWindows(currentChatWindow) {
     // Ensure the current chat window is displayed
     currentChatWindow.style.display = 'block';
 }
+
+// #endregion
