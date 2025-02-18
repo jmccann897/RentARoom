@@ -1,5 +1,9 @@
 ﻿@model PropertyDatatableVM
 
+@{
+    var isAgent = User.IsInRole(SD.Role_Agent);
+}
+
 <div class="card shadow border-0 mb-3">
 
     <div class="card-header bg-primary text-white m-lg-0 py-3">
@@ -21,24 +25,43 @@
 
     <div class="card-body p-4">
         @* https://datatables.net/ *@
-        <table id="tblData" class="display table-striped table-bordered table-hover pt-2" style="width:100%">
+        @* Admin Table *@
+        <table id="tblAdmin" class="display table-striped table-bordered table-hover pt-2" style="width:100%">
             <thead>
                 <tr>
+                    <th>Agent</th>
                     <th>Address</th>
                     <th>Postcode</th>
-                    <th>Agent</th>
                     <th>Rent</th>
                     <th>Beds</th>
                     <th>Floor Area</th>
                     <th>City</th>
                     <th>Type</th>
-                    <th>
-                    </th>
+                    <th></th>
                 </tr>
-            </thead>            
+            </thead>
+        </table>
+
+        @* Agent Table *@
+        <table id="tblAgent" class="display table-striped table-bordered table-hover pt-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Address</th>
+                    <th>Postcode</th>
+                    <th>Rent</th>
+                    <th>Beds</th>
+                    <th>Floor Area</th>
+                    <th>City</th>
+                    <th>Type</th>
+                    <th></th>
+                </tr>
+            </thead>
         </table>
     </div>
 </div>
 @section Scripts {
+    <script>
+        var isAgent = @isAgent.ToString().ToLower(); // `true` for agents, `false` for admins
+    </script>
     <script src="~/js/propertyDataTable.js"></script>
 }
