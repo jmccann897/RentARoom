@@ -129,6 +129,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
+            // Remove the 'active' class from any previously selected conversation
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.classList.remove('active'); // Remove active class from all items
+            });
+
+            // Add the 'active' class to the newly selected conversation
+            this.classList.add('active'); // Add active class to the clicked conversation item
+
             // Update session storage to remove this conversation from the new message list
             storedConvosWithNewMessages = storedConvosWithNewMessages.filter(id => id !== selectedConversationId);
             sessionStorage.setItem("conversationsWithNewMessages", JSON.stringify(storedConvosWithNewMessages));
