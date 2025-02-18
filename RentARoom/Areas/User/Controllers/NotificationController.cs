@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.DataAccess.Services.IServices;
+using RentARoom.Models;
 using RentARoom.Models.DTOs;
 using RentARoom.Models.ViewModels;
 using System.Security.Claims;
@@ -15,12 +17,14 @@ namespace RentARoom.Areas.User.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IChatService _chatService;
         private readonly ApplicationDbContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public NotificationController(IUnitOfWork unitOfWork, IChatService chatService, ApplicationDbContext db)
+        public NotificationController(IUnitOfWork unitOfWork, IChatService chatService, ApplicationDbContext db, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _chatService = chatService;
             _db = db;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -53,12 +57,16 @@ namespace RentARoom.Areas.User.Controllers
             // Convert to DTOs for view
             var conversationsDTO = await _chatService.GetUserExistingConversationsAsync(userId);
 
+            // Fetch the user
+            var applicationUser = await _userManager.GetUserAsync(User);
+
 
             var chatVM = new ChatVM
             {
                 UserId = userId,
                 ConversationIds = conversationIds,
-                Conversations = conversationsDTO.ToList()
+                Conversations = conversationsDTO.ToList(),
+                ApplicationUser = applicationUser
             };
 
             return View(chatVM);

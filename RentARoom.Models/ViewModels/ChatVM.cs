@@ -14,5 +14,6 @@ namespace RentARoom.Models.ViewModels
 
         public Property? property { get; set; }
         public List<ChatConversationDTO> Conversations { get; set; } = new();
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

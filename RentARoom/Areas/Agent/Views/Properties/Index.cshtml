@@ -1,4 +1,4 @@
-﻿@model List<Property>
+﻿@model PropertyDatatableVM
 
 <div class="card shadow border-0 mb-3">
 
@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <!-- Title -->
             <h2 class="text-white py-2">
-                @(User.IsInRole(SD.Role_Agent) ? "Agent Property List" : "All Properties listed on RentARoom") 
+                @(User.IsInRole(SD.Role_Agent) ? "Hey "+ @Model.ApplicationUser.Name + ", this is your property list" : "Hey " + @Model.ApplicationUser.Name +", here is all properties listed on RentARoom")
             </h2>
             
             <!-- Buttons -->
