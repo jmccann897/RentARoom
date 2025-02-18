@@ -32,19 +32,33 @@ namespace RentARoom.Areas.Agent.Controllers
             _azureBlobService = azureBlobService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            if (User.IsInRole(SD.Role_Agent))
+            // Fetch the logged-in user
+            var applicationUser = await _userManager.GetUserAsync(User);
+
+            if (applicationUser == null)
             {
-                // Update as owner changed to user object and name should be accessible
-                List<Property> objPropertyList = _unitOfWork.Property.Find(x => x.ApplicationUserId == User.Identity.Name).ToList();
-                return View(objPropertyList);
+                return Unauthorized(); // Handle the case where the user is not found
             }
-            else
+
+            // Based on user role determine property list to use
+            List<Property> objPropertyList;
+            if(User.IsInRole(SD.Role_Agent))
             {
-                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").ToList();
-                return View(objPropertyList);
+                objPropertyList = _unitOfWork.Property.Find(x => x.ApplicationUserId == User.Identity.Name).ToList();
+            } else
+            {
+                objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType").ToList();
             }
+
+            PropertyDatatableVM propertyDatatableVM = new PropertyDatatableVM
+            {
+                PropertyList = objPropertyList,
+                ApplicationUser = applicationUser
+            };
+
+            return View(propertyDatatableVM);
         }
 
         // Get

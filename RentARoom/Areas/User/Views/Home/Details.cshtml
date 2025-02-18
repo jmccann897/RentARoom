@@ -46,65 +46,34 @@
                 </div>
             </div>
 
-                    <div class="property-details">
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-12 col-lg-6 offset-lg-1">
-                                <h5> Property Details</h5>
-                                <div class="row ps-2">
-                                <h6> @Model.Property.NumberOfBedrooms <i class="fa-solid fa-bed" title="Number of Bedrooms"></i>  @Model.Property.NumberOfBathrooms <i class="fa fa-solid fa-toilet" title="Number of Bathrooms"></i> </h6>
-                                </div>
-                                <div class="row ps-2">
-                                <h6 class="text-dark text-opacity-50">Property Type: @Model.Property.PropertyType.Name</h6>
-                                </div>
-                                <div class="row ps-2">
-                                    @{
-                                    double areaInSqFt2 = (Model.Property.FloorArea * 10.764);
-                                    double roundedAreaInSqFt2 = Math.Round(areaInSqFt2, 2);
-                                    }
-                                <h6 class="text-dark text-opacity-50">Floor Area: @Model.Property.FloorArea m<sup>2</sup> (@roundedAreaInSqFt2 sqft)</h6>
-                                </div> 
-                                <div class="row ps-2">
-                                    <h6 class="text-dark text-opacity-50  pb-2">
-                                        Rent Price:
-                                        <span class="text-dark text-opacity-50 fw-semibold">
-                                        @Model.Property.Price.ToString("c")
-                                        </span>
-                                    </h6>
-                                </div>
+                <div class="property-details">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-12 col-lg-6 offset-lg-1">
+                            <h5> Property Details</h5>
+                            <div class="row ps-2">
+                            <h6> @Model.Property.NumberOfBedrooms <i class="fa-solid fa-bed" title="Number of Bedrooms"></i>  @Model.Property.NumberOfBathrooms <i class="fa fa-solid fa-toilet" title="Number of Bathrooms"></i> </h6>
+                            </div>
+                            <div class="row ps-2">
+                            <h6 class="text-dark text-opacity-50">Property Type: @Model.Property.PropertyType.Name</h6>
+                            </div>
+                            <div class="row ps-2">
+                                @{
+                                double areaInSqFt2 = (Model.Property.FloorArea * 10.764);
+                                double roundedAreaInSqFt2 = Math.Round(areaInSqFt2, 2);
+                                }
+                            <h6 class="text-dark text-opacity-50">Floor Area: @Model.Property.FloorArea m<sup>2</sup> (@roundedAreaInSqFt2 sqft)</h6>
+                            </div> 
+                            <div class="row ps-2">
+                                <h6 class="text-dark text-opacity-50  pb-2">
+                                    Rent Price:
+                                    <span class="text-dark text-opacity-50 fw-semibold">
+                                    @Model.Property.Price.ToString("c")
+                                    </span>
+                                </h6>
                             </div>
                         </div>
                     </div>
-                
-                    <form method="post">
-                        <div class="contact-agent-details">
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-12 col-lg-6 offset-lg-1">
-                                    <h5> Contact Agent Details</h5>
-                                    <div class="row">
-                                        <div class="col-12 col-md-8">
-                                            <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
-                                            <i class="bi bi-telephone-fill"></i>@Model.Property.ApplicationUser.PhoneNumber
-                                            </button>
-                                            <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
-                                            <i class="bi bi-envelope-arrow-up-fill"></i> @Model.Property.ApplicationUser.Email
-                                            </button>
-                                            <!-- Hidden fields for necessary data -->
-                                        <input type="hidden" name="recipientEmail" value="@Model.Property.ApplicationUser.Email" />
-                                        <input type="hidden" name="propertyAddress" value="@Model.Property.Address" />
-                                        <input type="hidden" name="propertyCity" value="@Model.Property.City" />
-                                        <input type="hidden" name="propertyPrice" value="@Model.Property.Price" />
-                                            <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold"
-                                                    asp-controller="Notification"
-                                                    asp-action="Chat">
-                                                <i class="bi bi-chat-left-text-fill"></i> Chat                                   
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
+                </div>
 
                 <div class="row d-flex justify-content-center">
                     <div class="col-12 col-lg-6 offset-lg-1">
@@ -142,6 +111,36 @@
                         <input type="hidden" id="userLocations" value='@Html.Raw(Json.Serialize(Model.UserLocations))' />
                     </div>
                 </div>
+                
+                <form method="post">
+                    <div class="contact-agent-details">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-12 col-lg-6 offset-lg-1">
+                                <h5> Contact Agent Details</h5>
+                                <div class="row">
+                                    <div class="col-12 col-md-8">
+                                        <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
+                                        <i class="bi bi-telephone-fill"></i>@Model.Property.ApplicationUser.PhoneNumber
+                                        </button>
+                                        <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
+                                        <i class="bi bi-envelope-arrow-up-fill"></i> @Model.Property.ApplicationUser.Email
+                                        </button>
+                                        <!-- Hidden fields for necessary data -->
+                                    <input type="hidden" name="recipientEmail" value="@Model.Property.ApplicationUser.Email" />
+                                    <input type="hidden" name="propertyAddress" value="@Model.Property.Address" />
+                                    <input type="hidden" name="propertyCity" value="@Model.Property.City" />
+                                    <input type="hidden" name="propertyPrice" value="@Model.Property.Price" />
+                                        <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold"
+                                                asp-controller="Notification"
+                                                asp-action="Chat">
+                                            <i class="bi bi-chat-left-text-fill"></i> Chat                                   
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
                 <div class="viewSection">
                     <div class="row pl-2 mb-3">
