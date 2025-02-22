@@ -27,7 +27,14 @@
             }
 
             // Construct chat messages and add them to the window
-            messages.forEach(message => appendMessage(messagesList, message, currentUserId));
+            //messages.forEach(message => appendMessage(messagesList, message, currentUserId));
+
+            // Construct chat messages and add them to the window
+            messages.forEach(message => {
+                //console.log("Message Data: ", message); // Log message before appending
+                appendMessage(messagesList, message, currentUserId);
+            });
+
             scrollToBottom(chatWindow);
         } else {
             console.error("Failed to fetch messages: ", await response.text());
@@ -39,8 +46,12 @@
 
 // Helper function to append a message to the chat window
 export function appendMessage(messagesList, message, currentUserId) {
-    
+
+    const existingMessage = messagesList.querySelector(`[data-message-id="${message.chatMessageId}"]`);
+    if (existingMessage) return;  // Avoid adding the duplicate message
+
     const li = document.createElement("li");
+    li.setAttribute("data-message-id", message.chatMessageId); // Add message Id to avoid duplicates
 
     const isSent = message.senderId === currentUserId;
 
@@ -91,7 +102,10 @@ function createTimeStamp(timestamp) {
 export function scrollToBottom(chatWindow) {
     const messagesBox = chatWindow.querySelector(".messages-box");
     if (messagesBox) {
-        messagesBox.scrollTop = messagesBox.scrollHeight;
+        const isScrolledToBottom = messagesBox.scrollHeight === messagesBox.scrollTop + messagesBox.clientHeight;
+        if (isScrolledToBottom) {
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+        }
     } else {
         console.log("Messages box not found in chat window - chatMessages.js")
     }

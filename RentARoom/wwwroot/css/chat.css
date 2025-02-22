@@ -1,9 +1,11 @@
 /* ChatWindow that shows messages*/
 
-.chat-window{
+.chat-window {
     display: flex;
     flex-direction: column;
     height: 100%;
+    flex-grow: 1;
+    padding: 10px;
 }
 
 .messages-box {
@@ -12,7 +14,7 @@
     padding: 10px;
     display: flex;
     flex-direction: column-reverse;
-    max-height: 200px; /* Adjust this value to control the height */
+    max-height: 50vh;
 }
 
     .chat-window .messages-box {
@@ -136,10 +138,7 @@
     padding: 10px;
 }
 
-.chat-window {
-    flex-grow: 1;
-    padding: 10px;
-}
+
 
 /* Additonal components for when property is included*/
 .chat-header {
@@ -194,19 +193,17 @@
         margin-top: 5px; /* Add some space from message text */
     }
 
-    /* Align sent messages correctly */
     .sent-message {
+        margin-left: auto;
+        margin-right: 0;
+    }
+
+    .received-message {
         margin-left: 0;
         margin-right: auto;
     }
 
-    /* Align received messages correctly */
-    .received-message {
-        margin-right: 0;
-        margin-left: auto;
-    }
-
-    conversation-item {
+    .conversation-item {
         padding: 8px;
         font-size: 0.9em;
     }
@@ -237,7 +234,7 @@
 /* Add an animation effect for smooth transition */
 @keyframes highlight-animation {
     0% {
-        background-color: #ffffff; /* Original background color */
+        background-color: #ffffff; /* Original background colour */
         border-color: #ddd; /* Original border color */
     }
 
@@ -246,7 +243,30 @@
     }
 
     100% {
-        background-color: #ffffff; /* Reset to the original background */
+        background-color: orangered; /* Keep theme colour background */
         border-color: #ddd; /* Reset to the original border */
     }
+}
+
+/* Active conversation item - distinct from highlight */
+.conversation-item.active {
+    background-color: #007bff; /* Blue background to distinguish active conversation */
+    color: white;
+    border: 1px solid #0056b3; /* Darker blue border for emphasis */
+    font-weight: bold; /* Make the active conversation text stand out */
+}
+
+/* Make sure the recipient, last message, and timestamp are in white text for visibility */
+.active .recipient,
+.active .last-message,
+.active .timestamp {
+    color: white !important;
+}
+/* Underline to the recipient */
+.active .recipient {
+    text-decoration: underline;
+}
+/* Subtle shadow effect */
+.active {
+    box-shadow: 0px 2px 10px rgba(0, 123, 255, 0.5); /* Blue shadow for active conversation */
 }

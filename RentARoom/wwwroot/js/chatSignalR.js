@@ -1,60 +1,74 @@
 ﻿
 import { appendMessage, scrollToBottom } from './chatMessages.js';
-import { getOrCreateChatWindow } from './chat.js';
+import { getOrCreateChatWindow, setActiveChatWindow } from './chat.js';
 
-
+let isMessageReceivedListenerAdded = false;
 export function initialiseChatConnection() {
     const connectionChat = new signalR.HubConnectionBuilder()
         .withUrl("/chatHub")
         .configureLogging(signalR.LogLevel.Information)
         .build();
 
-    // SignalR MessageReceived function  - event handler for receiving messages
-    connectionChat.on("MessageReceived", function (messagePayload) {
-        // Prevent sender from processing their own message
-        const senderEmailField = document.querySelector("#senderEmail");
-        if (senderEmailField && messagePayload.senderEmail === senderEmailField.value) return;
+    // Check if the listener has already been added
+    if (!isMessageReceivedListenerAdded) {
+        // SignalR MessageReceived function  - event handler for receiving messages
+        connectionChat.on("MessageReceived", function (messagePayload) {
+            // Prevent sender from processing their own message
+            const senderEmailField = document.querySelector("#senderEmail");
+            if (senderEmailField && messagePayload.senderEmail === senderEmailField.value) return;
 
-        // Add the receiver to the conversation group dynamically
-        connectionChat.invoke("AddToConversationOnMessage", messagePayload.conversationId)
-            .catch(err => console.error("Error adding receiver to conversation:", err));
+            // Check if the message has already been appended
+            const existingMessage = document.querySelector(`[data-message-id="${messagePayload.chatMessageId}"]`);
+            if (existingMessage) return; // Skip if already appended
+
+            // Add the receiver to the conversation group dynamically
+            connectionChat.invoke("AddToConversationOnMessage", messagePayload.conversationId)
+                .catch(err => console.error("Error adding receiver to conversation:", err));
 
 
-        const chatWindow = getOrCreateChatWindow(messagePayload.senderEmail, messagePayload.conversationId);
+            const chatWindow = getOrCreateChatWindow(messagePayload.senderEmail, messagePayload.conversationId);
 
-        // Get or create chat window for receiver where the sender is the data-receiver
-        if (!chatWindow) {
-            console.error("Chat window not found or created.");
-            return;
-        }
+            // Get or create chat window for receiver where the sender is the data-receiver
+            if (!chatWindow) {
+                console.error("Chat window not found or created.");
+                return;
+            }
 
-        // Ensure messages-box exists
-        const messagesBox = chatWindow.querySelector(".messages-box");
-        if (!messagesBox) {
-            console.error("Messages box not found in chat window.");
-            return;
-        }
+            // Ensure messages-box exists
+            const messagesBox = chatWindow.querySelector(".messages-box");
+            if (!messagesBox) {
+                console.error("Messages box not found in chat window.");
+                return;
+            }
 
-        // Ensure messagesList exists
-        const messagesList = chatWindow.querySelector(".messages-list");
-        if (!messagesList) {
-            console.error("Messages list not found in chat window.");
-            return;
-        }
+            // Ensure messagesList exists
+            const messagesList = chatWindow.querySelector(".messages-list");
+            if (!messagesList) {
+                console.error("Messages list not found in chat window.");
+                return;
+            }
 
-        // Automatically populate the receiver's email field for easy response
-        const receiverEmailField = chatWindow.querySelector(".receiver-email");
-        if (receiverEmailField) {
-            receiverEmailField.value = messagePayload.senderEmail; // Populate receiver's email
-        }
+            // Automatically populate the receiver's email field for easy response
+            const receiverEmailField = chatWindow.querySelector(".receiver-email");
+            if (receiverEmailField) {
+                receiverEmailField.value = messagePayload.senderEmail; // Populate receiver's email
+            }
 
-        // Get current user ID (email in this case)
-        const currentUserEmail = senderEmailField?.value || "";
+            // Get current user ID (email in this case)
+            const currentUserEmail = senderEmailField?.value || "";
 
-        // Append message with correct parameters
-        appendMessage(messagesList, messagePayload, currentUserEmail);      
-    });
+            // Append message with correct parameters
+            appendMessage(messagesList, messagePayload, currentUserEmail);
 
+            // Select conversationItem to set as active
+            const conversationItem = document.querySelector(`.conversation-item[data-conversation-id="${messagePayload.conversationId}"]`);
+            // Update UI to make current chatwindow active and scroll to bottom
+            setActiveChatWindow(chatWindow, conversationItem);
+            scrollToBottom(chatWindow);
+        });
+        // Mark that the listener has been added
+        isMessageReceivedListenerAdded = true;
+    }
     return connectionChat;
 }
 

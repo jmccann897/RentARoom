@@ -13,7 +13,7 @@ namespace RentARoom.DataAccess.Services.IServices
         // Check conversation
         Task<string> CreateOrGetConversationIdAsync(string senderId, string recipientId);
         // Save messages to Db
-        Task SaveMessageAsync(string conversationId, string senderId, string recipientId, string content);
+        Task<ChatMessage> SaveMessageAsync(string conversationId, string senderId, string recipientId, string content);
         // Get chat history
         Task<IEnumerable<ChatMessage>> GetConversationMessagesAsync(string conversationId);
         // Get conversations

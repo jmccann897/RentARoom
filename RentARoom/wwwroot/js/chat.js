@@ -96,24 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Modify the UI based on whether the data is present
     if (recipientEmail && propertyAddress && propertyPrice && propertyCity) {
-        // Dynamically update the chat window with property info
-        const propertyInfoDiv = document.createElement("div");
-        propertyInfoDiv.classList.add("chat-header");
-
-        // Construct the header
-        propertyInfoDiv.innerHTML = `
-        <div class="property-info-left">
-            <p><strong>Address:</strong> ${propertyAddress}</p>
-            <p><strong>City:</strong> ${propertyCity}</p>
-            <p><strong>Price:</strong> ${propertyPrice}</p>
-        </div>
-        <div class="receiver-info-right">
-            <p><strong>Receiver:</strong> ${recipientEmail}</p>
-        </div>
-    `;
-
-        // Append the header div to the chat window
-        document.getElementById("chatWindows").appendChild(propertyInfoDiv);
+        addPropertyDetailsToChatWindow();
     }
 
     // Event listener for conversation click to load messages
@@ -128,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     item.classList.remove('highlight');
                 }
             });
-
+            
             // Update session storage to remove this conversation from the new message list
             storedConvosWithNewMessages = storedConvosWithNewMessages.filter(id => id !== selectedConversationId);
             sessionStorage.setItem("conversationsWithNewMessages", JSON.stringify(storedConvosWithNewMessages));
@@ -154,6 +137,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Get or create a chat window
                 chatWindow = getOrCreateChatWindow(receiverEmail, conversationId);
+
+                // Set the corresponding conversation item as active
+                setActiveChatWindow(chatWindow, item);  // Pass the clicked conversation item here
+
             }).catch(err => {
                 console.error("Error starting SignalR chat connection:", err);
             });
@@ -261,8 +248,8 @@ export function getOrCreateChatWindow(receiverEmail, conversationId) {
 
     sendButton.addEventListener("click", () => sendMessageHandler(chatWindow, receiverEmail));
     
-
-    // Hide all other chat windows
+    // Mark this window as the active one and hide others
+    setActiveChatWindow(chatWindow, document.querySelector(`.conversation-item[data-conversation-id="${conversationId}"]`));
     hideOtherChatWindows(chatWindow);
 
     return chatWindow;
@@ -303,6 +290,52 @@ function hideOtherChatWindows(currentChatWindow) {
 
     // Ensure the current chat window is displayed
     currentChatWindow.style.display = 'block';
+}
+
+export function setActiveChatWindow(currentChatWindow, conversationItem) {
+    // Remove the 'active' class from all other windows
+    document.querySelectorAll('.chat-window').forEach(window => {
+        window.classList.remove('active'); // Remove active class from all windows
+    });
+
+    // Add the 'active' class to the selected chat window
+    currentChatWindow.classList.add('active');
+
+    // Remove the 'active' class from all conversation list items
+    document.querySelectorAll('.conversation-item').forEach(item => {
+        item.classList.remove('active');
+        if (item !== conversationItem && item.classList.contains('highlight')) {
+            item.classList.add('highlight'); // Keep highlight for other items with new messages
+        }
+    });
+
+    // Add the 'active' class to the corresponding conversation list item
+    if (conversationItem) {
+        conversationItem.classList.add('active');
+        conversationItem.classList.remove('highlight'); // Remove highlight from the active conversation item
+    }
+}
+
+// Helper function to add property details if chat accessed via details page
+function addPropertyDetailsToChatWindow() {
+    // Dynamically update the chat window with property info
+    const propertyInfoDiv = document.createElement("div");
+    propertyInfoDiv.classList.add("chat-header");
+
+    // Construct the header
+    propertyInfoDiv.innerHTML = `
+        <div class="property-info-left">
+            <p><strong>Address:</strong> ${propertyAddress}</p>
+            <p><strong>City:</strong> ${propertyCity}</p>
+            <p><strong>Price:</strong> ${propertyPrice}</p>
+        </div>
+        <div class="receiver-info-right">
+            <p><strong>Receiver:</strong> ${recipientEmail}</p>
+        </div>
+    `;
+
+    // Append the header div to the chat window
+    document.getElementById("chatWindows").appendChild(propertyInfoDiv);
 }
 
 // #endregion

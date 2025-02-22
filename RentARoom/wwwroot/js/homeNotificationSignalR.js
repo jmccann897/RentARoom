@@ -48,6 +48,15 @@ function startNotificationConnection(userId) {
     connection.on("ReceiveChatMessageNotification", function (message, conversationId) {
         console.log("New chat message received!");
 
+        const currentPath = window.location.pathname;
+
+        if (currentPath.includes("/Chat")) {
+            // User is on chat page, do NOT show notification icon
+            clearNotification();
+            return;
+        }
+
+        // User is not on chat page
         // Retrieve existing conversations from sessionStorage
         let storedConversations = JSON.parse(sessionStorage.getItem("conversationsWithNewMessages")) || [];
 
