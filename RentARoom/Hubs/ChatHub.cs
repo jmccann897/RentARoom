@@ -4,6 +4,7 @@ using NuGet.Packaging.Signing;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.DataAccess.Services.IServices;
+using RentARoom.Models;
 
 namespace RentARoom.Hubs
 {
@@ -84,7 +85,7 @@ namespace RentARoom.Hubs
             var conversationId = await _chatService.CreateOrGetConversationIdAsync(senderId, receiverId);
 
             // Save message
-            await _chatService.SaveMessageAsync(conversationId, senderId, receiverId, message);
+            ChatMessage savedMessage = await _chatService.SaveMessageAsync(conversationId, senderId, receiverId, message);
 
 
             // Log sender and recipient details
@@ -97,7 +98,8 @@ namespace RentARoom.Hubs
                 ReceiverEmail = receiverEmail,
                 Content = message,
                 Timestamp = DateTime.UtcNow,
-                SenderId = senderId
+                SenderId = senderId,
+                ChatMessageId = savedMessage.ChatMessageId
             };
 
             // Send message to the specified receiver

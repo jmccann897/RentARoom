@@ -76,7 +76,7 @@ namespace RentARoom.DataAccess.Services
                 .ToListAsync();
         }
 
-        public async Task SaveMessageAsync(string conversationId, string senderId, string recipientId, string content)
+        public async Task<ChatMessage> SaveMessageAsync(string conversationId, string senderId, string recipientId, string content)
         {
             var message = new ChatMessage
             {
@@ -94,6 +94,8 @@ namespace RentARoom.DataAccess.Services
             // Log the saved message
             _logger.LogInformation("Message saved: {MessageId}, ConversationId: {ConversationId}, SenderId: {SenderId}, RecipientId: {RecipientId}",
                 message.ChatMessageId, conversationId, senderId, recipientId);
+
+            return message;
         }
         public async Task<List<string>> GetUserConversationIdsAsync(string userId)
         {
