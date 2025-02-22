@@ -1,9 +1,11 @@
 /* ChatWindow that shows messages*/
 
-.chat-window{
+.chat-window {
     display: flex;
     flex-direction: column;
     height: 100%;
+    flex-grow: 1;
+    padding: 10px;
 }
 
 .messages-box {
@@ -12,7 +14,7 @@
     padding: 10px;
     display: flex;
     flex-direction: column-reverse;
-    max-height: 200px; /* Adjust this value to control the height */
+    max-height: 50vh;
 }
 
     .chat-window .messages-box {
@@ -136,10 +138,7 @@
     padding: 10px;
 }
 
-.chat-window {
-    flex-grow: 1;
-    padding: 10px;
-}
+
 
 /* Additonal components for when property is included*/
 .chat-header {
@@ -204,7 +203,7 @@
         margin-right: auto;
     }
 
-    conversation-item {
+    .conversation-item {
         padding: 8px;
         font-size: 0.9em;
     }
@@ -235,7 +234,7 @@
 /* Add an animation effect for smooth transition */
 @keyframes highlight-animation {
     0% {
-        background-color: #ffffff; /* Original background color */
+        background-color: #ffffff; /* Original background colour */
         border-color: #ddd; /* Original border color */
     }
 
@@ -244,7 +243,7 @@
     }
 
     100% {
-        background-color: #ffffff; /* Reset to the original background */
+        background-color: orangered; /* Keep theme colour background */
         border-color: #ddd; /* Reset to the original border */
     }
 }
