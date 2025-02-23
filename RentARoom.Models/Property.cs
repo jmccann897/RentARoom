@@ -36,9 +36,11 @@ namespace RentARoom.Models
 
         [Display(Name = "Property Type")]
         public int PropertyTypeId { get; set; }
+
         [ForeignKey("PropertyTypeId")]
         [ValidateNever]
         public PropertyType PropertyType { get; set; }
+
         public string City { get; set; }
 
         // Foreign key for ApplicationUser
@@ -59,6 +61,10 @@ namespace RentARoom.Models
 
         // Navigation property for Views
         public ICollection<PropertyView> PropertyViews { get; set; }
+
+        // CreateDate field
+        [Display(Name = "Date Created")]
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow;
 
         //default constructor
         public Property()
