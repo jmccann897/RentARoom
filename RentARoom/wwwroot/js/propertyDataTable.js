@@ -19,20 +19,35 @@ function checkUserRole() {
 // Function to load the Admin Table
 function loadAdminTable() {
     var columns = [
-        { data: 'applicationUser.name', "width": "10%" }, // Show "Agent" column for admin
+        { data: 'applicationUser.name'}, // Show "Agent" column for admin
         {
             data: 'address',
-            "width": "15%",
             "render": function (data, type, row) {
                 return `<a href="/User/Home/Details/${row.id}" class="text-decoration-none">${data}</a>`;
             }
         },
-        { data: 'postcode', "width": "10%" },
-        { data: 'price', "width": "5%" },
-        { data: 'numberOfBedrooms', "width": "5%" },
-        { data: 'floorArea', "width": "5%" },
-        { data: 'city', "width": "5%" },
-        { data: 'propertyType.name', "width": "10%" },
+        { data: 'postcode'},
+        { data: 'price'},
+        { data: 'numberOfBedrooms'},
+        { data: 'floorArea'},
+        { data: 'city'},
+        { data: 'propertyType.name'},
+        {
+            data: 'createDate',
+            "render": function (data) {
+                // Convert the createDate string into a JavaScript Date object
+                var createDate = new Date(data);
+                // Get the current date
+                var currentDate = new Date();
+                // Calculate the difference in time (milliseconds)
+                var timeDifference = currentDate - createDate;
+                // Convert the time difference to days
+                var daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
+                // Return the number of days
+                return daysDifference;
+            }
+        },
+        { data: 'totalViews' },
         {
             data: 'id',
             "render": function (data) {
@@ -46,13 +61,24 @@ function loadAdminTable() {
                     </a>
                 </div>`;
             },
-            "width": "15%", responsivePriority: 1
+            responsivePriority: 1
         }
     ];
 
     // Initialize the admin DataTable
     dataTable = $('#tblAdmin').DataTable({
-        "ajax": { url: 'Properties/GetAll', type: 'GET' },
+        "ajax": {
+            url: 'Properties/GetAll',
+            type: 'GET',
+            dataSrc: function (json) {
+                // Loop through each property and calculate totalViews
+                json.data.forEach(function (property) {
+                    // Calculate totalViews by counting the length of PropertyViews
+                    property.totalViews = calculateTotalViews(property);
+                });
+                return json.data;
+            }
+        },
         "columns": columns,
         "order": [[0, 'asc']], // Sorting by 'Agent' column
         responsive: true
@@ -66,17 +92,32 @@ function loadAgentTable() {
     var columns = [
         {
             data: 'address',
-            "width": "15%",
             "render": function (data, type, row) {
                 return `<a href="/User/Home/Details/${row.id}" class="text-decoration-none">${data}</a>`;
             }
         },
-        { data: 'postcode', "width": "10%" },
-        { data: 'price', "width": "5%" },
-        { data: 'numberOfBedrooms', "width": "5%" },
-        { data: 'floorArea', "width": "5%" },
-        { data: 'city', "width": "5%" },
-        { data: 'propertyType.name', "width": "10%" },
+        { data: 'postcode'},
+        { data: 'price'},
+        { data: 'numberOfBedrooms'},
+        { data: 'floorArea'},
+        { data: 'city'},
+        { data: 'propertyType.name'},
+        {
+            data: 'createDate',
+            "render": function (data) {
+                // Convert the createDate string into a JavaScript Date object
+                var createDate = new Date(data);
+                // Get the current date
+                var currentDate = new Date();
+                // Calculate the difference in time (milliseconds)
+                var timeDifference = currentDate - createDate;
+                // Convert the time difference to days
+                var daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24));
+                // Return the number of days
+                return daysDifference + ' days';
+            }
+        },
+        { data: 'totalViews'},
         {
             data: 'id',
             "render": function (data) {
@@ -90,13 +131,24 @@ function loadAgentTable() {
                     </a>
                 </div>`;
             },
-            "width": "15%", responsivePriority: 1
+             responsivePriority: 1
         }
     ];
 
     // Initialize the agent DataTable
     dataTable = $('#tblAgent').DataTable({
-        "ajax": { url: 'Properties/GetAll', type: 'GET' },
+        "ajax": {
+            url: 'Properties/GetAll',
+            type: 'GET',
+            dataSrc: function (json) {
+                // Loop through each property and calculate totalViews
+                json.data.forEach(function (property) {
+                    // Calculate totalViews by counting the length of PropertyViews
+                    property.totalViews = calculateTotalViews(property);
+                });
+                return json.data;
+            }
+        },
         "columns": columns,
         "order": [[1, 'asc']], // Sorting by 'address' column
         responsive: true
@@ -158,6 +210,11 @@ function Delete(url) {
             })
         }
     });
+}
+
+// Function to calculate total views based on the propertyViews length
+function calculateTotalViews(property) {
+    return property.propertyViews ? property.propertyViews.length : 0;
 }
 
 

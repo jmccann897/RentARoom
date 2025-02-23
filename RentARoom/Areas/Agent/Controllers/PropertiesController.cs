@@ -178,13 +178,13 @@ namespace RentARoom.Areas.Agent.Controllers
             // Check role first then filter results if Agent to their properties
             if (User.IsInRole(SD.Role_Agent))
             {
-                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser").Where(x => x.ApplicationUser.UserName == User.Identity.Name).ToList();
+                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,PropertyViews").Where(x => x.ApplicationUser.UserName == User.Identity.Name).ToList();
                 return Json(new { data = objPropertyList });
             }
             // If Admin, show all
             else
             {
-                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser").ToList();
+                List<Property> objPropertyList = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,PropertyViews").ToList();
                 return Json(new { data = objPropertyList });
             }          
         }

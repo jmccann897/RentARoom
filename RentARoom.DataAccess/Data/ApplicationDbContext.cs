@@ -154,7 +154,7 @@ namespace RentARoom.DataAccess.Data
                     Name = adminEmail,
                     UserName = adminEmail,
                     Email = adminEmail,
-                    EmailConfirmed = false
+                    EmailConfirmed = true
                 };
                 var result = await userManager.CreateAsync(adminUser, "Password.01");
                 if (result.Succeeded)
@@ -173,7 +173,7 @@ namespace RentARoom.DataAccess.Data
                     Name = agentEmail,
                     UserName = agentEmail,
                     Email = agentEmail,
-                    EmailConfirmed = false
+                    EmailConfirmed = true
                 };
                 var result = await userManager.CreateAsync(agentUser, "Password.01");
                 if (result.Succeeded)
@@ -192,7 +192,7 @@ namespace RentARoom.DataAccess.Data
                     Name = userEmail,
                     UserName = userEmail,
                     Email = userEmail,
-                    EmailConfirmed = false
+                    EmailConfirmed = true
                 };
                 var result = await userManager.CreateAsync(normalUser, "Password.01");
                 if (result.Succeeded)
@@ -229,12 +229,12 @@ namespace RentARoom.DataAccess.Data
             {
                 var properties = new[]
                 {
-                    new Models.Property { Postcode = "BT71 4PT", Address = "24 Kings Row", ApplicationUserId = agentId, PropertyTypeId = 1, Price = 800, NumberOfBedrooms = 3, NumberOfBathrooms = 2, NumberOfEnsuites = 0, FloorArea = 83, City = "Belfast", Latitude = 54.54134177777282, Longitude = -6.699969023466111 },
-                    new Models.Property { Postcode = "BT12 7BN", Address = "17 Gortfin Street", ApplicationUserId = adminId, PropertyTypeId = 3, Price = 700, NumberOfBedrooms = 4, NumberOfBathrooms = 2, NumberOfEnsuites = 1, FloorArea = 151, City = "Coalisland", Latitude = 54.5956190513791, Longitude = -5.960761606693269 },
-                    new Models.Property { Postcode = "BT9 5BN", Address = "16A Malone Road", ApplicationUserId = agentId, PropertyTypeId = 4, Price = 1000, NumberOfBedrooms = 1, NumberOfBathrooms = 2, NumberOfEnsuites = 2, FloorArea = 57, City = "Belfast", Latitude = 54.581576960811844, Longitude = -5.937657058238983 },
-                    new Models.Property { Postcode = "BT12 3AB", Address = "9 Sandymount Mews", ApplicationUserId = agentId, PropertyTypeId = 6, Price = 400, NumberOfBedrooms = 1, NumberOfBathrooms = 1, NumberOfEnsuites = 0, FloorArea = 15, City = "Belfast", Latitude = 54.54186395518589, Longitude = -6.018565893173219 },
-                    new Models.Property { Postcode = "BT9 5EJ", Address = "12 Hillside Drive", ApplicationUserId = adminId, PropertyTypeId = 6, Price = 700, NumberOfBedrooms = 1, NumberOfBathrooms = 1, NumberOfEnsuites = 1, FloorArea = 20, City = "Belfast", Latitude = 54.56917143602745, Longitude = -5.940277576446534 },
-                    new Models.Property { Postcode = "BT6 8EX", Address = "31 Florida Drive", ApplicationUserId = agentId, PropertyTypeId = 6, Price = 1000, NumberOfBedrooms = 1, NumberOfBathrooms = 2, NumberOfEnsuites = 1, FloorArea = 30, City = "Belfast", Latitude = 54.58821239356089, Longitude = -5.908394157886506 }
+                    new Models.Property { Postcode = "BT71 4PT", Address = "24 Kings Row", ApplicationUserId = agentId, PropertyTypeId = 1, Price = 800, NumberOfBedrooms = 3, NumberOfBathrooms = 2, NumberOfEnsuites = 0, FloorArea = 83, City = "Belfast", Latitude = 54.54134177777282, Longitude = -6.699969023466111, CreateDate = DateTime.UtcNow.AddDays(-30) },
+                    new Models.Property { Postcode = "BT12 7BN", Address = "17 Gortfin Street", ApplicationUserId = adminId, PropertyTypeId = 3, Price = 700, NumberOfBedrooms = 4, NumberOfBathrooms = 2, NumberOfEnsuites = 1, FloorArea = 151, City = "Coalisland", Latitude = 54.5956190513791, Longitude = -5.960761606693269, CreateDate = DateTime.UtcNow.AddDays(-28) },
+                    new Models.Property { Postcode = "BT9 5BN", Address = "16A Malone Road", ApplicationUserId = agentId, PropertyTypeId = 4, Price = 1000, NumberOfBedrooms = 1, NumberOfBathrooms = 2, NumberOfEnsuites = 2, FloorArea = 57, City = "Belfast", Latitude = 54.581576960811844, Longitude = -5.937657058238983, CreateDate = DateTime.UtcNow.AddDays(-26) },
+                    new Models.Property { Postcode = "BT12 3AB", Address = "9 Sandymount Mews", ApplicationUserId = agentId, PropertyTypeId = 6, Price = 400, NumberOfBedrooms = 1, NumberOfBathrooms = 1, NumberOfEnsuites = 0, FloorArea = 15, City = "Belfast", Latitude = 54.54186395518589, Longitude = -6.018565893173219, CreateDate = DateTime.UtcNow.AddDays(-24) },
+                    new Models.Property { Postcode = "BT9 5EJ", Address = "12 Hillside Drive", ApplicationUserId = adminId, PropertyTypeId = 6, Price = 700, NumberOfBedrooms = 1, NumberOfBathrooms = 1, NumberOfEnsuites = 1, FloorArea = 20, City = "Belfast", Latitude = 54.56917143602745, Longitude = -5.940277576446534, CreateDate = DateTime.UtcNow.AddDays(-22) },
+                    new Models.Property { Postcode = "BT6 8EX", Address = "31 Florida Drive", ApplicationUserId = agentId, PropertyTypeId = 6, Price = 1000, NumberOfBedrooms = 1, NumberOfBathrooms = 2, NumberOfEnsuites = 1, FloorArea = 30, City = "Belfast", Latitude = 54.58821239356089, Longitude = -5.908394157886506, CreateDate = DateTime.UtcNow.AddDays(-20) }
                 };
                 await AddPropertiesAsync(properties);
             }
