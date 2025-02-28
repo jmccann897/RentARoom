@@ -139,6 +139,18 @@ namespace RentARoom.Areas.User.Controllers
             public string ReceiverEmail { get; set; }
         }
 
+
+        [HttpGet("check-user-email")]
+        public async Task<IActionResult> CheckUserEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest(new { exists = false, error = "Email cannot be empty." });
+
+            bool userExists = await _userManager.Users.AnyAsync(u => u.Email == email);
+
+            return Ok(new { exists = userExists });
+        }
+
         #endregion
     }
 }

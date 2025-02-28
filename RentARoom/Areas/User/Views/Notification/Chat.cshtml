@@ -26,13 +26,14 @@
         
         <div class="col-md-6">
             <label for="receiverEmail" class="form-label">Start Chat with (Email)</label>
-            <!-- Prepopulate if provided -->
-            <input type="text" class="form-control" 
-                id="receiverEmail" value="@recipientEmail" 
-                placeholder="Enter email to start a private chat" />
-        </div>
-        <div class="col-md-6 d-flex align-items-end mt-3 mt-md-0">
-            <button id="startChat" class="btn btn-success px-4" disabled>Start Chat</button>
+            <div class="d-flex align-items-center">
+                <!-- Prepopulate if provided -->
+                <input type="text" class="form-control" 
+                    id="receiverEmail" value="@recipientEmail" 
+                    placeholder="Enter email to start a private chat" />
+                <button id="startChat" class="col-md-3 btn btn-success px-4" style="margin-left: 10px;">Start Chat</button>
+            </div>
+        <div id="emailError">User not found. Please enter a valid email.</div> <!-- Error message -->
         </div>
     </div>
 
