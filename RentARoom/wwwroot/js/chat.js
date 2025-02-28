@@ -1,6 +1,7 @@
 ﻿
 import { initialiseChatConnection, joinConversation, sendMessage, listenForNewMessage } from './chatSignalR.js';
 import { loadChatMessages, appendMessage } from './chatMessages.js';
+import { debounce } from './site.js';
 
 // Global variables
 let connectionChat;
@@ -147,12 +148,22 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Event listener for email field input
+
+    // Create debounced version of Check User Email
+    const debouncedCheckUserEmail = debounce(checkUserEmail, 500);
+    receiverEmailField.addEventListener("input", function () {
+        debouncedCheckUserEmail(receiverEmailField.value);
+    });
     // Event listener for "Start Chat" button
     startChatButton.addEventListener("click", async function () {
+
+        startChatButton.disabled = true; // Disable while processing
 
         // Validate receiver email
         if (!receiverEmailField.value || receiverEmailField.value.trim() === "") {
             alert("Please enter a recipient's email to start a chat.");
+            startChatButton.disabled = false; // Re-enable if validation fails
             return;
         }
 
@@ -188,10 +199,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 } else {
                     console.error("Error fetching or creating conversation:", result.error);
+                    startChatButton.disabled = false; // Re-enable on failure
                     return;
                 }
             } catch (error) {
                 console.error("Error connecting to backend to create conversation:", error);
+                startChatButton.disabled = false; // Re-enable on failure
                 return;
             }
         }
@@ -214,12 +227,50 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }).catch(err => {
             console.error("Error starting SignalR connection:", err);
+            startChatButton.disabled = false; // Re-enable on failure
         });
     });
 });
 // #endregion
 
 // #region Helper functions
+
+// Helper function to check if the email exists
+async function checkUserEmail(email) {
+    let errorMessageElement = document.getElementById("emailError");
+    let startChatButton = document.getElementById("startChat");
+
+    if (!email.trim()) {
+        errorMessageElement.textContent = "";
+        errorMessageElement.style.visibility = "hidden";
+        startChatButton.disabled = true;
+        return;
+    }
+
+    try {
+        const response = await fetch(`/check-user-email?email=${encodeURIComponent(email)}`);
+
+        if (!response.ok) throw new Error("Failed to validate email");
+
+        const result = await response.json();
+
+        if (result.exists) { // Check if the user exists
+            errorMessageElement.textContent = ""; // Clear error if email exists
+            errorMessageElement.style.visibility = "hidden";
+            startChatButton.disabled = false;
+        } else {
+            errorMessageElement.textContent = "User not found. Please enter a valid email.";
+            errorMessageElement.style.visibility = "visible";
+            startChatButton.disabled = true;
+        }        
+    } catch (error) {
+        console.error("Error checking user email:", error);
+        errorMessageElement.textContent = "An error occurred. Please try again later.";
+        errorMessageElement.style.visibility = "visible"; 
+        startChatButton.disabled = true;
+    }
+}
+
 
 // Helper function to get or create a chat window
 export function getOrCreateChatWindow(receiverEmail, conversationId) {

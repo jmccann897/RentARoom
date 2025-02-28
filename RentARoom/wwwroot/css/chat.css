@@ -138,8 +138,6 @@
     padding: 10px;
 }
 
-
-
 /* Additonal components for when property is included*/
 .chat-header {
     display: flex;
@@ -269,4 +267,11 @@
 /* Subtle shadow effect */
 .active {
     box-shadow: 0px 2px 10px rgba(0, 123, 255, 0.5); /* Blue shadow for active conversation */
+}
+
+#emailError {
+    visibility: hidden; /* Make sure it's hidden, but still takes up space */
+    height: 20px; /* Adjust the height to match the typical size of the error message */
+    color: red; /* Customize error message color */
+    transition: visibility 0s 0.3s, height 0.3s ease; /* Smooth transition */
 }
