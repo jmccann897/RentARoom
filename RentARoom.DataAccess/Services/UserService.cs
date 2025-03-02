@@ -26,5 +26,24 @@ namespace RentARoom.Services
             return adminAndAgentUsers;
         }
 
+        public async Task<List<ApplicationUser>> GetAllUsers()
+        {
+            var allUsers = new List<ApplicationUser>();
+            var agentList = await _userManager.GetUsersInRoleAsync(SD.Role_Agent);
+            var adminList = await _userManager.GetUsersInRoleAsync(SD.Role_Admin);
+            var userList = await _userManager.GetUsersInRoleAsync(SD.Role_User);
+            allUsers.AddRange(agentList);
+            allUsers.AddRange(adminList);
+            allUsers.AddRange(userList);
+            allUsers = allUsers.Distinct().ToList();
+
+            return allUsers;
+        }
+
+        public async Task<ApplicationUser> GetUserById(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
+
+        }
     }
 }

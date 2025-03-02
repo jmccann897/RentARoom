@@ -42,6 +42,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="User" asp-controller="Map" asp-action="MapSearch">Map</a>
                         </li>
+                        @if (User.IsInRole(SD.Role_Admin))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="Admin" asp-controller="Admin" asp-action="Index">User Management</a>
+                            </li>
+                        }
                         
                     </ul>
 
@@ -66,13 +72,13 @@
         <partial name="_Notification" />
         @RenderBody()
     </main>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/homeNotificationSignalR.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -10,5 +10,7 @@ namespace RentARoom.DataAccess.Services.IServices
     public interface IUserService
     {
         Task<List<ApplicationUser>> GetAdminAndAgentUsersAsync();
+        Task<List<ApplicationUser>> GetAllUsers();
+        Task<ApplicationUser> GetUserById(string userId);
     }
 }

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<ApplicationUser>
+
+@{
+    var isAdmin = User.IsInRole(SD.Role_Admin);
+}
+
+<div class="card shadow border-0 mb-3">
+
+    <div class="card-header bg-primary text-white m-lg-0 py-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Title -->
+            <h2 class="text-white py-2">
+                All Users on RentARoom
+            </h2>
+       </div>
+    </div>
+
+    <div class="card-body p-4">
+        @* https://datatables.net/ *@
+        @* User Table *@
+        <table id="tblUsers" class="display table-striped table-bordered table-hover pt-2" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        var isAdmin = @isAdmin.ToString().ToLower(); // `true` for admin
+    </script>
+    <script src="~/js/userDataTable.js"></script>
+}
