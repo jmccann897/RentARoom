@@ -68,7 +68,8 @@ namespace RentARoom.Models
 
         //default constructor
         public Property()
-        {           
+        {
+            PropertyViews = new List<PropertyView>();
         }
     }
 }

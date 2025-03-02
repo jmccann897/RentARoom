@@ -116,9 +116,15 @@ namespace RentARoom.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    if(User.IsInRole(SD.Role_Agent) || User.IsInRole(SD.Role_Admin))
+
+                    if (User.IsInRole(SD.Role_Admin))
                     {
-                        _logger.LogInformation("User logged in.");
+                        _logger.LogInformation("Admin logged in.");
+                        return LocalRedirect("~/Admin/Admin");
+                    }
+                    else if (User.IsInRole(SD.Role_Agent))
+                    {
+                        _logger.LogInformation("Agent logged in.");
                         return LocalRedirect("~/Agent/Properties");
                     }
                     else

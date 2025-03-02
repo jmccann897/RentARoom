@@ -123,11 +123,13 @@ namespace RentARoom.Areas.Agent.Controllers
                     if (propertyVM.Property.Id == 0)
                     {
                         _unitOfWork.Property.Add(propertyVM.Property);
+                        TempData["success"] = "Property created successfully";
                         _unitOfWork.Save();
                     }
                     else
                     {
                         _unitOfWork.Property.Update(propertyVM.Property);
+                        TempData["success"] = "Property updated successfully";
                         _unitOfWork.Save();
                     }
 
@@ -143,7 +145,7 @@ namespace RentARoom.Areas.Agent.Controllers
                     }
 
                     _unitOfWork.Save();
-                    TempData["success"] = "Property created successfully";
+                    //TempData["success"] = "Property created successfully";
                     return RedirectToAction("Index", "Properties");
 
                 } catch (Exception ex)
@@ -166,7 +168,7 @@ namespace RentARoom.Areas.Agent.Controllers
             {
                 Text = user.UserName,
                 Value = user.Id.ToString() 
-            }).ToList();
+            }).ToList();           
             return View(propertyVM);
         }
 
@@ -226,7 +228,7 @@ namespace RentARoom.Areas.Agent.Controllers
             _unitOfWork.Property.Remove(propertyToBeDeleted);
             _unitOfWork.Save();
 
-            return Json(new { success = true, message = "Delete successful" });
+            return Json(new { success = true, message = "Property deleted successfully" });
         }
 
         [HttpPost]
