@@ -19,18 +19,23 @@
 
     <!-- Chat Control Panel -->
     <div class="row mb-3">
-        <h2>Hello, @Model.ApplicationUser.Name! Chat with others in Rentaroom.</h2>
+        @{
+            var chatText ="";
+            chatText = (User.IsInRole(SD.Role_Admin) ? chatText += "Others" : User.IsInRole(SD.Role_Agent) ? chatText += "Renters" : chatText += "Agents");
+        }
+        <h2>Hello, @Model.ApplicationUser.Name! Chat with @chatText</h2>
+
 
         <!-- Hidden input for User's email -->
         <input type="hidden" id="senderEmail" value="@User.Identity.Name" />   
         
         <div class="col-md-6">
-            <label for="receiverEmail" class="form-label">Start Chat with (Email)</label>
+            <label for="receiverEmail" class="form-label"></label>
             <div class="d-flex align-items-center">
                 <!-- Prepopulate if provided -->
                 <input type="text" class="form-control" 
                     id="receiverEmail" value="@recipientEmail" 
-                    placeholder="Enter email to start a private chat" />
+                    placeholder="Enter their email" />
                 <button id="startChat" class="col-md-3 btn btn-success px-4" style="margin-left: 10px;">Start Chat</button>
             </div>
         <div id="emailError">User not found. Please enter a valid email.</div> <!-- Error message -->

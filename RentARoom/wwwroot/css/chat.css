@@ -256,8 +256,11 @@
 
 /* Make sure the recipient, last message, and timestamp are in white text for visibility */
 .active .recipient,
-.active .last-message,
-.active .timestamp {
+.active .last-message {
+    color: white;
+}
+
+.conversation-item.active .timestamp {
     color: white !important;
 }
 /* Underline to the recipient */

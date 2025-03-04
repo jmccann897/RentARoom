@@ -19,16 +19,30 @@ function checkUserRole() {
 function loadUserTable() {
     var columns = [
         { data: 'name', title: "Name" },
-        { data: 'email', title: "Email" },
-        { data: 'phoneNumber', title: "Phone" },
-        { data: 'role', title: "Role" },
+        { data: 'email', title: "Email"},
+        { data: 'phoneNumber', title: "Phone"},
         {
-            data: 'id',
-            title: 'Actions',
+            data: 'role',
+            title: "Role",
+            render: function (data, type, row) {
+                let badgeClass = "badge bg-secondary"; 
+
+                if (data.toLowerCase() === "admin") {
+                    badgeClass = "badge bg-danger"; 
+                } else if (data.toLowerCase() === "agent") {
+                    badgeClass = "badge bg-warning text-dark"; 
+                } else if (data.toLowerCase() === "user") {
+                    badgeClass = "badge bg-info";
+                }
+
+                return `<span class="${badgeClass}">${data}</span>`;
+            }
+        },
+        {
+            data: 'id', 
             "render": function (data) {
                 return `
-                <div class="w-75 btn-group" role="group">
-                    
+                <div class="w-40 btn-group" role="group">
                     <a onClick=Delete('Admin/DeleteUser/${data}') class="btn btn-secondary mx-2" data-bs-toggle="tooltip" title="Delete Property">
                     <i class="bi bi-trash-fill"></i>
                     </a>
@@ -44,6 +58,10 @@ function loadUserTable() {
             url: 'Admin/GetAllUsers',
             type: 'GET',
         },
+        "columnDefs": [
+            { className: "text-center", targets: [1, 2] }, // Center align Email & Phone
+            { width: "100px", targets: [-1] } // Reduce width of last column (Actions)
+        ],
         "columns": columns,
         "order": [[0, 'asc']], // Sorting by 'Name' column
         responsive: true

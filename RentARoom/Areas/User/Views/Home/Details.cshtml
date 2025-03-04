@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-12 text-center">
                 <h3 class="text-white text-uppercase">@Model.Property.Address, @Model.Property.City, @Model.Property.Postcode</h3>
-                <p class="text-white-50 fw-semibold mb-0">Agent: @Model.Property.ApplicationUser.UserName</p>
+                <p class="text-dark fw-semibold mb-0">Listed By: @Model.Property.ApplicationUser.UserName</p>
                 </div>
             </div>
         </div>
@@ -54,18 +54,18 @@
                             <h6> @Model.Property.NumberOfBedrooms <i class="fa-solid fa-bed" title="Number of Bedrooms"></i>  @Model.Property.NumberOfBathrooms <i class="fa fa-solid fa-toilet" title="Number of Bathrooms"></i> </h6>
                             </div>
                             <div class="row ps-2">
-                            <h6 class="text-dark text-opacity-50">Property Type: @Model.Property.PropertyType.Name</h6>
+                            <h6 class="text-dark text-opacity-50">Type: @Model.Property.PropertyType.Name</h6>
                             </div>
                             <div class="row ps-2">
                                 @{
                                 double areaInSqFt2 = (Model.Property.FloorArea * 10.764);
                                 double roundedAreaInSqFt2 = Math.Round(areaInSqFt2, 2);
                                 }
-                            <h6 class="text-dark text-opacity-50">Floor Area: @Model.Property.FloorArea m<sup>2</sup> (@roundedAreaInSqFt2 sqft)</h6>
+                            <h6 class="text-dark text-opacity-50">Size: @Model.Property.FloorArea m<sup>2</sup> (@roundedAreaInSqFt2 sqft)</h6>
                             </div> 
                             <div class="row ps-2">
                                 <h6 class="text-dark text-opacity-50  pb-2">
-                                    Rent Price:
+                                    Monthly Rent:
                                     <span class="text-dark text-opacity-50 fw-semibold">
                                     @Model.Property.Price.ToString("c")
                                     </span>
@@ -78,24 +78,31 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-12 col-lg-6 offset-lg-1">
                         <div class="travel-time-section">
-                            <h5>Points of Interest Travel Time</h5>
+                            <h5>Travel Time to your Points of Interest </h5>
+
                             <div class="row ps-2">
-                                <label for="travelProfile">Select Travel Mode:</label>
-                                <select id="travelProfile" class="form-select mb-2">
-                                    <option value="driving-car">Driving</option>
-                                    <option value="cycling-regular" selected>Cycling</option>
-                                    <option value="foot-walking">Walking</option>
-                                </select>
+                                <div class="col-12">
+                                    <ul id="travelTimesList" class="list-group w-100">
+                                        <li class="list-group-item">Select a travel mode and click 'Get Travel Time' to view estimated travel durations.</li>
+                                    </ul>
+                                </div>
                             </div>
+
+                            <div class="row ps-2">
+                                <div class="col-12">
+                                    <label for="travelProfile"></label>
+                                    <select id="travelProfile" class="form-select w-100 mb-2">
+                                        <option value="driving-car">Driving</option>
+                                        <option value="cycling-regular" selected>Cycling</option>
+                                        <option value="foot-walking">Walking</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="row ps-2">
                                 <button id="calculateTravelTime" class="btn btn-warning bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
                                     <i class="bi bi-clock-history"></i> Get Travel Time
                                 </button>
-                            </div>
-                            <div class="row ps-2">
-                                <ul id="travelTimesList" class="list-group">
-                                    <li class="list-group-item">Click "Get Travel Time" to see results.</li>
-                                </ul>
                             </div>
                         </div>
 
@@ -112,35 +119,7 @@
                     </div>
                 </div>
                 
-                <form method="post">
-                    <div class="contact-agent-details">
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-12 col-lg-6 offset-lg-1">
-                                <h5> Contact Agent Details</h5>
-                                <div class="row">
-                                    <div class="col-12 col-md-8">
-                                        <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
-                                        <i class="bi bi-telephone-fill"></i>@Model.Property.ApplicationUser.PhoneNumber
-                                        </button>
-                                        <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
-                                        <i class="bi bi-envelope-arrow-up-fill"></i> @Model.Property.ApplicationUser.Email
-                                        </button>
-                                        <!-- Hidden fields for necessary data -->
-                                    <input type="hidden" name="recipientEmail" value="@Model.Property.ApplicationUser.Email" />
-                                    <input type="hidden" name="propertyAddress" value="@Model.Property.Address" />
-                                    <input type="hidden" name="propertyCity" value="@Model.Property.City" />
-                                    <input type="hidden" name="propertyPrice" value="@Model.Property.Price" />
-                                        <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold"
-                                                asp-controller="Notification"
-                                                asp-action="Chat">
-                                            <i class="bi bi-chat-left-text-fill"></i> Chat                                   
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+               
 
                 <div class="viewSection">
                     <div class="row pl-2 mb-3">
@@ -155,8 +134,40 @@
                     </div>
                     <canvas id="viewsChart"></canvas>
                 </div>
-                
-           
+
+                <form method="post">
+                    <div class="contact-agent-details">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-12 col-lg-6 offset-lg-1">
+                                <h5> Get in Touch with the Agent</h5>
+                                <div class="row">
+                                    <div class="col-12 col-md-8">
+                                        <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-telephone-fill me-2"></i>@Model.Property.ApplicationUser.PhoneNumber
+                                        </button>
+
+                                        <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-envelope-arrow-up-fill me-2"></i> @Model.Property.ApplicationUser.Email
+                                        </button>
+
+                                        <!-- Hidden fields for necessary data -->
+                                        <input type="hidden" name="recipientEmail" value="@Model.Property.ApplicationUser.Email" />
+                                        <input type="hidden" name="propertyAddress" value="@Model.Property.Address" />
+                                        <input type="hidden" name="propertyCity" value="@Model.Property.City" />
+                                        <input type="hidden" name="propertyPrice" value="@Model.Property.Price" />
+
+                                        <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 fw-semibold d-flex align-items-center justify-content-center"
+                                                asp-controller="Notification"
+                                                asp-action="Chat">
+                                    <i class="bi bi-chat-left-text-fill me-2"></i> Message the Agent
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form> 
         </div>
    
 </div>
