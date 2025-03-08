@@ -142,38 +142,27 @@
 .chat-header {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    align-items: center;
+    padding: 15px;
+    background-color: #f7f9fc;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom:2px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    font-weight: bold;
 }
+    .chat-header span {
+        display: inline-block; /* or 'block' if you want it to fill its parent */
+        text-align: center;
+        width: 100%; /* Make it take up the full width */
+    }
 
-.property-info-left {
+.property-info {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     text-align: left;
 }
-
-.receiver-info-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    text-align: right;
-    word-wrap: break-word;
-}
-
-    .property-info-left p,
-    .receiver-info-right p {
-        margin: 0;
-        padding: 0;
-        font-size: 14px;
-    }
-
-    .property-info-left strong,
-    .receiver-info-right strong {
-        font-weight: bold;
-    }
 
 
 /* Mobile View Adjustments */

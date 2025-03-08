@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentARoom.DataAccess.Data;
@@ -31,11 +32,10 @@ namespace RentARoom.Areas.User.Controllers
             
             return View();
         }
+
+        [Authorize]
         public async Task<IActionResult> Chat(string recipientEmail, string propertyAddress, string propertyCity, decimal propertyPrice)
         {
-            ViewBag.RecipientEmail = string.IsNullOrEmpty(recipientEmail) ? string.Empty : recipientEmail;
-            ViewBag.PropertyAddress = string.IsNullOrEmpty(propertyAddress) ? string.Empty : propertyAddress;
-            ViewBag.PropertyCity = string.IsNullOrEmpty(propertyCity) ? string.Empty : propertyCity;
             if (!propertyPrice.Equals(null))
             {
                 ViewBag.PropertyPrice = propertyPrice;
@@ -66,7 +66,11 @@ namespace RentARoom.Areas.User.Controllers
                 UserId = userId,
                 ConversationIds = conversationIds,
                 Conversations = conversationsDTO.ToList(),
-                ApplicationUser = applicationUser
+                ApplicationUser = applicationUser,
+                RecipientEmail = string.IsNullOrEmpty(recipientEmail) ? null : recipientEmail,
+                PropertyAddress = string.IsNullOrEmpty(propertyAddress) ? null : propertyAddress,
+                PropertyCity = string.IsNullOrEmpty(propertyCity) ? null : propertyCity,
+                PropertyPrice = propertyPrice == default ? null : propertyPrice
             };
 
             return View(chatVM);
@@ -149,6 +153,20 @@ namespace RentARoom.Areas.User.Controllers
             bool userExists = await _userManager.Users.AnyAsync(u => u.Email == email);
 
             return Ok(new { exists = userExists });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetReceiverName(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest(new { exists = false, error = "Email cannot be empty." });
+
+            var user = await _userManager.FindByEmailAsync(email.ToUpper());
+            if (user == null)
+                return NotFound();
+
+            return Ok(new { Name = user.Name, Email = user.Email });
         }
 
         #endregion

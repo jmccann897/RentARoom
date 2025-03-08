@@ -1,10 +1,10 @@
 ﻿@model ChatVM
 
 @{
-    var recipientEmail = ViewBag.RecipientEmail as string ?? string.Empty;
-    var propertyAddress = ViewBag.PropertyAddress as string ?? string.Empty;
-    var propertyCity = ViewBag.PropertyCity as string ?? string.Empty;
-    var propertyPrice = ViewBag.PropertyPrice as string ?? string.Empty;
+    var recipientEmail = Model.RecipientEmail ?? string.Empty;
+    var propertyAddress = Model.PropertyAddress ?? string.Empty;
+    var propertyCity = Model.PropertyCity ?? string.Empty;
+    var propertyPrice = Model.PropertyPrice.HasValue ? Model.PropertyPrice.Value.ToString("F2") : string.Empty;
 }
 
 <!-- Pass conversation Ids to JavaScript -->
@@ -79,10 +79,10 @@
             <div id="chatWindows">
                 <p class="text-muted">Click a conversation to resume chat or enter email above to start a chat.</p>
                 <div id="chatInfo"
-                     data-recipient-email="@ViewBag.RecipientEmail"
-                     data-property-address="@ViewBag.PropertyAddress"
-                     data-property-city="@ViewBag.PropertyCity"
-                     data-property-price="@ViewBag.PropertyPrice">
+                     data-recipient-email="@Model.RecipientEmail"
+                     data-property-address="@(Model.PropertyAddress ?? "")"
+                     data-property-city="@(Model.PropertyCity ?? "")"
+                     data-property-price="@(Model.PropertyPrice?.ToString() ?? "")">
                 </div>
             </div>
         </div>
