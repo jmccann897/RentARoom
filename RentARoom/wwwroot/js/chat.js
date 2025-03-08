@@ -89,16 +89,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const senderEmailField = document.getElementById("senderEmail");
     const chatInfo = document.getElementById("chatInfo");
 
-    // Access data attributes
-    const recipientEmail = chatInfo.getAttribute("data-recipient-email");
-    const propertyAddress = chatInfo.getAttribute("data-property-address");
-    const propertyCity = chatInfo.getAttribute("data-property-city");
-    const propertyPrice = chatInfo.getAttribute("data-property-price");
 
     // Modify the UI based on whether the data is present
-    if (recipientEmail && propertyAddress && propertyPrice && propertyCity) {
-        addPropertyDetailsToChatWindow();
-    }
+    addPropertyDetailsToChatWindow(conversationId);
+    
 
     // Event listener for conversation click to load messages
     document.querySelectorAll('.conversation-item').forEach(item => {
@@ -225,6 +219,9 @@ document.addEventListener("DOMContentLoaded", function () {
             // Create or open a chat window for the receiver
             chatWindow = getOrCreateChatWindow(receiverEmail, conversationId);
 
+            // If new chat started from property details then add property details div
+            addPropertyDetailsToChatWindow(conversationId);
+
         }).catch(err => {
             console.error("Error starting SignalR connection:", err);
             startChatButton.disabled = false; // Re-enable on failure
@@ -298,6 +295,9 @@ export function getOrCreateChatWindow(receiverEmail, conversationId) {
     const sendButton = chatWindow.querySelector(".send-private-message");
 
     sendButton.addEventListener("click", () => sendMessageHandler(chatWindow, receiverEmail));
+
+    addChatHeaderDetails(receiverEmail, chatWindow)
+    addPropertyDetailsToChatWindow(conversationId)
     
     // Mark this window as the active one and hide others
     setActiveChatWindow(chatWindow, document.querySelector(`.conversation-item[data-conversation-id="${conversationId}"]`));
@@ -314,7 +314,7 @@ function createChatWindow(receiverEmail, conversationId) {
     chatWindow.setAttribute("data-conversation-id", conversationId);
 
     // HTML inner structure for chat window
-    chatWindow.innerHTML = `
+    chatWindow.innerHTML += `
     <div class="messages-box border rounded p-3 mb-3">
         <!-- messages-list will be added dynamically -->
     </div>
@@ -368,25 +368,81 @@ export function setActiveChatWindow(currentChatWindow, conversationItem) {
 }
 
 // Helper function to add property details if chat accessed via details page
-function addPropertyDetailsToChatWindow() {
+function addPropertyDetailsToChatWindow(conversationId) {
+    // Access data attributes
+    const recipientEmail = chatInfo.getAttribute("data-recipient-email");
+    const propertyAddress = chatInfo.getAttribute("data-property-address");
+    const propertyCity = chatInfo.getAttribute("data-property-city");
+    const propertyPrice = chatInfo.getAttribute("data-property-price");
+
+    if (!recipientEmail || !propertyAddress || !propertyPrice || !propertyCity) {
+        console.log("recipientEmail,propertyAddress, propertyPrice , propertyCity not populated, skipping property details.");
+        return;
+    }
+    // First, check if a chat window is open for the current conversation
+    let chatWindow = document.querySelector(`.chat-window[data-conversation-id="${conversationId}"]`);
+
+    if (!chatWindow) {
+        console.log("No chat window for this conversation, skipping property details.");
+        return;  // If no chat window exists, skip adding the property details
+    }
+
+    // Ensure that the chat window is the correct conversation
+    const currentConversationRecipientEmail = chatWindow.getAttribute("data-receiver");
+    if (currentConversationRecipientEmail !== recipientEmail) {
+        console.log("The conversation does not match the recipient, skipping property details.");
+        return;  // If the conversation recipient doesn't match, skip
+    }
+
+    // Check if property details are already appended
+    if (chatWindow.querySelector('.property-info')) {
+        console.log("Property details already added to the chat window.");
+        return;  // If the property details are already added, do nothing
+    }
+
     // Dynamically update the chat window with property info
     const propertyInfoDiv = document.createElement("div");
-    propertyInfoDiv.classList.add("chat-header");
+    propertyInfoDiv.classList.add("property-info");
 
     // Construct the header
     propertyInfoDiv.innerHTML = `
-        <div class="property-info-left">
-            <p><strong>Address:</strong> ${propertyAddress}</p>
-            <p><strong>City:</strong> ${propertyCity}</p>
-            <p><strong>Price:</strong> ${propertyPrice}</p>
-        </div>
-        <div class="receiver-info-right">
-            <p><strong>Receiver:</strong> ${recipientEmail}</p>
+        <div>
+            <p>Address: ${propertyAddress} | City: ${propertyCity} | Price: ${propertyPrice}</p>
         </div>
     `;
 
-    // Append the header div to the chat window
-    document.getElementById("chatWindows").appendChild(propertyInfoDiv);
+    // Prepend the header div to the chat window to ensure it goes above the messages
+    chatWindow.insertBefore(propertyInfoDiv, chatWindow.firstChild);
+}
+
+function addChatHeaderDetails(receiverEmail, chatWindow) {
+    // Check if property details are already appended
+    if (chatWindow.querySelector('.chat-header')) {
+        console.log("Chat header already added to the chat window.");
+        return;  // If the chat header already added, do nothing
+    }
+    // Fetch the receiver's name based on the email
+    fetch(`/User/Notification/GetReceiverName?email=${receiverEmail}`)
+        .then(response => {
+            console.log(response.status); // Check the status code
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.name) {
+                // Add the receiver's name header at the top of the chat window
+                const chatHeader = document.createElement("div");
+                chatHeader.classList.add("chat-header", "mb-2");
+                chatHeader.innerHTML = `
+                    <span class="receiver-name">You are chatting with: ${data.name}</span>
+                `;
+                // Insert the chat header at the top of the chat window
+                chatWindow.prepend(chatHeader);  // Insert as the first child
+            }
+        })
+        .catch(error => console.error('Error fetching receiver info:', error));
 }
 
 // #endregion

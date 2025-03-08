@@ -15,5 +15,12 @@ namespace RentARoom.Models.ViewModels
         public Property? property { get; set; }
         public List<ChatConversationDTO> Conversations { get; set; } = new();
         public ApplicationUser ApplicationUser { get; set; }
+
+        // Allow for property details - nullable
+        public string? RecipientEmail { get; set; }
+        public string? PropertyAddress { get; set; }
+        public string? PropertyCity { get; set; }
+        public decimal? PropertyPrice { get; set; }
+
     }
 }
