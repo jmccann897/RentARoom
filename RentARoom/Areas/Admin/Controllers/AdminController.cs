@@ -27,17 +27,7 @@ namespace RentARoom.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Need to add a datatable fo the users
-            // Fetch the logged-in user and check their admin role
-            var applicationUser = await _userManager.GetUserAsync(User);
-            if (applicationUser == null || !User.IsInRole(SD.Role_Admin))
-            {
-                return Unauthorized();
-            }
-            
-            var userList = await _userService.GetAllUsers();                   
-            
-            // Need to pass in users
+            var userList = await _userService.GetAllUsersWithRoles();                   
             return View(userList);
         }
 
@@ -46,47 +36,21 @@ namespace RentARoom.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            // Check role first then filter results if Agent to their properties
-            if (!User.IsInRole(SD.Role_Admin))
-            {
-                return Unauthorized();
-            }
-            
-            var users = await _userService.GetAllUsers();
-            var formattedUsers = users.Select(u => new
-            {
-                Id = u.Id,
-                Name = u.Name,
-                Email = u.Email,
-                PhoneNumber = u.PhoneNumber,
-                Role = _userManager.GetRolesAsync(u).Result.FirstOrDefault()
-            });
-
-            return Json(new { data = formattedUsers });
-
+            var users = await _userService.GetAllUsersWithRoles();
+            return Json(new { data = users });
         }
 
         [HttpDelete]
         [Route("Admin/Admin/DeleteUser/{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var userToBeDeleted =  await _userService.GetUserById(id);
-            if (userToBeDeleted == null)
-            {
-                return Json(new { success = false, message = "Error while Deleting - User not found" });
-            }
-            var result = await _userManager.DeleteAsync(userToBeDeleted);
-            if (result.Succeeded)
-            {
+            var success = await _userService.DeleteUser(id);
+            if (success) 
+            { 
                 return Json(new { success = true, message = "User deleted successfully" });
             }
-            else
-            {
-                return BadRequest(new { success = false, message="Error deleting user" });
-            }    
+            return BadRequest(new { success = false, message = "Error deleting user" });
         }
-
-
         #endregion
     }
 }

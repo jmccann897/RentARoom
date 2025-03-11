@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
+using RentARoom.Models.DTOs;
 using RentARoom.Utility;
 
 namespace RentARoom.Services
@@ -40,10 +42,58 @@ namespace RentARoom.Services
             return allUsers;
         }
 
-        public async Task<ApplicationUser> GetUserById(string userId)
+        public async Task<UserDTO> GetUserById(string userId)
         {
-            return await _userManager.FindByIdAsync(userId);
-
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return null;
+            return new UserDTO
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Role = _userManager.GetRolesAsync(user).Result.FirstOrDefault()
+            };
         }
+
+        // #region Admin Controller
+
+        // Check if user is an admin
+        public async Task<bool> IsUserAdmin(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return false;
+            return await _userManager.IsInRoleAsync(user, SD.Role_Admin);
+        }
+
+        // Get all users with role included
+        public async Task<List<UserDTO>> GetAllUsersWithRoles()
+        {
+            var allUsers = await _userManager.Users.ToListAsync();
+            var userDTOs = allUsers.Select(user => new UserDTO
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Role = _userManager.GetRolesAsync(user).Result.FirstOrDefault()
+            }).ToList();
+          
+            return userDTOs
+;
+        }
+
+        // Delete user by ID
+        public async Task<bool> DeleteUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return false;
+
+            var result = await _userManager.DeleteAsync(user);
+            return result.Succeeded;
+        }
+
+
+        // #endregion
     }
 }
