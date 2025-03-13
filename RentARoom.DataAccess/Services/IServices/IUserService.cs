@@ -3,6 +3,7 @@ using RentARoom.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,6 +42,16 @@ namespace RentARoom.DataAccess.Services.IServices
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<bool> DeleteUser(string userId);
+        // #endregion
+
+
+        // #region Property Controller
+        /// <summary>
+        /// Gets the current applicationuser based on the claims principal of user in window.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        Task<ApplicationUser> GetCurrentUserAsync(ClaimsPrincipal user);
         // #endregion
     }
 }

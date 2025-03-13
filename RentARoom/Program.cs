@@ -50,6 +50,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IAzureBlobService, AzureBlobService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddTransient<ITravelTimeService, TravelTimeService>();
+builder.Services.AddScoped<IPropertyService, PropertyService>();
 
 
 builder.Services.AddRazorPages(); // needed for identity

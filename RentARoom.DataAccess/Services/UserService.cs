@@ -4,6 +4,7 @@ using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Models.DTOs;
 using RentARoom.Utility;
+using System.Security.Claims;
 
 namespace RentARoom.Services
 {
@@ -94,6 +95,15 @@ namespace RentARoom.Services
         }
 
 
+        // #endregion
+
+        // #region Property Controller
+        public async Task<ApplicationUser> GetCurrentUserAsync(ClaimsPrincipal user)
+        {
+            return await _userManager.GetUserAsync(user);
+        }
+        
+        
         // #endregion
     }
 }
