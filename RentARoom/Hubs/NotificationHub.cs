@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using NuGet.Packaging.Signing;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository.IRepository;
-using RentARoom.DataAccess.Services.IServices;
+using RentARoom.Services.IServices;
 
 namespace RentARoom.Hubs
 {

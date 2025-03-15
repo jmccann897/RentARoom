@@ -28,13 +28,15 @@ namespace RentARoom.DataAccess.Repository
                 objFromDb.Address = obj.Address;
                 objFromDb.Postcode = obj.Postcode;
                 objFromDb.Price = obj.Price;
-                objFromDb.ApplicationUserId = obj.ApplicationUserId;
                 objFromDb.NumberOfBedrooms = obj.NumberOfBedrooms;
+                objFromDb.NumberOfBathrooms = obj.NumberOfBathrooms;
+                objFromDb.NumberOfEnsuites = obj.NumberOfEnsuites;
                 objFromDb.FloorArea = obj.FloorArea;
                 objFromDb.City = obj.City;
-                objFromDb.PropertyTypeId = obj.PropertyTypeId;
                 objFromDb.Latitude = obj.Latitude;
                 objFromDb.Longitude = obj.Longitude;
+                objFromDb.PropertyTypeId = obj.PropertyTypeId;
+                objFromDb.ApplicationUserId = obj.ApplicationUserId;
             }
         }
     }

@@ -18,6 +18,10 @@ namespace RentARoom.DataAccess.Repository
         public IImageRepository Image { get; private set; }
         public IPropertyViewRepository PropertyView { get; private set; }
 
+        public IChatConversationRepository ChatConversations { get; private set; }
+        public IChatMessageRepository ChatMessages { get; private set; }
+        public IChatConversationParticipantRepository ChatConversationParticipants { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -26,11 +30,19 @@ namespace RentARoom.DataAccess.Repository
             Location = new LocationRepository(_db);
             Image = new ImageRepository(_db);
             PropertyView = new PropertyViewRepository(_db);
+            ChatConversations = new ChatConversationRepository(_db);
+            ChatMessages = new ChatMessageRepository(_db);
+            ChatConversationParticipants = new ChatConversationParticipantRepository(_db);
         }
 
         public void Save()
         {
             _db.SaveChanges();
+        }
+
+        public async Task SaveAsync()
+        {
+            await _db.SaveChangesAsync();
         }
     }
 }

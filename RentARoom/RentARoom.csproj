@@ -25,6 +25,8 @@
     <ProjectReference Include="..\RentARoom.DataAccess\RentARoom.DataAccess.csproj" />
     <ProjectReference Include="..\RentARoom.Models\RentARoom.Models.csproj" />
     <ProjectReference Include="..\RentARoom.Utility\RentARoom.Utility.csproj" />
+	<ProjectReference Include="..\RentARoom.Services\RentARoom.Services.csproj" />
+
   </ItemGroup>
 
   <ItemGroup>

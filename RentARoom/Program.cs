@@ -9,8 +9,8 @@ using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Hubs;
 using RentARoom.Models;
 using RentARoom.Services;
+using RentARoom.Services.IServices;
 using RentARoom.Utility;
-using System;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +50,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IAzureBlobService, AzureBlobService>();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddTransient<ITravelTimeService, TravelTimeService>();
+builder.Services.AddScoped<IPropertyService, PropertyService>();
+builder.Services.AddScoped<IPropertyViewService, PropertyViewService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IMapService, MapService>();
 
 
 builder.Services.AddRazorPages(); // needed for identity

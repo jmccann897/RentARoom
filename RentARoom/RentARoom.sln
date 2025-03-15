@@ -5,11 +5,13 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentARoom", "RentARoom.csproj", "{D1BA5B1D-B691-4F1C-AE74-0CD20D3B4F5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentARoom.DataAccess", "..\RentARoom.DataAccess\RentARoom.DataAccess.csproj", "{5924C737-6BDD-4569-B902-611E40C9B618}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentARoom.DataAccess", "..\RentARoom.DataAccess\RentARoom.DataAccess.csproj", "{5924C737-6BDD-4569-B902-611E40C9B618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentARoom.Models", "..\RentARoom.Models\RentARoom.Models.csproj", "{F2759B69-B379-4311-84BD-6A352135FCF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentARoom.Models", "..\RentARoom.Models\RentARoom.Models.csproj", "{F2759B69-B379-4311-84BD-6A352135FCF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentARoom.Utility", "..\RentARoom.Utility\RentARoom.Utility.csproj", "{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentARoom.Utility", "..\RentARoom.Utility\RentARoom.Utility.csproj", "{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentARoom.Services", "..\RentARoom.Services\RentARoom.Services.csproj", "{7A3FA3B4-89A0-471C-B3E5-CA3D324D0C42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DBFACEF-1511-4CF9-92DE-3603EF1587C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A3FA3B4-89A0-471C-B3E5-CA3D324D0C42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A3FA3B4-89A0-471C-B3E5-CA3D324D0C42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A3FA3B4-89A0-471C-B3E5-CA3D324D0C42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A3FA3B4-89A0-471C-B3E5-CA3D324D0C42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
