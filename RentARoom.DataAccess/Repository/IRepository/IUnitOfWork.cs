@@ -13,7 +13,12 @@ namespace RentARoom.DataAccess.Repository.IRepository
         ILocationRepository Location { get;  }
         IImageRepository Image { get; }
         IPropertyViewRepository PropertyView { get; }
+        IChatConversationRepository ChatConversations { get; }
+        IChatMessageRepository ChatMessages { get; }
+        IChatConversationParticipantRepository ChatConversationParticipants { get; }
 
         void Save();
+
+        Task SaveAsync();
     }
 }

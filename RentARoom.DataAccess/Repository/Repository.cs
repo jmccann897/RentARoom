@@ -25,6 +25,11 @@ namespace RentARoom.DataAccess.Repository
         {
             dbSet.Add(entity);
         }
+        
+        public void AddRange(IEnumerable<T> entities)
+        {
+            dbSet.AddRange(entities);
+        }
 
         public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {

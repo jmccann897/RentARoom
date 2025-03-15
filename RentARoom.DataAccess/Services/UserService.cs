@@ -102,8 +102,23 @@ namespace RentARoom.Services
         {
             return await _userManager.GetUserAsync(user);
         }
-        
-        
+        // #endregion
+
+        // #region Notification Controller
+        public async Task<ApplicationUser> GetUserByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<ApplicationUser> GetUserByIdAsync(string id)
+        {
+            return await _userManager.FindByIdAsync(id);
+        }
+
+        public async Task<bool> CheckUserEmailExistsAsync(string email)
+        {
+            return await _userManager.Users.AnyAsync(u => u.Email == email);
+        }
         // #endregion
     }
 }
