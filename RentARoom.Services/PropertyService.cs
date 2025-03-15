@@ -27,6 +27,10 @@ namespace RentARoom.Services.IServices
             var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
             return properties;
         }
+        public async Task<IEnumerable<Property>> GetAllPropertiesAsync()
+        {
+            return await _unitOfWork.Property.GetAllAsync(includeProperties: "PropertyType,ApplicationUser,Images");
+        }
 
         public async Task<IEnumerable<Property>> SearchPropertiesAsync(string searchType, string searchPhrase)
         {

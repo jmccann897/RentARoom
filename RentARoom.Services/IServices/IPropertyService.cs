@@ -13,6 +13,12 @@ namespace RentARoom.Services.IServices
         IEnumerable<Property> GetAllProperties();
 
         /// <summary>
+        /// Get all properties async
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Property>> GetAllPropertiesAsync();
+
+        /// <summary>
         /// Return a list of properties filtered by search type and search phrase.
         /// </summary>
         /// <param name="searchType"></param>

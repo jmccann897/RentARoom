@@ -1,32 +1,32 @@
 ﻿using RentARoom.Models;
+using RentARoom.Models.DTOs;
 using RentARoom.Models.ViewModels;
 
 namespace RentARoom.Services.IServices
 {
-    public interface ILocationService
+    public interface IMapService
     {
         /// <summary>
-        /// Return users locations.
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        IEnumerable<Location> GetUserLocations(string userId);
-
-        /// <summary>
-        /// Gets all locations.
+        /// Get the properties for the map.
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Location>> GetAllLocationsAsync();
+        Task<List<Property>> GetMapProperties();
 
         /// <summary>
-        /// Get location by id.
+        /// Get the locations for the map.
+        /// </summary>
+        /// <returns></returns>
+        Task<List<Location>> GetMapLocations();
+
+        /// <summary>
+        /// Calls Get location by id in location service.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         Location GetLocationById(int id);
 
         /// <summary>
-        /// Save new location.
+        /// Calls Save New Location in location service
         /// </summary>
         /// <param name="locationVM"></param>
         /// <param name="userId"></param>
@@ -34,7 +34,7 @@ namespace RentARoom.Services.IServices
         bool SaveNewLocation(LocationVM locationVM, string userId);
 
         /// <summary>
-        /// Edit location.
+        /// Calls Edit Location in location service
         /// </summary>
         /// <param name="id"></param>
         /// <param name="updatedLocation"></param>
@@ -42,11 +42,10 @@ namespace RentARoom.Services.IServices
         bool EditLocation(int id, Location updatedLocation);
 
         /// <summary>
-        /// Delete a location.
+        /// Calls Delete Location in location service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         bool DeleteLocation(int id);
     }
-
 }

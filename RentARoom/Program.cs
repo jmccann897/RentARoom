@@ -53,6 +53,7 @@ builder.Services.AddTransient<ITravelTimeService, TravelTimeService>();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IPropertyViewService, PropertyViewService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IMapService, MapService>();
 
 
 builder.Services.AddRazorPages(); // needed for identity
