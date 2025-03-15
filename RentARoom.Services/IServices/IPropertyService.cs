@@ -1,17 +1,25 @@
 ﻿using Microsoft.AspNetCore.Http;
 using RentARoom.Models;
-using RentARoom.Models.DTOs;
 using RentARoom.Models.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RentARoom.DataAccess.Services.IServices
+namespace RentARoom.Services.IServices
 {
     public interface IPropertyService
     {
+        /// <summary>
+        /// Return a list of all properties
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Property> GetAllProperties();
+
+        /// <summary>
+        /// Return a list of properties filtered by search type and search phrase.
+        /// </summary>
+        /// <param name="searchType"></param>
+        /// <param name="searchPhrase"></param>
+        /// <returns></returns>
+        Task<IEnumerable<Property>> SearchPropertiesAsync(string searchType, string searchPhrase);
+
         /// <summary>
         /// Get List of Properties for user (Agent list filtered to their ids, all for Admin).
         /// </summary>

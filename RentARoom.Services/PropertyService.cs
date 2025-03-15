@@ -6,13 +6,8 @@ using RentARoom.Models;
 using RentARoom.Models.DTOs;
 using RentARoom.Models.ViewModels;
 using RentARoom.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RentARoom.DataAccess.Services
+namespace RentARoom.Services.IServices
 {
     public class PropertyService : IPropertyService
     {
@@ -27,6 +22,38 @@ namespace RentARoom.DataAccess.Services
             _azureBlobService = azureBlobService;
         }
 
+        public IEnumerable<Property> GetAllProperties()
+        {
+            var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
+            return properties;
+        }
+
+        public async Task<IEnumerable<Property>> SearchPropertiesAsync(string searchType, string searchPhrase)
+        {
+            var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
+            if (!string.IsNullOrEmpty(searchPhrase))
+            {
+                properties = _unitOfWork.Property.Find(p =>
+                p.Address.Contains(searchPhrase) ||
+                p.ApplicationUser.Name.Contains(searchPhrase) ||
+                p.Postcode.Contains(searchPhrase) ||
+                p.City.Contains(searchPhrase));
+            }
+
+            if (!string.IsNullOrEmpty(searchType))
+            {
+                if (searchType.Equals("Bedroom"))
+                {
+                    properties = properties.Where(p => p.PropertyType.Name.Equals("Bedroom"));
+                }
+                else if (searchType.Equals("House"))
+                {
+                    properties = properties.Where(p => !p.PropertyType.Name.Equals("Bedroom"));
+                }
+            }
+
+            return await Task.FromResult(properties);
+        }
         public async Task<List<Property>> GetPropertiesForUserAsync(ApplicationUser user)
         {
             // null check
@@ -52,7 +79,7 @@ namespace RentARoom.DataAccess.Services
 
         public async Task<Property> GetPropertyAsync(int id)
         {
-            return await _unitOfWork.Property.GetAsync(u => u.Id == id, includeProperties: "Images");
+            return await _unitOfWork.Property.GetAsync(u => u.Id == id, includeProperties: "PropertyType,ApplicationUser,Images,PropertyViews");
         }
 
         public async Task<bool> SavePropertyAsync(PropertyVM propertyVM, ApplicationUser user, IEnumerable<IFormFile>? files)
@@ -214,5 +241,7 @@ namespace RentARoom.DataAccess.Services
                 ViewCount = vm.Property.PropertyViews?.Count ?? 0
             };
         }
+
+       
     }
 }

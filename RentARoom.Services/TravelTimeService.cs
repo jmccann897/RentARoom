@@ -1,26 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using RentARoom.DataAccess.Data;
-using RentARoom.DataAccess.Services.IServices;
+﻿using Microsoft.Extensions.Configuration;
+using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
+using RentARoom.Models.DTOs;
+using RentARoom.Services.IServices;
 using SixLabors.ImageSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace RentARoom.DataAccess.Services
+namespace RentARoom.Services.IServices
 {
     public class TravelTimeService : ITravelTimeService
     {
         private readonly string _apiKey;
         private readonly HttpClient _httpClient;
+        private readonly ILocationService _locationService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TravelTimeService(IConfiguration configuration)
+        public TravelTimeService(IConfiguration configuration, IUnitOfWork unitOfWork, ILocationService locationService)
         {
             // Access API key from user secrets (or appsettings)
             _apiKey = configuration["OpenRouteServiceAPI:OSR-RentARoom"];
@@ -33,7 +28,37 @@ namespace RentARoom.DataAccess.Services
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Conent-Type", "application/json");
             _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {_apiKey}");
+
+            _unitOfWork = unitOfWork;
+            _locationService = locationService;
         }
+
+        public async Task<TravelTimeResultDTO> GetTravelTimeAsync(string userId, int propertyId, string profile)
+        {
+            var userLocations = _locationService.GetUserLocations(userId);
+            if (!userLocations.Any())
+            {
+                throw new Exception("No saved locations for the user.");
+            }
+
+            var property = _unitOfWork.Property.Get(u => u.Id == propertyId);
+            if(property == null)
+            {
+                throw new Exception("Invalid property.");
+            }
+
+            var userCoordinates = userLocations.Select(l => new Coordinate { Lat = l.Latitude, Lon = l.Longitude }).ToList();
+            var propertyLocation = new Coordinate { Lat = property.Latitude, Lon = property.Longitude };
+
+            var (travelTimes, distances) = await GetTravelTimesAndDistancesAsync(userCoordinates, propertyLocation, profile);
+
+            return new TravelTimeResultDTO
+            {
+                TravelTimes = travelTimes,
+                Distances = distances
+            };
+        }
+
         public async Task<(List<double> TravelTimes, List<double> Distances)> GetTravelTimesAndDistancesAsync(List<Coordinate> userCoordinates, Coordinate propertyLocation, string profile)
         {
             // Prepare the request body

@@ -7,7 +7,7 @@ using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Models.ViewModels;
-using RentARoom.Services;
+using RentARoom.Services.IServices;
 using RentARoom.Utility;
 using Property = RentARoom.Models.Property;
 
