@@ -2,9 +2,6 @@
 using RentARoom.DataAccess.Repository.IRepository;
 using Location = RentARoom.Models.Location;
 using RentARoom.Models.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using RentARoom.Models;
-using RentARoom.DataAccess.Services.IServices;
 using System.Security.Claims;
 using RentARoom.Services.IServices;
 

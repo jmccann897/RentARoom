@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RentARoom.DataAccess.Repository.IRepository;
-using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
-using RentARoom.Services;
+using RentARoom.Services.IServices;
 using RentARoom.Utility;
 
 namespace RentARoom.Areas.Admin.Controllers

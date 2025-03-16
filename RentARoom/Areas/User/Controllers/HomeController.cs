@@ -1,21 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using NuGet.Versioning;
 using RentARoom.DataAccess.Repository.IRepository;
-using RentARoom.DataAccess.Services;
-using RentARoom.DataAccess.Services.IServices;
+using RentARoom.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Models.ViewModels;
 using System.Diagnostics;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using Property = RentARoom.Models.Property;
-using Coordinate = RentARoom.Models.Coordinate;
 using RentARoom.Hubs;
 using Microsoft.AspNetCore.SignalR;
-using RentARoom.Services.IServices;
 
 namespace RentARoom.Areas.User.Controllers
 {

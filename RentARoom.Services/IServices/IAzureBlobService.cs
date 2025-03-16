@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentARoom.DataAccess.Services.IServices
+namespace RentARoom.Services.IServices
 {
     public interface IAzureBlobService
     {
