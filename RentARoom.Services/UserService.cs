@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Models.DTOs;
 using RentARoom.Utility;
 using System.Security.Claims;
 
-namespace RentARoom.Services
+namespace RentARoom.Services.IServices
 {
     public class UserService : IUserService
     {

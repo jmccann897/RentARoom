@@ -1,7 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Utility;
 using SixLabors.ImageSharp;
@@ -10,7 +9,7 @@ using SixLabors.ImageSharp.Formats.Webp;
 using Image = SixLabors.ImageSharp.Image;
 using System.IO;
 
-namespace RentARoom.Services
+namespace RentARoom.Services.IServices
 {
     public class AzureBlobService : IAzureBlobService
     {

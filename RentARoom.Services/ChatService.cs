@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using RentARoom.DataAccess.Data;
 using RentARoom.DataAccess.Repository.IRepository;
-using RentARoom.DataAccess.Services.IServices;
+using RentARoom.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Models.DTOs;
 using System;

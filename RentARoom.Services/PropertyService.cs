@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using RentARoom.DataAccess.Repository.IRepository;
-using RentARoom.DataAccess.Services.IServices;
 using RentARoom.Models;
 using RentARoom.Models.DTOs;
 using RentARoom.Models.ViewModels;

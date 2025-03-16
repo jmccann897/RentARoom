@@ -4,7 +4,6 @@ using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Services.IServices;
 using RentARoom.Models.ViewModels;
 using System.Security.Claims;
-using RentARoom.DataAccess.Services.IServices;
 
 namespace RentARoom.Areas.User.Controllers
 {
