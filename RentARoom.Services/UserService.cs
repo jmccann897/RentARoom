@@ -79,8 +79,7 @@ namespace RentARoom.Services.IServices
                 Role = _userManager.GetRolesAsync(user).Result.FirstOrDefault()
             }).ToList();
           
-            return userDTOs
-;
+            return userDTOs;
         }
 
         // Delete user by ID
@@ -99,6 +98,7 @@ namespace RentARoom.Services.IServices
         // #region Property Controller
         public async Task<ApplicationUser> GetCurrentUserAsync(ClaimsPrincipal user)
         {
+            if (user == null) { throw new ArgumentNullException(nameof(user), "ClaimsPrincipal cannot be null."); }
             return await _userManager.GetUserAsync(user);
         }
         // #endregion
@@ -106,17 +106,30 @@ namespace RentARoom.Services.IServices
         // #region Notification Controller
         public async Task<ApplicationUser> GetUserByEmailAsync(string email)
         {
+            if (string.IsNullOrEmpty(email)) // Check for null or empty string
+            {
+                throw new ArgumentException("Email cannot be null or empty.", nameof(email));
+            }
             return await _userManager.FindByEmailAsync(email);
         }
 
         public async Task<ApplicationUser> GetUserByIdAsync(string id)
         {
+            if (string.IsNullOrEmpty(id)) // Check for null or empty string
+            {
+                throw new ArgumentException("Id cannot be null or empty.", nameof(id));
+            }
             return await _userManager.FindByIdAsync(id);
         }
 
         public async Task<bool> CheckUserEmailExistsAsync(string email)
         {
-            return await _userManager.Users.AnyAsync(u => u.Email == email);
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentException("Email cannot be null or empty.", nameof(email));
+            }
+            var user = await _userManager.FindByEmailAsync(email);
+            return user != null;
         }
         // #endregion
     }
