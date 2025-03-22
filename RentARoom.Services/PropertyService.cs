@@ -33,7 +33,7 @@ namespace RentARoom.Services.IServices
 
         public async Task<IEnumerable<Property>> SearchPropertiesAsync(string searchType, string searchPhrase)
         {
-            var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
+            IEnumerable<Property> properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
             if (!string.IsNullOrEmpty(searchPhrase))
             {
                 properties = _unitOfWork.Property.Find(p =>
@@ -57,6 +57,7 @@ namespace RentARoom.Services.IServices
 
             return await Task.FromResult(properties);
         }
+
         public async Task<List<Property>> GetPropertiesForUserAsync(ApplicationUser user)
         {
             // null check
@@ -91,17 +92,6 @@ namespace RentARoom.Services.IServices
             PropertyDTO propertyDTO = MapPropertyVMToDTO(propertyVM);
             Property property;
 
-            // Save any images sent
-            var imageUrls = new List<string>();
-            if (files != null & files.Any())
-            {
-                foreach (var file in files)
-                {
-                    string imageUrl = await _azureBlobService.UploadFileAsync(file, 800, 600);
-                    imageUrls.Add(imageUrl);
-                }
-            }
-
             if (propertyDTO.Id == 0)
             {
                 property = new Property
@@ -123,6 +113,29 @@ namespace RentARoom.Services.IServices
                 };
 
                 _unitOfWork.Property.Add(property);
+                _unitOfWork.Save(); // Save to generate Id
+                
+                // Save any images sent
+                var imageUrls = new List<string>();
+                if (files != null & files.Any())
+                {
+                    foreach (var file in files)
+                    {
+                        string imageUrl = await _azureBlobService.UploadFileAsync(file, 800, 600);
+                        imageUrls.Add(imageUrl);
+                    }
+                }
+
+                // Process file images
+                foreach (var imageUrl in imageUrls)
+                {
+                    var image = new Image
+                    {
+                        ImageUrl = imageUrl,
+                        PropertyId = property.Id
+                    };
+                    _unitOfWork.Image.Add(image);
+                }
             }
             else
             {
@@ -143,21 +156,28 @@ namespace RentARoom.Services.IServices
 
                 _unitOfWork.Property.Update(property);
 
-            }
-
-            // Save property
-            _unitOfWork.Save();
-
-            // Process file images
-
-            foreach (var imageUrl in imageUrls)
-            {
-                var image = new Image
+                // Save any images sent
+                var imageUrls = new List<string>();
+                if (files != null & files.Any())
                 {
-                    ImageUrl = imageUrl,
-                    PropertyId = property.Id
-                };
-                _unitOfWork.Image.Add(image);
+                    foreach (var file in files)
+                    {
+                        string imageUrl = await _azureBlobService.UploadFileAsync(file, 800, 600);
+                        imageUrls.Add(imageUrl);
+                    }
+                }
+
+                // Process file images
+                foreach (var imageUrl in imageUrls)
+                {
+                    var image = new Image
+                    {
+                        ImageUrl = imageUrl,
+                        PropertyId = property.Id
+                    };
+                    _unitOfWork.Image.Add(image);
+                }
+
             }
 
             // Save images
