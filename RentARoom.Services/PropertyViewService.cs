@@ -20,6 +20,12 @@ namespace RentARoom.Services.IServices
 
         public IEnumerable<object> GetViewsPerDay(int propertyId)
         {
+
+            if (propertyId <= 0)
+            {
+                return new List<PropertyViewStatsDTO>(); // Return empty list for invalid ID
+            }
+
             var viewsPerDay = _unitOfWork.PropertyView
                 .Find(pv => pv.PropertyId == propertyId)
                 .GroupBy(pv => pv.ViewedAt.Date)
@@ -36,6 +42,11 @@ namespace RentARoom.Services.IServices
 
         public async Task<int> LogPropertyViewAsync(int propertyId)
         {
+            if (propertyId <= 0)
+            {
+                return 0; // Return 0 for invalid ID
+            }
+
             var propertyView = new PropertyView
             {
                 PropertyId = propertyId,

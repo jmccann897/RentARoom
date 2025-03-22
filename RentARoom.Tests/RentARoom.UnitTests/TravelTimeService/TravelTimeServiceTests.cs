@@ -10,7 +10,7 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace RentARoom.Services.Tests
+namespace RentARoom.Tests.RentARoom.UnitTests
 {
     public class TravelTimeServiceTests
     {

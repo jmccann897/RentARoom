@@ -9,7 +9,7 @@ using RentARoom.Utility;
 using System.Linq.Expressions;
 using System.Security.Claims;
 
-namespace RentARoom.Tests
+namespace RentARoom.Tests.RentARoom.UnitTests
 {
     public class UserServiceTests
     {
