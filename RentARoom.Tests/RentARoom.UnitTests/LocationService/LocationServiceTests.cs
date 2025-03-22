@@ -14,16 +14,6 @@ namespace RentARoom.Tests.RentARoom.UnitTests
 {
     public class LocationServiceTests
     {
-        /*
-         * 1. public IEnumerable<Location> GetUserLocations(string userId)
-         * 2. public async Task<IEnumerable<Location>> GetAllLocationsAsync()
-         * 3. public Location GetLocationById(int id)
-         * 4. public bool SaveNewLocation(LocationVM locationVM, string userId)
-         * 5. public bool EditLocation(int id, Location updatedLocation)
-         * 6. public bool DeleteLocation(int id)
-         */
-
-
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly LocationService _locationService;
