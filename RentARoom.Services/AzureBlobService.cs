@@ -73,6 +73,7 @@ namespace RentARoom.Services.IServices
                 }
             }
         }
+
         public async Task DeleteFileAsync(string fileName)
         {
             var containerClient = GetContainerClient();
