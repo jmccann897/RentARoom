@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Azure;
+using Microsoft.Extensions.Configuration;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
 using RentARoom.Models.DTOs;
@@ -11,26 +12,30 @@ namespace RentARoom.Services.IServices
     public class TravelTimeService : ITravelTimeService
     {
         private readonly string _apiKey;
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientWrapper _httpClientWrapper;
         private readonly ILocationService _locationService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public TravelTimeService(IConfiguration configuration, IUnitOfWork unitOfWork, ILocationService locationService)
+        public TravelTimeService(IConfiguration configuration, IUnitOfWork unitOfWork, ILocationService locationService, IHttpClientWrapper httpClientWrapper)
         {
             // Access API key from user secrets (or appsettings)
             _apiKey = configuration["OpenRouteServiceAPI:OSR-RentARoom"];
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://api.openrouteservice.org")
-            };
-
-            _httpClient.DefaultRequestHeaders.Clear();
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Conent-Type", "application/json");
-            _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {_apiKey}");
-
             _unitOfWork = unitOfWork;
             _locationService = locationService;
+            _httpClientWrapper = httpClientWrapper;
+            _httpClientWrapper.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {_apiKey}");
+
+            //_httpClient = new HttpClient
+            //{
+            //    BaseAddress = new Uri("https://api.openrouteservice.org")
+            //};
+
+            //_httpClient.DefaultRequestHeaders.Clear();
+            //_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
+            //_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Conent-Type", "application/json");
+            //_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {_apiKey}");
+
+
         }
 
         public async Task<TravelTimeResultDTO> GetTravelTimeAsync(string userId, int propertyId, string profile)
@@ -61,6 +66,20 @@ namespace RentARoom.Services.IServices
 
         public async Task<(List<double> TravelTimes, List<double> Distances)> GetTravelTimesAndDistancesAsync(List<Coordinate> userCoordinates, Coordinate propertyLocation, string profile)
         {
+            if (userCoordinates == null || !userCoordinates.Any())
+            {
+                throw new ArgumentException("User coordinates cannot be null or empty.", nameof(userCoordinates));
+            }
+
+            if (propertyLocation == null)
+            {
+                throw new ArgumentNullException(nameof(propertyLocation), "Property location cannot be null.");
+            }
+
+            if (string.IsNullOrEmpty(profile))
+            {
+                throw new ArgumentException("Profile cannot be null or empty.", nameof(profile));
+            }
             // Prepare the request body
             var requestBody = new
             {
@@ -81,7 +100,7 @@ namespace RentARoom.Services.IServices
                 Console.WriteLine(content);
 
                 // Send the request to Open Route Service
-                var response = await _httpClient.PostAsync(requestUri, content);
+                var response = await _httpClientWrapper.PostAsync(requestUri, content);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 Console.WriteLine("API Response: " + responseContent);
@@ -100,24 +119,39 @@ namespace RentARoom.Services.IServices
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception in GetTravelTimesAndDistancesAsync: {ex.Message}");
+                throw;
             }
-
-            // Return empty lists in case of an error
-            return (new List<double>(), new List<double>());
         }
 
         private (List<double> TravelTimes, List<double> Distances) HandleApiResponse(string responseContent)
         {
-            // Deserialize the response into JsonElement
-            var matrixData = JsonSerializer.Deserialize<JsonElement>(responseContent);
+            // Declare matrixData outside the try block
+            JsonElement matrixData; 
+
+            try
+            {
+                // Deserialize the response into JsonElement
+                matrixData = JsonSerializer.Deserialize<JsonElement>(responseContent);
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception("Invalid JSON response", ex);
+            }
 
             // Extract durations from the response
             List<double> travelTimes = new List<double>();
             if (matrixData.TryGetProperty("durations", out var durationsElement) && durationsElement.ValueKind == JsonValueKind.Array)
             {
-                var durations = durationsElement[0].EnumerateArray().Select(d => d.GetDouble()).ToList();
-                // Convert the durations from seconds to minutes (rounding)
-                travelTimes = durations.Select(d => Math.Round(d / 60.0, 0)).ToList();
+                try
+                {
+                    var durations = durationsElement[0].EnumerateArray().Select(d => d.GetDouble()).ToList();
+                    // Convert the durations from seconds to minutes (rounding)
+                    travelTimes = durations.Select(d => Math.Round(d / 60.0, 0)).ToList();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    throw new Exception("Invalid duration data type", ex);
+                }
             }
             else
             {
@@ -128,9 +162,16 @@ namespace RentARoom.Services.IServices
             List<double> distances = new List<double>();
             if (matrixData.TryGetProperty("distances", out var distancesElement) && distancesElement.ValueKind == JsonValueKind.Array)
             {
-                var distancesArray = distancesElement[0].EnumerateArray().Select(d => d.GetDouble()).ToList();
-                // Format distance to 2 dp
-                distances = distancesArray.Select(d => Math.Round(d, 2)).ToList(); 
+                try
+                {
+                    var distancesArray = distancesElement[0].EnumerateArray().Select(d => d.GetDouble()).ToList();
+                    // Format distance to 2 dp
+                    distances = distancesArray.Select(d => Math.Round(d, 2)).ToList();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    throw new Exception("Invalid distance data type", ex);
+                }
             }
             else
             {
