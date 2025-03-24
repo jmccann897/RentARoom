@@ -202,9 +202,10 @@ namespace RentARoom.Services.IServices
             {
                 throw new ArgumentNullException(nameof(userId), "User ID cannot be null or empty.");
             }
-            // Fetch ids and convos for user
+            // Fetch ids for user
             var conversationIds = await _unitOfWork.ChatConversations.GetConversationIdsByUserIdAsync(userId);
-            var conversations = await _unitOfWork.ChatConversations.GetUserConversationsAsync(userId);
+            // Map conversations to DTO
+            var conversations = await GetUserConversationsAsync(userId);
 
             // Map the conversations to the DTO
             var conversationsDTO = await GetUserExistingConversationsAsync(userId);
