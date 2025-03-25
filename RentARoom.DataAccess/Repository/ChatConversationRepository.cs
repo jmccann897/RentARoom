@@ -23,6 +23,7 @@ namespace RentARoom.DataAccess.Repository
             return await _db.ChatConversations
                 .Include(c => c.Participants)
                     .ThenInclude(p => p.User)
+                .Include(c => c.ChatMessages)
                 .Where(c => c.Participants.Any(p => p.UserId == userId))
                 .ToListAsync();
         }
