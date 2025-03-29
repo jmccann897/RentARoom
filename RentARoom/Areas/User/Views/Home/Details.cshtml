@@ -167,15 +167,16 @@
                                         </div>
                                     
                                         <!-- Hidden fields for necessary data -->
-                                        <input type="hidden" name="recipientEmail" value="@Model.Property.ApplicationUser.Email" />
                                         <input type="hidden" name="propertyAddress" value="@Model.Property.Address" />
                                         <input type="hidden" name="propertyCity" value="@Model.Property.City" />
                                         <input type="hidden" name="propertyPrice" value="@Model.Property.Price" />
 
                                         <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 mb-1 fw-semibold d-flex align-items-center justify-content-center"
                                                 asp-controller="Notification"
-                                                asp-action="Chat">
-                                    <i class="bi bi-chat-left-text-fill me-2"></i> Message the Agent
+                                                asp-action="Chat"
+                                                asp-route-propertyId="@Model.Property.Id"
+                                                asp-route-recipientEmail="@Model.Property.ApplicationUser.Email">
+                                                <i class="bi bi-chat-left-text-fill me-2"></i> Message the Agent
                                         </button>
 
                                     </div>

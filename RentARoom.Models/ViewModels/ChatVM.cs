@@ -10,7 +10,6 @@ namespace RentARoom.Models.ViewModels
     public class ChatVM
     {
         public string UserId { get; set; }
-        public List<string> ConversationIds { get; set; }
 
         public Property? property { get; set; }
         public List<ChatConversationDTO> Conversations { get; set; } = new();
@@ -21,6 +20,7 @@ namespace RentARoom.Models.ViewModels
         public string? PropertyAddress { get; set; }
         public string? PropertyCity { get; set; }
         public decimal? PropertyPrice { get; set; }
-
+        public int? PropertyId { get; set; }
+        public List<Property> PropertyList { get; set; }
     }
 }

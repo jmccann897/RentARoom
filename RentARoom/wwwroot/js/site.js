@@ -12,10 +12,25 @@
  * @param {number} delay - Delay in milliseconds.
  * @returns {Function} - Debounced function.
  */
+//export function debounce(func, delay) {
+//    let timeoutId;
+//    return function (...args) {
+//        clearTimeout(timeoutId);
+//        timeoutId = setTimeout(() => func.apply(this, args), delay);
+//    };
+//}
+
+// site.js (Modified debounce with logging)
 export function debounce(func, delay) {
     let timeoutId;
     return function (...args) {
+        //console.log("debounce - Arguments received:", args); // Log the arguments
+
+        const context = this;
         clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => func.apply(this, args), delay);
+        timeoutId = setTimeout(() => {
+            //console.log("debounce - Executing function with arguments:", args); // Log before execution
+            func.apply(context, args);
+        }, delay);
     };
 }

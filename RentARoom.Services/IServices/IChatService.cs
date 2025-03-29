@@ -18,7 +18,7 @@ namespace RentARoom.Services.IServices
         /// <param name="senderId"></param>
         /// <param name="recipientId"></param>
         /// <returns></returns>
-        Task<string> CreateOrGetConversationIdAsync(string senderId, string recipientId);
+        Task<string> CreateOrGetConversationIdAsync(string senderId, string recipientId, int? propertyId = null);
         // Save messages to Db
         Task<ChatMessage> SaveMessageAsync(string conversationId, string senderId, string recipientId, string content);
         // Get chat history
@@ -47,7 +47,7 @@ namespace RentARoom.Services.IServices
         /// <param name="senderId"></param>
         /// <param name="recipientEmail"></param>
         /// <returns></returns>
-        Task<string> CreateOrGetConversationIdByEmailAsync(string senderId, string recipientEmail);
+        Task<string> CreateOrGetConversationIdByEmailAsync(string senderId, string recipientEmail, int? propertyId);
 
     }
 }

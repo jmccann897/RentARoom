@@ -26,7 +26,7 @@ namespace RentARoom.Services.IServices
             _userService = userService;
         }
 
-        public async Task<string> CreateOrGetConversationIdAsync(string senderId, string recipientId)
+        public async Task<string> CreateOrGetConversationIdAsync(string senderId, string recipientId, int? propertyId = null)
         {
             if (string.IsNullOrEmpty(senderId))
             {
@@ -41,7 +41,8 @@ namespace RentARoom.Services.IServices
             // Check if conversation already exists
             var conversation = await _unitOfWork.ChatConversations
                 .GetAsync(c => c.Participants.Any(p => p.UserId == senderId) &&
-                                     c.Participants.Any(p => p.UserId == recipientId));
+                                     c.Participants.Any(p => p.UserId == recipientId) &&
+                                     c.PropertyId == propertyId);
 
             if (conversation != null)
             {
@@ -52,7 +53,8 @@ namespace RentARoom.Services.IServices
             var newConversation = new ChatConversation
             {
                 ChatConversationId = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                PropertyId = propertyId
             };
 
             _unitOfWork.ChatConversations.Add(newConversation);
@@ -190,8 +192,13 @@ namespace RentARoom.Services.IServices
                 ChatConversationId = c.ChatConversationId,
                 RecipientEmail = c.Participants
                     .FirstOrDefault(p => p.UserId != userId)?.User.Email,
+                RecipientUserName = c.Participants
+                    .FirstOrDefault(p => p.UserId != userId)?.User.Name,
                 LastMessage = c.ChatMessages.OrderByDescending(m => m.Timestamp).FirstOrDefault()?.Content,
-                LastMessageTimestamp = c.ChatMessages.OrderByDescending(m => m.Timestamp).FirstOrDefault()?.Timestamp
+                LastMessageTimestamp = c.ChatMessages.OrderByDescending(m => m.Timestamp).FirstOrDefault()?.Timestamp,
+                PropertyId = c.PropertyId,
+                PropertyAddress = c.Property?.Address,
+                PropertyImageUrl = c.Property?.Images.FirstOrDefault()?.ImageUrl
             });
             return result;
         }
@@ -202,11 +209,7 @@ namespace RentARoom.Services.IServices
             {
                 throw new ArgumentNullException(nameof(userId), "User ID cannot be null or empty.");
             }
-            // Fetch ids for user
-            var conversationIds = await _unitOfWork.ChatConversations.GetConversationIdsByUserIdAsync(userId);
-            // Map conversations to DTO
-            var conversations = await GetUserConversationsAsync(userId);
-
+            
             // Map the conversations to the DTO
             var conversationsDTO = await GetUserExistingConversationsAsync(userId);
 
@@ -216,7 +219,6 @@ namespace RentARoom.Services.IServices
             var chatDataDTO = new ChatDataDTO
             {
                 UserId = userId,
-                ConversationIds = conversationIds,
                 Conversations = conversationsDTO.ToList(),
                 ApplicationUser = applicationUser,
                 RecipientEmail = recipientEmail
@@ -224,7 +226,7 @@ namespace RentARoom.Services.IServices
             return chatDataDTO;
         }
 
-        public async Task<string> CreateOrGetConversationIdByEmailAsync(string senderId, string recipientEmail)
+        public async Task<string> CreateOrGetConversationIdByEmailAsync(string senderId, string recipientEmail, int? propertyId)
         {
             if (string.IsNullOrEmpty(senderId))
             {
@@ -242,7 +244,7 @@ namespace RentARoom.Services.IServices
 
             var recipientId = recipient.Id;
 
-            return await CreateOrGetConversationIdAsync(senderId, recipientId);
+            return await CreateOrGetConversationIdAsync(senderId, recipientId, propertyId);
         }
     }
 }

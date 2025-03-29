@@ -24,6 +24,8 @@ namespace RentARoom.DataAccess.Repository
                 .Include(c => c.Participants)
                     .ThenInclude(p => p.User)
                 .Include(c => c.ChatMessages)
+                .Include(c => c.Property)
+                    .ThenInclude(p => p.Images)
                 .Where(c => c.Participants.Any(p => p.UserId == userId))
                 .ToListAsync();
         }

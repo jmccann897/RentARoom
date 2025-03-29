@@ -9,7 +9,6 @@ namespace RentARoom.Models.DTOs
     public class ChatDataDTO
     {
         public string UserId { get; set; }
-        public List<string> ConversationIds { get; set; }
         public List<ChatConversationDTO> Conversations { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public string RecipientEmail { get; set; }
