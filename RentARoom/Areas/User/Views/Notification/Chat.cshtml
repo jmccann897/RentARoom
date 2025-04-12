@@ -9,9 +9,9 @@
 
 <!-- Pass conversation Ids to JavaScript -->
 <script>
-    // Pass the conversation Ids to JavaScript via the ViewModel
-    const conversationIds = @Html.Raw(Json.Serialize(Model.ConversationIds));
-    console.log("User's conversation IDs: ", conversationIds);
+    // Pass the conversations to JavaScript via the ViewModel
+    const conversations = @Html.Raw(Json.Serialize(Model.Conversations));
+    console.log("User's conversations: ", conversations);
     window.currentUserId = '@Model.UserId';
 </script>
 
@@ -36,6 +36,13 @@
                 <input type="text" class="form-control" 
                     id="receiverEmail" value="@recipientEmail" 
                     placeholder="Enter their email" />
+                <select id="propertySelect">
+                    <option value="">Select Property (Optional)</option>
+                    @foreach (var property in Model.PropertyList)
+                    {
+                        <option value="@property.Id">@property.Address</option>
+                    }
+                </select>
                 <button id="startChat" class="col-md-3 btn btn-success px-4" style="margin-left: 10px;">Start Chat</button>
             </div>
         <div id="emailError">User not found. Please enter a valid email.</div> <!-- Error message -->
@@ -54,9 +61,17 @@
                 {
                     @foreach (var conversation in Model.Conversations)
                     {
-                        <div class="conversation-item" data-conversation-id="@conversation.ChatConversationId" 
-                        data-recipient-email="@conversation.RecipientEmail">
-                            <div class="recipient">@conversation.RecipientEmail</div>
+                        <div class="conversation-item" 
+                        data-conversation-id="@conversation.ChatConversationId" 
+                        data-recipient-email="@conversation.RecipientEmail"
+                        data-property-id="@conversation.PropertyId">
+                            
+                            <div class="recipient">
+                                UserName: <strong>@conversation.RecipientUserName</strong>
+                            </div>
+                            <div class="query-type">
+                                Query: <strong>@(string.IsNullOrWhiteSpace(conversation.PropertyAddress) ? "General" : conversation.PropertyAddress)</strong>
+                            </div>
                             <div class="last-message">@conversation.LastMessage</div>
                             <div class="timestamp">
                                 @if (conversation.LastMessageTimestamp.HasValue)
@@ -92,6 +107,7 @@
 @section Scripts {
     <script type="module" src="~/js/chatSignalR.js"></script>
     <script type="module" src="~/js/chatMessages.js"></script>
+    <script type="module" src="~/js/chatInputhelpers.js"></script>
     <script type="module" src="~/js/chat.js"></script>
 }
 

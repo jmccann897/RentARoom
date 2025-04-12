@@ -10,8 +10,13 @@ namespace RentARoom.Models.DTOs
     {
         public string ChatConversationId { get; set; }
         public string RecipientEmail { get; set; }
+        public string RecipientUserName { get; set; }
         
         public string LastMessage { get; set; }
         public DateTime? LastMessageTimestamp { get; set; }
+
+        public int? PropertyId { get; set; } 
+        public string PropertyAddress { get; set; } 
+        public string PropertyImageUrl { get; set; }
     }
 }

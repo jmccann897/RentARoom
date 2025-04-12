@@ -111,7 +111,6 @@
     }
 
     .conversation-item .recipient {
-        font-weight: bold;
         font-size: 1em;
     }
 
@@ -159,11 +158,18 @@
 
 .property-info {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between; /* Place text and image on opposite ends */
+    align-items: center; /* Vertically align text and image */
     text-align: left;
 }
 
+    .property-info img {
+        width: 50px; 
+        height: 50px; 
+        border-radius: 50%; /* Make it circular */
+        object-fit: cover; /* Maintain aspect ratio and cover the circle */
+        margin-left: 10px; /* Add some spacing between text and image */
+    }
 
 /* Mobile View Adjustments */
 @media (max-width: 768px) {
