@@ -9,12 +9,25 @@ using RentARoom.Models;
 using RentARoom.Services.IServices;
 using RentARoom.Utility;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Azure;
+using Azure.Identity;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Ensure User Secrets are loaded in Development mode
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
+}
+else
+{
+    // Retrieve the Key Vault URI from an app setting or environment variable.
+    // For example, set "KeyVaultUri" in your production configuration.
+    var keyVaultUri = builder.Configuration["KeyVaultUri"];
+    if (!string.IsNullOrEmpty(keyVaultUri))
+    {
+        builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUri), new DefaultAzureCredential());
+    }
 }
 
 // Add services to the container.
@@ -71,6 +84,12 @@ builder.Services.AddControllers()
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
 
+builder.Services.AddAzureClients(clientBuilder =>
+{
+    clientBuilder.AddBlobServiceClient(builder.Configuration["AzureBlobStorage:blob"]!, preferMsi: true);
+    clientBuilder.AddQueueServiceClient(builder.Configuration["AzureBlobStorage:queue"]!, preferMsi: true);
+});
+
 var app = builder.Build();
 
 // Chat
@@ -90,7 +109,6 @@ else
 }
 
 app.UseHttpsRedirection();
-
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
