@@ -16,24 +16,28 @@ jobs:
       contents: read #This is required for actions/checkout
 
     steps:
+      - name: Checkout code
       - uses: actions/checkout@v4
 
-      - name: Set up .NET Core
+      - name: Set up .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '3.1'
+          dotnet-version: '8.0.x'
+          
+      - name: Restore dependencies
+        run: dotnet restore RentARoom/RentARoom.sln
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      - name: Build solution
+        run: dotnet build RentARoom.sln --configuration Release --no-restore
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+      - name: Publish web app
+        run: dotnet publish RentARoom/RentARoom/RentARoom.csproj -c Release -o publish_output
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: publish_output
 
   deploy:
     runs-on: windows-latest
