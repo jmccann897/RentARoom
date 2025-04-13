@@ -19,7 +19,7 @@ namespace RentARoom.Services.IServices
         public TravelTimeService(IConfiguration configuration, IUnitOfWork unitOfWork, ILocationService locationService, IHttpClientWrapper httpClientWrapper)
         {
             // Access API key from user secrets (or appsettings)
-            _apiKey = configuration["OpenRouteServiceAPI:OSR-RentARoom"];
+            _apiKey = configuration["OpenRouteServiceAPI:OSRRentARoom"];
             _unitOfWork = unitOfWork;
             _locationService = locationService;
             _httpClientWrapper = httpClientWrapper;
