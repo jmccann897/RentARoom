@@ -1,4 +1,4 @@
-﻿
+﻿@using System.Globalization
 @model PropertyDetailsVM
 
 <div class="card shadow border-0 mt-4 mb-4 property-details-card">
@@ -67,7 +67,7 @@
                                 <h6 class="text-dark text-opacity-50  pb-2">
                                     Monthly Rent:
                                     <span class="text-dark text-opacity-50 fw-semibold">
-                                    @Model.Property.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))
+                                    @string.Format(new CultureInfo("en-GB"), "{0:C}", Model.Property.Price)
                                     </span>
                                 </h6>
                             </div>

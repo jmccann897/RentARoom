@@ -1,4 +1,5 @@
-﻿@model SearchResultsVM
+﻿@using System.Globalization
+@model SearchResultsVM
 
 <!-- Render Search and Filter Bar -->
 <form asp-controller="Home" asp-action="SearchResults" method="POST">
@@ -62,7 +63,9 @@
                         <div class="d-flex align-items-centers">
                             <div class="d-flex flex-column justify-content-start me-4">
                                 <p class="card-title text-dark mb-0">@property.PropertyType.Name</p>
-                                <p class="text-dark opacity-75 mb-0">@property.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))</p>
+                                <p class="text-dark opacity-75 mb-0">
+                                    @string.Format(new CultureInfo("en-GB"), "{0:C}", property.Price)
+                                    </p>
                             </div>
                             <div class="d-flex align-items-center justify-content-around">
                                 @property.NumberOfBedrooms <i class="fa-solid fa-bed ms-2 me-3" title="Number of Bedrooms"></i>
