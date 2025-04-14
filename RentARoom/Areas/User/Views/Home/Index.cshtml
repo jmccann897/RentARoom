@@ -70,11 +70,7 @@
                             </div>
                             <div class="pl-1">
                                 <p class="text-dark opacity-75 text-center">
-                                    <span>
-                                        @("£" + promotedProperty.Price.ToString("0.00"))
-                                    </span>
                                     <span>@string.Format(new CultureInfo("en-GB"), "{0:C}", promotedProperty.Price)</span>
-                                    <span>£@promotedProperty.Price.ToString("N2")</span>
                                 </p>
                             </div>
                         </div>
@@ -134,7 +130,11 @@
                                 <p class="card-title text-warning text-center">@property.PropertyType.Name</p>
                             </div>
                             <div class="pl-1">
-                            <p class="text-dark opacity-75 text-center"><span>@property.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))</span></p>
+                            <p class="text-dark opacity-75 text-center">
+                                <span>
+                                    @string.Format(new CultureInfo("en-GB"), "{0:C}", property.Price)
+                                </span>
+                            </p>
                             </div>
                         </div>
                         <div>

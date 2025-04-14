@@ -66,11 +66,7 @@
                             <div class="row ps-2">
                                 <h6 class="text-dark text-opacity-50  pb-2">
                                     Monthly Rent:
-                                    <span class="text-dark text-opacity-50 fw-semibold">
-                                        @("£" + Model.Property.Price.ToString("0.00"))
-                                    </span>
                                     <span>@string.Format(new CultureInfo("en-GB"), "{0:C}", Model.Property.Price)</span>
-                                    <span>£@Model.Property.Price.ToString("N2")</span>
                                 </h6>
                             </div>
                         </div>
