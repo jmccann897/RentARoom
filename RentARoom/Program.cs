@@ -11,6 +11,7 @@ using RentARoom.Utility;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Azure;
 using Azure.Identity;
+using System.Globalization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -89,6 +90,11 @@ builder.Services.AddAzureClients(clientBuilder =>
     clientBuilder.AddBlobServiceClient(builder.Configuration["AzureBlobStorage:blob"]!, preferMsi: true);
     clientBuilder.AddQueueServiceClient(builder.Configuration["AzureBlobStorage:queue"]!, preferMsi: true);
 });
+
+// Set default culture to en-GB (UK) - otherwise Azure uses US
+var cultureInfo = new CultureInfo("en-GB");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 var app = builder.Build();
 
