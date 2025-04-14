@@ -68,7 +68,7 @@
                                     <p class="card-title text-warning text-center">@promotedProperty.PropertyType.Name</p>
                             </div>
                             <div class="pl-1">
-                                    <p class="text-dark opacity-75 text-center"><span>@promotedProperty.Price.ToString("c")</span></p>
+                                <p class="text-dark opacity-75 text-center"><span>@promotedProperty.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))</span></p>
                             </div>
                         </div>
                         <div>
@@ -127,7 +127,7 @@
                                 <p class="card-title text-warning text-center">@property.PropertyType.Name</p>
                             </div>
                             <div class="pl-1">
-                                <p class="text-dark opacity-75 text-center"><span>@property.Price.ToString("c")</span></p>
+                            <p class="text-dark opacity-75 text-center"><span>@property.Price.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("en-GB"))</span></p>
                             </div>
                         </div>
                         <div>
