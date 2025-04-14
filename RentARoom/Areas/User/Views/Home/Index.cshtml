@@ -1,5 +1,4 @@
-﻿@using System.Globalization
-@model IEnumerable<Property>
+﻿@model IEnumerable<Property>
 
 <div class="container d-flex flex-column">
     @if(Model != null)
@@ -69,9 +68,11 @@
                                     <p class="card-title text-warning text-center">@promotedProperty.PropertyType.Name</p>
                             </div>
                             <div class="pl-1">
-                                <p class="text-dark opacity-75 text-center"><span>
-                                    @string.Format(new CultureInfo("en-GB"), "{0:C}", promotedProperty.Price)
-                                    </span></p>
+                                <p class="text-dark opacity-75 text-center">
+                                    <span>
+                                        @("£" + promotedProperty.Price.ToString("0.00"))
+                                    </span>
+                                </p>
                             </div>
                         </div>
                         <div>

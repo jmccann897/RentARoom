@@ -111,16 +111,6 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
-var cultureInfo = new System.Globalization.CultureInfo("en-GB");
-var localizationOptions = new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(cultureInfo),
-    SupportedCultures = new List<CultureInfo> { cultureInfo },
-    SupportedUICultures = new List<CultureInfo> { cultureInfo }
-};
-app.UseRequestLocalization(localizationOptions);
-
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages(); // needed for identity which use razor pages
