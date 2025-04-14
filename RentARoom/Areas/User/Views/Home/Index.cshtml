@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Property>
+﻿@using System.Globalization
+@model IEnumerable<Property>
 
 <div class="container d-flex flex-column">
     @if(Model != null)
@@ -72,6 +73,8 @@
                                     <span>
                                         @("£" + promotedProperty.Price.ToString("0.00"))
                                     </span>
+                                    <span>@string.Format(new CultureInfo("en-GB"), "{0:C}", promotedProperty.Price)</span>
+                                    <span>£@promotedProperty.Price.ToString("N2")</span>
                                 </p>
                             </div>
                         </div>

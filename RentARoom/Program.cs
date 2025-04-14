@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 using Microsoft.Extensions.Azure;
 using Azure.Identity;
 using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -111,6 +112,21 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+// For formatting currency in Azure
+var cultureInfo = new CultureInfo("en-GB");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(cultureInfo),
+    SupportedCultures = new List<CultureInfo> { cultureInfo },
+    SupportedUICultures = new List<CultureInfo> { cultureInfo }
+};
+
+app.UseRequestLocalization(localizationOptions);
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages(); // needed for identity which use razor pages
