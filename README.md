@@ -53,17 +53,17 @@ This project is built using modern Microsoft and open-source technologies:
 
 ## 📚 Documentation
 
-### 🛠 [Setup Instructions](https://github.com/jmccann897/RentARoom/blob/main/docs/SETUP.md)
+### 🛠 [Setup Instructions](https://github.com/jmccann897/RentARoom/blob/main/Setup.md)
 
-A full step-by-step guide to setting up the application locally with database seeding, Docker services, and Azure integration.
+A full step-by-step guide to setting up the application locally.
 
-### 📦 [Database Instructions]()
+### 📦 [Database Instructions](https://github.com/jmccann897/RentARoom/blob/main/DatabaseSetUp.md)
 
-A full step-by-step guide to setting up the application locally with database seeding, Docker services, and Azure integration.
+Additional database information including Azure integration, seed data and connection strings.
 
-### 🧪 [Test Instructions]()
+### 🧪 [Test Instructions](https://github.com/jmccann897/RentARoom/blob/main/IntegrationTestSetUp.md)
 
-A full step-by-step guide to setting up the application locally with database seeding, Docker services, and Azure integration.
+Guidance on how to run the integration test for RentARoom.
 
 ---
 
