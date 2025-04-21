@@ -24,11 +24,55 @@ jobs:
         with:
           dotnet-version: '8.0.x'
           
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Use the latest stable version of Node.js
+
       - name: Restore dependencies
         run: dotnet restore RentARoom/RentARoom.sln
 
       - name: Build solution
         run: dotnet build RentARoom/RentARoom.sln --configuration Release --no-restore
+
+     # UNIT TESTS
+      - name: Run unit tests
+        run: dotnet test RentARoom.Tests/RentARoom.Tests.csproj --filter "Category=Unit"
+
+      # INSTALL AND START AZURITE FOR INTEGRATION TESTS
+      - name: Install Azurite
+        run: npm install -g azurite
+      
+      - name: Start Azurite
+        shell: pwsh
+        run: |
+         Start-Process -FilePath "npx" -ArgumentList "azurite --silent --location C:\azurite --debug C:\azurite\debug.log" -WindowStyle Hidden
+          Start-Sleep -Seconds 10
+          if (Test-Path "C:\azurite\debug.log") {
+            Get-Content C:\azurite\debug.log
+          } else {
+            Write-Error "Debug log not found. Azurite may not have started."
+            Exit 1
+          }
+          
+      - name: Wait for Azurite
+        run: sleep 10
+
+      - name: Check if Azurite is listening
+        run: |
+            $connections = Get-NetTCPConnection -LocalPort 10000 -State Listen
+            if ($connections) {
+              Write-Output "Azurite is running on port 10000"
+            } else {
+              throw "Azurite is not listening on port 10000"
+            }
+        shell: pwsh
+        
+      # INTEGRATION TESTS
+      - name: Run integration tests
+        run: dotnet test RentARoom.Tests/RentARoom.Tests.csproj --no-build --filter "Category=Integration"
+        env:
+          AzureStorageConnectionString: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;"
 
       - name: Publish web app
         run: dotnet publish RentARoom/RentARoom.csproj -c Release -o publish_output
