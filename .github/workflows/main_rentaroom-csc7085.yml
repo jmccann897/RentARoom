@@ -41,12 +41,10 @@ jobs:
 
       # INSTALL AND START AZURITE FOR INTEGRATION TESTS
       - name: Install Azurite
-        run: |
-          npm install -g azurite
+        run: npm install -g azurite
       
       - name: Start Azurite
-        run: |
-          Start-Process -NoNewWindow -FilePath "azurite" -ArgumentList "--silent --location C:\azurite"
+        run: azurite --silent --location C:\azurite &
           
       - name: Wait for Azurite
         run: sleep 5
