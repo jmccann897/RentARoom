@@ -4,6 +4,7 @@ using RentARoom.Services.IServices;
 
 namespace RentARoom.Tests.RentARoom.UnitTests
 {
+    [Trait("Category", "Unit")]
     public class HttpClientWrapperTests
     {
         [Fact]

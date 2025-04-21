@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RentARoom.Tests.RentARoom.UnitTests
 {
+    [Trait("Category", "Unit")]
     public class TravelTimeServiceTests
     {
         private readonly ILocationService _locationService;

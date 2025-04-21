@@ -5,6 +5,7 @@ using Azure.Storage.Blobs;
 
 namespace RentARoom.Tests.RentARoom.IntegrationTests
 {
+    [Trait("Category", "Integration")]
     public class AzureBlobServiceIntegrationTests : IAsyncLifetime
     {
         private readonly AzureBlobService _service;

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace RentARoom.Tests.RentARoom.UnitTests
 {
+    [Trait("Category", "Unit")]
     public class PropertyServiceTests
     {
 

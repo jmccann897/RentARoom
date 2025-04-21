@@ -11,6 +11,7 @@ using System.Security.Claims;
 
 namespace RentARoom.Tests.RentARoom.UnitTests
 {
+    [Trait("Category", "Unit")]
     public class UserServiceTests
     {
         private readonly UserManager<ApplicationUser> _userManager;

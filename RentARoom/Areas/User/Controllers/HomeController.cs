@@ -47,48 +47,9 @@ namespace RentARoom.Areas.User.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            //Property property = _unitOfWork.Property.Get(u => u.Id == id, includeProperties: "PropertyType,ApplicationUser,Images,PropertyViews");
-
             Property property = await _propertyService.GetPropertyAsync(id);
 
             if (property == null) { return NotFound(); }
-
-            // Log the property view
-            //var propertyView = new PropertyView
-            //{
-            //    PropertyId = id,
-            //    ViewedAt = DateTime.UtcNow
-            //};
-
-            //// Save view to DB
-            //_unitOfWork.PropertyView.Add(propertyView);
-            //_unitOfWork.Save();
-
-            //// Get updated view count
-            //int totalViews = _unitOfWork.PropertyView.Find(v => v.PropertyId == id).Count();
-
-            //// Check if user is logged in and has locations saved
-            //var userLocations = new List<Location>(); // Initialise as empty
-            //string userId = "";
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the logged-in user's ID
-
-            //    if (!string.IsNullOrEmpty(userId)) // Ensure the userId is not null or empty
-            //    {
-            //        // Use the Find method to get the user's saved locations
-            //        userLocations = _unitOfWork.Location.Find(l => l.ApplicationUserId == userId).ToList();
-            //    }           
-            //}
-
-            //// Create a ViewModel to pass both property and user locations
-            //var viewModel = new PropertyDetailsVM
-            //{
-            //    Property = property,
-            //    UserLocations = userLocations,
-            //    UserId = userId,
-            //    TotalViews = totalViews
-            //};
 
             int totalViews = await _propertyViewService.LogPropertyViewAsync(id);
 
@@ -130,9 +91,6 @@ namespace RentARoom.Areas.User.Controllers
         [HttpPost]
         public async Task<IActionResult> SearchResults(string searchType, string searchPhrase = "")
         {
-            // Get all properties
-            //var properties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,Images");
-
             var properties = await _propertyService.SearchPropertiesAsync(searchType, searchPhrase);
 
             var searchResultsVM = new SearchResultsVM
@@ -146,41 +104,6 @@ namespace RentARoom.Areas.User.Controllers
             };
             ViewData["SearchAndFilterBar"] = searchAndFilterBarVM;
             return View("SearchResults", searchResultsVM);
-
-            //// Filter by search phrase --> defaults to empty string so should skip if empty
-            //if (!string.IsNullOrEmpty(searchPhrase))
-            //{
-            //    properties = _unitOfWork.Property.Find(m => m.Address.Contains(searchPhrase) ||
-            //                                                    m.ApplicationUserId.Contains(searchPhrase) ||
-            //                                                    m.Postcode.Contains(searchPhrase) ||
-            //                                                    m.City.Contains(searchPhrase));
-            //}
-            //// Filter by Search Type
-            //if (!string.IsNullOrEmpty(searchType))
-            //{
-            //    if (searchType.Equals("Bedroom"))
-            //    {
-            //        properties = _unitOfWork.Property.Find(m => m.PropertyType.Name.Equals("Bedroom"));
-                                                    
-            //    }
-            //    else if (searchType.Equals("House"))
-            //    {
-            //        properties = _unitOfWork.Property.Find(m => !m.PropertyType.Name.Equals("Bedroom"));
-            //    }
-            //}
-
-            // Create SearchResultsVM and populate with PropertyList and default settings for SearchAndFilterBar
-
-            //SearchResultsVM searchResultsVM = new();
-            //searchResultsVM.PropertyList = properties.ToList();
-
-            //var searchAndFilterBarVM = new SearchAndFilterBarVM
-            //{
-            //    Keywords = searchPhrase
-            //};
-            //ViewData["SearchAndFilterBar"] = searchAndFilterBarVM; // Pass to partial 
-
-            //return View("SearchResults", searchResultsVM);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -189,62 +112,27 @@ namespace RentARoom.Areas.User.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-
-
         #region API methods
         [HttpGet]
         public async Task<IActionResult> GetTravelTime(int propertyId, string profile)
         {
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized(new { message = "User is not logged in." });
             }
 
-
-            //var userLocations = _unitOfWork.Location.Find(l => l.ApplicationUserId == userId).ToList();
-            //if (!userLocations.Any())
-            //{
-            //    return BadRequest(new { message = "No saved locations for the user." });
-            //}
-
-
-            //var property = _unitOfWork.Property.Get(u => u.Id == propertyId, includeProperties: "PropertyType,ApplicationUser,Images");
-
-            //if (property == null)
-            //{
-            //    return BadRequest(new { message = "Invalid property." });
-            //}
-
-            //// Prepare the location data (user's locations and property location)
-            //var userCoordinates = userLocations.Select(l => new Coordinate
-            //{ 
-            //    Lat = l.Latitude, 
-            //    Lon = l.Longitude 
-            //}).ToList();
-            //var propertyLocation = new Coordinate
-            //{ 
-            //    Lat = property.Latitude, 
-            //    Lon = property.Longitude 
-            //};
-
-
             // Call the service to get travel times
             try
             {
-
                 var result = await _travelTimeService.GetTravelTimeAsync(userId, propertyId, profile);
-
                 Console.WriteLine(result);
-
 
                 // Check if the travel times and distances are valid collections
                 if (result.TravelTimes == null || result.Distances == null || result.TravelTimes.Count == 0 || result.Distances.Count == 0)
                 {
                     return NotFound(new { message = "No travel times or distances available." });
                 }
-
                 return Json(new { success = true, travelTimes = result.TravelTimes, distances = result.Distances });
 
             }
@@ -258,19 +146,7 @@ namespace RentARoom.Areas.User.Controllers
         [HttpGet]
         public IActionResult GetViewsPerDay(int propertyId)
         {
-            //var viewsPerDay = _unitOfWork.PropertyView
-            //    .Find(pv => pv.PropertyId == propertyId)
-            //    .GroupBy(pv => pv.ViewedAt.Date)
-            //    .Select(g => new
-            //    {
-            //        Date = g.Key.ToString("yyyy-MM-dd"),
-            //        Views = g.Count()
-            //    })
-            //    .OrderBy(v => v.Date)
-            //    .ToList();
-
             var viewsPerDay = _propertyViewService.GetViewsPerDay(propertyId);
-
             return Json(viewsPerDay);
         }
 
