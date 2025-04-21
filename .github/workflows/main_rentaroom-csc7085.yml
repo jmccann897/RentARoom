@@ -32,9 +32,9 @@ jobs:
 
      # UNIT TESTS
       - name: Run unit tests
-        run: dotnet test RentARoom.Tests/RentARoom.Tests.csproj --no-build --filter "Category=Unit"
+        run: dotnet test RentARoom.Tests/RentARoom.Tests.csproj --filter "Category=Unit"
 
-      # START AZURITE for integration tests
+      # START AZURITE FOR INTEGRATION TESTS
       - name: Start Azurite
         run: docker run -d -p 10000:10000 -p 10001:10001 -p 10002:10002 mcr.microsoft.com/azure-storage/azurite
       
