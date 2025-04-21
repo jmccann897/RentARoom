@@ -45,7 +45,7 @@ namespace RentARoom.Tests.RentARoom.IntegrationTests
         {
             // Arrange
             // Load a real image file from disk (replace with your file path)
-            byte[] imageData = File.ReadAllBytes("test-rentaroom.png");
+            byte[] imageData = File.ReadAllBytes(Path.Combine("RentARoom.TestFiles", "test-rentaroom.png"));
             var mockFormFile = new MockFormFile("test-rentaroom.png", "image/png", imageData);
 
             // Act
@@ -86,7 +86,7 @@ namespace RentARoom.Tests.RentARoom.IntegrationTests
         public async Task AzureBlobService_DeleteFileAsync_Should_DeleteFile_IfExists()
         {
             // Arrange
-            byte[] imageData = File.ReadAllBytes("test-rentaroom.png");
+            byte[] imageData = File.ReadAllBytes(Path.Combine("RentARoom.TestFiles", "test-rentaroom.png"));
             var mockFormFile = new MockFormFile("test-rentaroom.png", "image/png", imageData);
             var uploadResult = await _service.UploadFileAsync(mockFormFile);
             var blobName = uploadResult.Replace("http://127.0.0.1:10000/devstoreaccount1/testcontainer/", "");
@@ -119,8 +119,8 @@ namespace RentARoom.Tests.RentARoom.IntegrationTests
         public async Task AzureBlobService_ListFilesAsync_Should_ReturnListOfFileNames()
         {
             // Arrange
-            byte[] imageData1 = File.ReadAllBytes("test-rentaroom.png");
-            byte[] imageData2 = File.ReadAllBytes("test-rentaroom.png");
+            byte[] imageData1 = File.ReadAllBytes(Path.Combine("RentARoom.TestFiles", "test-rentaroom.png"));
+            byte[] imageData2 = File.ReadAllBytes(Path.Combine("RentARoom.TestFiles", "test-rentaroom.png"));
             var mockFormFile1 = new MockFormFile("file1.png", "image/png", imageData1);
             var mockFormFile2 = new MockFormFile("file2.png", "image/png", imageData2);
 
