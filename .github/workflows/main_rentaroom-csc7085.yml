@@ -44,11 +44,16 @@ jobs:
         run: npm install -g azurite
       
       - name: Start Azurite
-        run: |
-          npx azurite --silent --location C:\azurite &
-          Start-Sleep -Seconds 10
-          Get-Content C:\azurite\debug.log
         shell: pwsh
+        run: |
+         Start-Process -FilePath "npx" -ArgumentList "azurite --silent --location C:\azurite --debug C:\azurite\debug.log" -WindowStyle Hidden
+          Start-Sleep -Seconds 10
+          if (Test-Path "C:\azurite\debug.log") {
+            Get-Content C:\azurite\debug.log
+          } else {
+            Write-Error "Debug log not found. Azurite may not have started."
+            Exit 1
+          }
           
       - name: Wait for Azurite
         run: sleep 10
