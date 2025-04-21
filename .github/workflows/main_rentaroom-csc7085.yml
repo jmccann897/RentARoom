@@ -44,11 +44,17 @@ jobs:
         run: npm install -g azurite
       
       - name: Start Azurite
+        run: |
+          npx azurite --silent --location C:\azurite &
+          Start-Sleep -Seconds 5
         shell: pwsh
-        run: Start-Process azurite -ArgumentList "--silent --location C:\azurite" -NoNewWindow
           
       - name: Wait for Azurite
         run: sleep 10
+
+      - name: Check if Azurite is listening
+        run: netstat -aon | findstr :10000
+        shell: cmd
         
       # INTEGRATION TESTS
       - name: Run integration tests
