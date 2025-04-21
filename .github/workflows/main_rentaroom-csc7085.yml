@@ -24,6 +24,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
           
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Use the latest stable version of Node.js
+
       - name: Restore dependencies
         run: dotnet restore RentARoom/RentARoom.sln
 
@@ -34,10 +39,15 @@ jobs:
       - name: Run unit tests
         run: dotnet test RentARoom.Tests/RentARoom.Tests.csproj --filter "Category=Unit"
 
-      # START AZURITE FOR INTEGRATION TESTS
-      - name: Start Azurite
-        run: docker run -d -p 10000:10000 -p 10001:10001 -p 10002:10002 mcr.microsoft.com/azure-storage/azurite
+      # INSTALL AND START AZURITE FOR INTEGRATION TESTS
+      - name: Install Azurite
+        run: |
+          npm install -g azurite
       
+      - name: Start Azurite
+        run: |
+          Start-Process -NoNewWindow -FilePath "azurite" -ArgumentList "--silent --location C:\azurite"
+          
       - name: Wait for Azurite
         run: sleep 5
         
