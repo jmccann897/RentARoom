@@ -46,15 +46,22 @@ jobs:
       - name: Start Azurite
         run: |
           npx azurite --silent --location C:\azurite &
-          Start-Sleep -Seconds 5
+          Start-Sleep -Seconds 10
+          Get-Content C:\azurite\debug.log
         shell: pwsh
           
       - name: Wait for Azurite
         run: sleep 10
 
       - name: Check if Azurite is listening
-        run: netstat -aon | findstr :10000
-        shell: cmd
+        run: |
+            $connections = Get-NetTCPConnection -LocalPort 10000 -State Listen
+            if ($connections) {
+              Write-Output "Azurite is running on port 10000"
+            } else {
+              throw "Azurite is not listening on port 10000"
+            }
+        shell: pwsh
         
       # INTEGRATION TESTS
       - name: Run integration tests
