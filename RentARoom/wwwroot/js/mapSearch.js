@@ -253,10 +253,17 @@ document.getElementById('mapControlButton').addEventListener('click', (e) => {
     e.stopPropagation();  // Stop event from propagating to the map
 });
 
+const isLoggedIn = document.getElementById('mapContainer').dataset.isLoggedIn === 'true';
+console.log("IsloggedIn: ", isLoggedIn);
+
 // Click on map event --> Show add location version of modal
 map.on('click', (e) => {
-    const { lat, lng } = e.latlng; // Extract latitude and longitude
-    initializeModal({ latitude: lat, longitude: lng });
+    if (!isLoggedIn) {
+        $('#authModal').modal('show');
+    } else {
+        const { lat, lng } = e.latlng; // Extract latitude and longitude
+        initializeModal({ latitude: lat, longitude: lng });
+    }
 });
 
 // If no data, then empty otherwise populate the modal field with values

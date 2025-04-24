@@ -1,5 +1,9 @@
 ﻿@using System.Globalization
 @model PropertyDetailsVM
+@{
+    // Razor variable to check if the user is logged in
+    var isLoggedIn = User.Identity.IsAuthenticated;
+}
 
 <div class="card shadow border-0 mt-4 mb-4 property-details-card">
 
@@ -98,7 +102,8 @@
                             </div>
 
                             <div class="row ps-2">
-                                <button id="calculateTravelTime" class="btn btn-warning bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
+                                <button id="calculateTravelTime" data-is-logged-in="@isLoggedIn.ToString().ToLower()"
+                                class=" btn btn-warning bg-gradient w-100 py-2 mb-1 text-uppercase fw-semibold">
                                     <i class="bi bi-clock-history"></i> Get Travel Time
                                 </button>
                             </div>
@@ -184,7 +189,25 @@
                     </div>
                 </form> 
         </div>
-   
+</div>
+
+<!-- Auth Modal for handling if user not logged in and trying to calculate travel time -->
+<div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="authModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center w-100" id="authModalLabel">Authentication Required</h5>
+            </div>
+            <div class="modal-body">
+                You must be logged in to add a location.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="/Identity/Account/Register" class="btn btn-success">Register</a>
+                <a href="/Identity/Account/Login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
