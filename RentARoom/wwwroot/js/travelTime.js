@@ -5,6 +5,12 @@
     document.getElementById("calculateTravelTime").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent form submission, if inside a form.
 
+        const isLoggedIn = this.dataset.loggedIn === "true";
+        if (!isLoggedIn) {
+            $('#authModal').modal('show');
+            return;
+        }
+
         let profile = document.getElementById("travelProfile").value;
 
         // Get the propertyId, latitude and longitude values from the hidden input fields

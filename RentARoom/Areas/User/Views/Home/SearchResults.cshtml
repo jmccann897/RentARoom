@@ -12,77 +12,88 @@
 
 <!-- Property Results -->
 <div class="container">
-    @foreach (var property in Model.PropertyList)
+    @if( Model.PropertyList != null && Model.PropertyList.Any())
     {
-        <div class="row g-4 mb-4 align-items-center">
-            <!-- Image Carousel -->
-            <div class="col-md-4">
-                <div id="carouselProperty_@property.Id" class="carousel slide shadow rounded" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        @if (property.Images != null && property.Images.Any())
-                        {
-                            int index = 0;
-                            foreach (var image in property.Images)
+        @foreach (var property in Model.PropertyList)
+        {
+            <div class="row g-4 mb-4 align-items-center">
+                <!-- Image Carousel -->
+                <div class="col-md-4">
+                    <div id="carouselProperty_@property.Id" class="carousel slide shadow rounded" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @if (property.Images != null && property.Images.Any())
                             {
-                                <div class="carousel-item @(index == 0 ? "active" : "")">
-                                    <img src="@image.ImageUrl" class="d-block w-100" alt="Property Image @(index + 1)" style="width: 300px; height: 200px;" />
-                                </div>
-                                index++;
+                                int index = 0;
+                                foreach (var image in property.Images)
+                                {
+                                    <div class="carousel-item @(index == 0 ? "active" : "")">
+                                        <img src="@image.ImageUrl" class="d-block w-100" alt="Property Image @(index + 1)" style="width: 300px; height: 200px;" />
+                                    </div>
+                                    index++;
+                                }
                             }
-                        }
-                        else
-                        {
-                            <div class="carousel-item active">
-                                <img src="/images/no-image-available.png" class="d-block w-100" alt="No Images Available" style="width: 300px; height: 200px;" />
-                            </div>
-                        }
+                            else
+                            {
+                                <div class="carousel-item active">
+                                    <img src="/images/no-image-available.png" class="d-block w-100" alt="No Images Available" style="width: 300px; height: 200px;" />
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselProperty_@property.Id" data-bs-slide="prev">
+                            <i class="fas fa-chevron-left fa-2x" aria-hidden="true"></i>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselProperty_@property.Id" data-bs-slide="next">
+                            <i class="fas fa-chevron-right fa-2x" aria-hidden="true"></i>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProperty_@property.Id" data-bs-slide="prev">
-                        <i class="fas fa-chevron-left fa-2x" aria-hidden="true"></i>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProperty_@property.Id" data-bs-slide="next">
-                        <i class="fas fa-chevron-right fa-2x" aria-hidden="true"></i>
-                        <span class="visually-hidden">Next</span>
-                    </button>
                 </div>
-            </div>
-            <!-- Property Details -->
-            <div class="col-md-6">
-                <div class="card border-0 shadow border-top border-5 rounded h-100">
-                    <div class="card-body">
-                        @if (string.Equals(property.PropertyType.Name, "Bedroom"))
-                        {
-                            <p><span class="badge rounded-pill bg-info">Room</span></p>
-                        } 
-                        else
-                        {
-                            <p><span class="badge rounded-pill bg-warning">House</span></p>
-                        }
-                        <p class="card-title h5 text-dark opacity-75">@property.Address, @property.City, @property.Postcode </p>
-                        <div class="d-flex align-items-centers">
-                            <div class="d-flex flex-column justify-content-start me-4">
-                                <p class="card-title text-dark mb-0">@property.PropertyType.Name</p>
-                                <p class="text-dark opacity-75 mb-0">
-                                    <span>@string.Format(new CultureInfo("en-GB"), "{0:C}", property.Price)</span>
-                                </p>
-                            </div>
-                            <div class="d-flex align-items-center justify-content-around">
-                                @property.NumberOfBedrooms <i class="fa-solid fa-bed ms-2 me-3" title="Number of Bedrooms"></i>
-                                @property.NumberOfBathrooms <i class="fa-solid fa-toilet ms-2  me-3" title="Number of Bathrooms"></i>
-                                @property.NumberOfEnsuites <i class="fa-solid fa-bath ms-2 me-3" title="Number of Ensuites"></i>
+                <!-- Property Details -->
+                <div class="col-md-6">
+                    <div class="card border-0 shadow border-top border-5 rounded h-100">
+                        <div class="card-body">
+                            @if (string.Equals(property.PropertyType.Name, "Bedroom"))
+                            {
+                                <p><span class="badge rounded-pill bg-info">Room</span></p>
+                            }
+                            else
+                            {
+                                <p><span class="badge rounded-pill bg-warning">House</span></p>
+                            }
+                            <p class="card-title h5 text-dark opacity-75">@property.Address, @property.City, @property.Postcode </p>
+                            <div class="d-flex align-items-centers">
+                                <div class="d-flex flex-column justify-content-start me-4">
+                                    <p class="card-title text-dark mb-0">@property.PropertyType.Name</p>
+                                    <p class="text-dark opacity-75 mb-0">
+                                        <span>@string.Format(new CultureInfo("en-GB"), "{0:C}", property.Price)</span>
+                                    </p>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-around">
+                                    @property.NumberOfBedrooms <i class="fa-solid fa-bed ms-2 me-3" title="Number of Bedrooms"></i>
+                                    @property.NumberOfBathrooms <i class="fa-solid fa-toilet ms-2  me-3" title="Number of Bathrooms"></i>
+                                    @property.NumberOfEnsuites <i class="fa-solid fa-bath ms-2 me-3" title="Number of Ensuites"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer bg-transparent border-0">
-                        <a asp-controller="Home" asp-action="Details" asp-route-id="@property.Id"
-                           class="btn btn-primary bg-gradient border-0">
-                            Click for more info
-                        </a>
+                        <div class="card-footer bg-transparent border-0">
+                            <a asp-controller="Home" asp-action="Details" asp-route-id="@property.Id"
+                               class="btn btn-primary bg-gradient border-0">
+                                Click for more info
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
+        }
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <h4 class="text-muted">No properties found matching your criteria.</h4>
+            <p>Try adjusting your filters or search term to see more results.</p>
         </div>
     }
+
 </div>
 

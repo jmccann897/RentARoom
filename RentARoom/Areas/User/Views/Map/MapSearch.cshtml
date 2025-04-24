@@ -26,7 +26,7 @@
 <!-- Load MarkerCluster JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 
-<div class="container" style="position: relative;">
+<div id="mapContainer" class="container" style="position: relative;" data-is-logged-in="@isLoggedIn.ToString().ToLower()">
     <h3>Browse rental properties on map in relation to your Points of Interest</h3>
     <div id="map" style="position: relative;"></div>
 </div>
@@ -90,6 +90,25 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary" id="saveLocationBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Auth Modal for handling if user not logged in and trying to add location -->
+<div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="authModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center w-100" id="authModalLabel">Authentication Required</h5>
+            </div>
+            <div class="modal-body">
+                You must be logged in to add a location.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="/Identity/Account/Register" class="btn btn-success">Register</a>
+                <a href="/Identity/Account/Login" class="btn btn-primary">Login</a>
             </div>
         </div>
     </div>
