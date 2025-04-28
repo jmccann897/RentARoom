@@ -401,7 +401,7 @@ function editLocation(id) {
         type: 'GET',
         success: function (data) {
             console.log(data);
-            if (data && data.locationName && data.address && data.city && data.postcode) {
+            if (data && data.id) {
                 initializeModal(data);          
             } else {
                 toastr.error("Location not found.");
