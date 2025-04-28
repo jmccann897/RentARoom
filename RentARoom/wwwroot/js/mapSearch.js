@@ -387,7 +387,10 @@ function loadLocationsTable() {
                 "width": "10%"
             }
         ], 
-        responsive: true // Enable responsive mode
+        responsive: true, // Enable responsive mode
+        language: {
+            "emptyTable": "Please click on the map to add a new Point of Interest."
+        }
     });
 }
 

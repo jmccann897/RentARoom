@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using Microsoft.AspNetCore.Http;
+using NSubstitute;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
 using RentARoom.Models.ViewModels;
@@ -6,6 +7,7 @@ using RentARoom.Services.IServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +22,8 @@ namespace RentARoom.Tests.RentARoom.UnitTests
         private readonly ILocationService _locationService;
         private readonly IPropertyService _propertyService;
         private readonly MapService _mapService;
+        private readonly IUserService _userService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public MapServiceTests()
         {
@@ -27,9 +31,11 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             _unitOfWork = Substitute.For<IUnitOfWork>();
             _locationService = Substitute.For<ILocationService>();
             _propertyService = Substitute.For<IPropertyService>();
+            _userService = Substitute.For<IUserService>();
+            _httpContextAccessor = Substitute.For<IHttpContextAccessor>();
 
             // Create MapService instance with mocked dependencies
-            _mapService = new MapService(_unitOfWork, _locationService, _propertyService);
+            _mapService = new MapService(_unitOfWork, _locationService, _propertyService, _userService, _httpContextAccessor);
         }
 
         [Fact]
@@ -50,10 +56,22 @@ namespace RentARoom.Tests.RentARoom.UnitTests
         }
 
         [Fact]
-        public async Task MapService_GetMapLocations_Should_ReturnListOfLocations()
+        public async Task MapService_GetMapLocations_Should_ReturnListOfLocations_WhenUserIsAdmin()
         {
             // Arrange
             var expectedLocations = new List<Location> { new Location(), new Location() };
+
+            // Mock claims user
+            var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, "test-user-id")
+            }));
+            // Mock current user
+            var testUser = new ApplicationUser { Id = "test-user-id" };
+            _httpContextAccessor.HttpContext.Returns(new DefaultHttpContext { User = claimsPrincipal });
+            _userService.GetCurrentUserAsync(Arg.Any<ClaimsPrincipal>()).Returns(Task.FromResult(testUser));
+            _userService.IsUserAdmin(testUser.Id).Returns(Task.FromResult(true));
+
             _locationService.GetAllLocationsAsync().Returns(Task.FromResult((IEnumerable<Location>)expectedLocations));
 
             // Act
@@ -64,6 +82,7 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             Assert.Equal(expectedLocations.Count, result.Count);
             Assert.Equal(expectedLocations, result);
             await _locationService.Received(1).GetAllLocationsAsync();
+            _locationService.DidNotReceive().GetUserLocations(Arg.Any<string>());
         }
 
         [Fact]

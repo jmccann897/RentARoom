@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
 using RentARoom.Models.DTOs;
@@ -14,12 +16,17 @@ namespace RentARoom.Services.IServices
         private readonly ILocationService _locationService;
         private readonly IPropertyService _propertyService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserService _userService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MapService(IUnitOfWork unitOfWork, ILocationService locationService, IPropertyService propertyService)
+        public MapService(IUnitOfWork unitOfWork, ILocationService locationService, 
+            IPropertyService propertyService, IUserService userService, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _locationService = locationService;
             _propertyService = propertyService;
+            _userService = userService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -30,7 +37,23 @@ namespace RentARoom.Services.IServices
 
         public async Task<List<Location>> GetMapLocations()
         {
-            return (await _locationService.GetAllLocationsAsync()).ToList();
+            // Get userid
+            var claimsUser = _httpContextAccessor.HttpContext.User;
+            var user = await _userService.GetCurrentUserAsync(claimsUser);
+
+            //
+            if(user == null)
+            {
+                return new List<Location>();
+            }
+            if(await _userService.IsUserAdmin(user.Id))
+            {
+                return (await _locationService.GetAllLocationsAsync()).ToList();
+            }
+            else 
+            {
+                return _locationService.GetUserLocations(user.Id).ToList();
+            }
         }
 
         public Location GetLocationById(int id)
