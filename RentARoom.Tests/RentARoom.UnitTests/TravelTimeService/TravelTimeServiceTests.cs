@@ -8,6 +8,9 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 
 namespace RentARoom.Tests.RentARoom.UnitTests
@@ -20,6 +23,7 @@ namespace RentARoom.Tests.RentARoom.UnitTests
         private readonly IConfiguration _configuration;
         private readonly TravelTimeService _travelTimeService;
         private readonly IHttpClientWrapper _httpClientWrapper;
+        private readonly IWebHostEnvironment _environment;
 
         public TravelTimeServiceTests()
         {
@@ -41,10 +45,13 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             // Setup the DefaultRequestHeaders mock
             _httpClientWrapper.DefaultRequestHeaders.Returns(new HttpClient().DefaultRequestHeaders);
             Console.WriteLine("HttpClientWrapper created");
+            // Substitute for IEnvironment
+            _environment = Substitute.For<IWebHostEnvironment>();
+            Console.WriteLine("IEnvironment mock created");
 
             try
             {
-                _travelTimeService = new TravelTimeService(_configuration, _unitOfWork, _locationService, _httpClientWrapper);
+                _travelTimeService = new TravelTimeService(_configuration, _unitOfWork, _locationService, _httpClientWrapper, _environment);
                 Console.WriteLine("TravelTimeService created"); // Add this
             }
             catch (Exception ex)

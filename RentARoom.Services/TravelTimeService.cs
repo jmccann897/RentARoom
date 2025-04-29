@@ -1,10 +1,13 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
 using RentARoom.Models.DTOs;
 using RentARoom.Services.IServices;
 using SixLabors.ImageSharp;
+using System;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -16,11 +19,24 @@ namespace RentARoom.Services.IServices
         private readonly IHttpClientWrapper _httpClientWrapper;
         private readonly ILocationService _locationService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _environment;
 
-        public TravelTimeService(IConfiguration configuration, IUnitOfWork unitOfWork, ILocationService locationService, IHttpClientWrapper httpClientWrapper)
+        public TravelTimeService(IConfiguration configuration, IUnitOfWork unitOfWork, ILocationService locationService, 
+            IHttpClientWrapper httpClientWrapper, IWebHostEnvironment environment)
         {
-            // Access API key from user secrets (or appsettings)
-            _apiKey = configuration["OpenRouteServiceAPI:OSRRentARoom"];
+            // Access API key from user secrets (or AzureKeyvault)
+            _environment = environment;
+            // Check environment and load API key accordingly
+            if (_environment.IsDevelopment())
+            {
+                // Local environment (dev mode)
+                _apiKey = configuration["OpenRouteServiceAPI:OSRRentARoom"];
+            }
+            else
+            {
+                // Live environment (production mode)
+                _apiKey = configuration["OpenRouteServiceAPI--OSRRentARoom"];  // Adjusted for Azure Key Vault naming convention
+            }
             _unitOfWork = unitOfWork;
             _locationService = locationService;
             _httpClientWrapper = httpClientWrapper;
