@@ -23,7 +23,6 @@ namespace RentARoom.Tests.RentARoom.UnitTests
         private readonly IConfiguration _configuration;
         private readonly TravelTimeService _travelTimeService;
         private readonly IHttpClientWrapper _httpClientWrapper;
-        private readonly IWebHostEnvironment _environment;
 
         public TravelTimeServiceTests()
         {
@@ -45,13 +44,10 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             // Setup the DefaultRequestHeaders mock
             _httpClientWrapper.DefaultRequestHeaders.Returns(new HttpClient().DefaultRequestHeaders);
             Console.WriteLine("HttpClientWrapper created");
-            // Substitute for IEnvironment
-            _environment = Substitute.For<IWebHostEnvironment>();
-            Console.WriteLine("IEnvironment mock created");
 
             try
             {
-                _travelTimeService = new TravelTimeService(_configuration, _unitOfWork, _locationService, _httpClientWrapper, _environment);
+                _travelTimeService = new TravelTimeService(_configuration, _unitOfWork, _locationService, _httpClientWrapper);
                 Console.WriteLine("TravelTimeService created"); // Add this
             }
             catch (Exception ex)

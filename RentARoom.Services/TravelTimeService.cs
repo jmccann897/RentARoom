@@ -19,24 +19,11 @@ namespace RentARoom.Services.IServices
         private readonly IHttpClientWrapper _httpClientWrapper;
         private readonly ILocationService _locationService;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _environment;
 
         public TravelTimeService(IConfiguration configuration, IUnitOfWork unitOfWork, ILocationService locationService, 
-            IHttpClientWrapper httpClientWrapper, IWebHostEnvironment environment)
+            IHttpClientWrapper httpClientWrapper)
         {
-            // Access API key from user secrets (or AzureKeyvault)
-            _environment = environment;
-            // Check environment and load API key accordingly
-            if (_environment.IsDevelopment())
-            {
-                // Local environment (dev mode)
-                _apiKey = configuration["OpenRouteServiceAPI:OSRRentARoom"];
-            }
-            else
-            {
-                // Live environment (production mode)
-                _apiKey = configuration["OpenRouteServiceAPI--OSRRentARoom"];  // Adjusted for Azure Key Vault naming convention
-            }
+            _apiKey = configuration["OpenRouteServiceAPI:OSRRentARoom"];
             _unitOfWork = unitOfWork;
             _locationService = locationService;
             _httpClientWrapper = httpClientWrapper;
