@@ -5,7 +5,7 @@
     document.getElementById("calculateTravelTime").addEventListener("click", function (event) {
         event.preventDefault(); // Prevent form submission, if inside a form.
 
-        const isLoggedIn = this.dataset.loggedIn === "true";
+        const isLoggedIn = this.dataset.isLoggedIn === "true";
         if (!isLoggedIn) {
             $('#authModal').modal('show');
             return;
