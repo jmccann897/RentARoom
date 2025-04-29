@@ -139,7 +139,7 @@ namespace RentARoom.Areas.User.Controllers
             catch (Exception ex)
             {
                 // Log exception (you can implement your own logging mechanism here)
-                return StatusCode(500, new { message = $"An error occurred while calculating travel times & distances: {ex.Message}" });
+                return StatusCode(500, new { message = $"An error occurred while calculating travel times and distances: {ex.Message}" });
             }
         }
 

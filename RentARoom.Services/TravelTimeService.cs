@@ -5,6 +5,7 @@ using RentARoom.Models;
 using RentARoom.Models.DTOs;
 using RentARoom.Services.IServices;
 using SixLabors.ImageSharp;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace RentARoom.Services.IServices
@@ -23,17 +24,7 @@ namespace RentARoom.Services.IServices
             _unitOfWork = unitOfWork;
             _locationService = locationService;
             _httpClientWrapper = httpClientWrapper;
-            _httpClientWrapper.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {_apiKey}");
-
-            //_httpClient = new HttpClient
-            //{
-            //    BaseAddress = new Uri("https://api.openrouteservice.org")
-            //};
-
-            //_httpClient.DefaultRequestHeaders.Clear();
-            //_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-            //_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Conent-Type", "application/json");
-            //_httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {_apiKey}");
+            _httpClientWrapper.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
 
         }
@@ -119,6 +110,7 @@ namespace RentARoom.Services.IServices
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception in GetTravelTimesAndDistancesAsync: {ex.Message}");
+                Console.WriteLine($"API Key is null: {_apiKey == null}");
                 throw;
             }
         }
