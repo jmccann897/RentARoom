@@ -61,7 +61,7 @@ namespace RentARoom.Areas.Agent.Controllers
                 }),
                 ApplicationUserList = (await _userService.GetAdminAndAgentUsersAsync()).Select(user => new SelectListItem
                 {
-                    Text = user.UserName, 
+                    Text = string.IsNullOrEmpty(user.Name) ? user.UserName : user.Name,
                     Value = user.Id.ToString()
                 }).ToList(),
                 Property = new Property()
@@ -69,7 +69,9 @@ namespace RentARoom.Areas.Agent.Controllers
 
             // Create
             if (id == null || id == 0)
-            { 
+            {
+                var currentUser = await _userService.GetCurrentUserAsync(User);
+                propertyVM.Property.ApplicationUserId = currentUser?.Id;
                 return View(propertyVM);
             }
             else
