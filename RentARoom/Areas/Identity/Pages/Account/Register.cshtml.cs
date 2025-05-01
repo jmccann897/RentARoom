@@ -105,8 +105,9 @@ namespace RentARoom.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            //add for role dropdown
-            public string? Role { get; set; }
+            // add for role dropdown
+            [Required(ErrorMessage = "Please select a role.")]
+            public string Role { get; set; }
 
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
@@ -135,11 +136,17 @@ namespace RentARoom.Areas.Identity.Pages.Account
             Input = new()
             {
                 //First select gets name from roles, second select create the items based on the name returned from first select
-                RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+                RoleList = _roleManager.Roles.Where(r => r.Name != SD.Role_Admin).ToList()
+                .Select(r => new SelectListItem
                 {
-                    Text = i,
-                    Value = i
-                })
+                    Text = r.Name switch
+                    {
+                        SD.Role_User => "User (Renter)",
+                        SD.Role_Agent => "Agent (Landlord)",
+                        _ => r.Name
+                    },
+                    Value = r.Name
+                }).ToList()
             };
             
 
