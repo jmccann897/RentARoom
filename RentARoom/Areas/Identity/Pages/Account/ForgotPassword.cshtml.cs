@@ -73,8 +73,14 @@ namespace RentARoom.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Reset Password for RentARoom",
+                    $@"<p> Hello {user.Name}, </p>
+                    <p>You have requested a password reset for your <strong>RentARoom</strong> account.</p>
+                    <p>Please reset your password by <a href='{callbackUrl}'>clicking here</a>.</p>
+                    <p>If you did not request this, please ignore this email.</p>
+                    <br />
+                    <p>Best regards,<br />The RentARoom Team</p>
+                    ");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
