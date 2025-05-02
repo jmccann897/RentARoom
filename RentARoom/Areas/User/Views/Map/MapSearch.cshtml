@@ -3,18 +3,6 @@
     // Razor variable to check if the user is logged in
     var isLoggedIn = User.Identity.IsAuthenticated;
 }
-<!--  Search Bar -->
-<div>
-    <div class="container mt-4">
-        <div class="row align-items-center bg-light p-3 rounded">
-            <!-- Search Field -->
-            <div class="col-md-4 col-12 mb-2 mb-md-0">
-                <input id="searchField" name="searchPhrase" type="text" class="form-control"
-                       placeholder="Enter keywords ..." asp-for="Keywords" />
-            </div>
-        </div>
-    </div>
-</div>
 
 @* https://leafletjs.com/examples/quick-start/ *@
 <!-- Load Leaflet CSS First -->
@@ -36,6 +24,10 @@
 
 <div id="mapContainer" class="container" style="position: relative;" data-is-logged-in="@isLoggedIn.ToString().ToLower()">
     <h3>Browse rental properties on map in relation to your Points of Interest</h3>
+    <div class="map-search-bar">
+        <input id="searchField" name="searchPhrase" type="text" class="form-control"
+               placeholder="Search properties on the map ..." asp-for="Keywords" />
+    </div>
     <div id="map" style="position: relative;"></div>
 </div>
 
