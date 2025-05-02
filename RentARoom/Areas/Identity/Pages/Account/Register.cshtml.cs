@@ -159,6 +159,20 @@ namespace RentARoom.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            // Repopulate the RoleList for dropdown (in case of form validation failure)
+            Input.RoleList = _roleManager.Roles.Where(r => r.Name != SD.Role_Admin).ToList()
+                .Select(r => new SelectListItem
+                {
+                    Text = r.Name switch
+                    {
+                        SD.Role_User => "User (Renter)",
+                        SD.Role_Agent => "Agent (Landlord)",
+                        _ => r.Name
+                    },
+                    Value = r.Name
+                }).ToList();
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
