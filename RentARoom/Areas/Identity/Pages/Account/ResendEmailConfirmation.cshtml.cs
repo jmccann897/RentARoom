@@ -79,10 +79,18 @@ namespace RentARoom.Areas.Identity.Pages.Account
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 Input.Email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                "Resending your email confirmation for RentARoom",
+                $@"<p> Hello {user.Name}, </p>
+                <p>Thank you for registering with <strong>RentARoom</strong>!</p>
+                <p>To complete your registration, please confirm your email address by <a href='{callbackUrl}'>clicking here</a>.</p>
+                <p>If you did not request a new confirmation link for a RentARoom account, please ignore this email.</p>
+                <br />
+                <p>Best regards,<br />The RentARoom Team</p>
+            ");
 
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+
+
+            ModelState.AddModelError(string.Empty, "Verification email re-sent. Please check your email including spam or other folder.");
             return Page();
         }
     }

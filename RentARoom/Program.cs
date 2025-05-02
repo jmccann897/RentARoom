@@ -37,7 +37,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+    })
     .AddEntityFrameworkStores<ApplicationDbContext>()//AddEFStores defines Db linked to identity
     .AddDefaultTokenProviders();//Needed for email token generation no longer using basic identity
 
@@ -57,7 +60,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Unique DI
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IAzureBlobService, AzureBlobService>();
 builder.Services.AddScoped<IChatService, ChatService>();

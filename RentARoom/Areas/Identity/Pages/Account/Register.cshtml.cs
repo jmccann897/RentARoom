@@ -197,8 +197,15 @@ namespace RentARoom.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, 
+                        "Confirm your email for RentARoom",
+                        $@"<p> Hello {Input.Name}, </p>
+                        <p>Thank you for registering with <strong>RentARoom</strong>!</p>
+                        <p>To complete your registration, please confirm your email address by <a href='{callbackUrl}'>clicking here</a>.</p>
+                        <p>If you did not register for a RentARoom account, please ignore this email.</p>
+                        <br />
+                        <p>Best regards,<br />The RentARoom Team</p>
+                    ");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
