@@ -89,20 +89,25 @@ namespace RentARoom.Areas.User.Controllers
         // https://stackoverflow.com/questions/72476089/how-to-implement-search-functionality
         // POST: /ShowSearchResults
         [HttpPost]
-        public async Task<IActionResult> SearchResults(string searchType, string searchPhrase = "")
+        public async Task<IActionResult> SearchResults(string searchType, string searchPhrase = "", string sortBy = "")
         {
             var properties = await _propertyService.SearchPropertiesAsync(searchType, searchPhrase);
 
-            var searchResultsVM = new SearchResultsVM
+            // Apply sorting
+            properties = sortBy switch
             {
-                PropertyList = properties.ToList()
+                "PriceLowHigh" => properties.OrderBy(p => p.Price),
+                "PriceHighLow" => properties.OrderByDescending(p => p.Price),
+                _ => properties
             };
 
-            var searchAndFilterBarVM = new SearchAndFilterBarVM
+            var searchResultsVM = new SearchResultsVM
             {
-                Keywords = searchPhrase
+                PropertyList = properties.ToList(),
+                Keywords = searchPhrase,
+                SortBy = sortBy,
+                SearchType = searchType
             };
-            ViewData["SearchAndFilterBar"] = searchAndFilterBarVM;
             return View("SearchResults", searchResultsVM);
         }
 

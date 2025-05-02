@@ -14,5 +14,7 @@ namespace RentARoom.Models.ViewModels
 
         [ValidateNever]
         public IEnumerable<SelectListItem> ApplicationUserList { get; set; }
+
+        public string Keywords { get; set; }
     }
 }

@@ -1,12 +1,45 @@
 ﻿@using System.Globalization
 @model SearchResultsVM
 
-<!-- Render Search and Filter Bar -->
+<!-- Search Bar -->
 <form asp-controller="Home" asp-action="SearchResults" method="POST">
     <div>
-        @Html.Partial("_SearchAndFilterBar", ViewData["SearchAndFilterBar"] as RentARoom.Models.ViewModels.SearchAndFilterBarVM)
-        <!-- Hidden input to persist the searchPhrase between requests -->
-        <input type="hidden" name="searchPhrase" />
+        <div class="container mt-4">
+            <div class="row align-items-center bg-light p-3 rounded">
+                <!-- Search Field -->
+                <div class="col-md-4 col-12 mb-2 mb-md-0">
+                    <input id="searchField" name="searchPhrase" type="text" class="form-control"
+                           placeholder="Enter keywords ..." asp-for="Keywords" />
+                </div>
+
+                <!-- Search Type Dropdown -->
+                <div class="col-md-2 col-6 mb-2 mb-md-0">
+                    <select class="form-select" asp-for="SearchType">
+                        <option value="">All</option>
+                        <option value="House">House</option>
+                        <option value="Bedroom">Room only</option>
+                    </select>
+                </div>
+
+                <!-- Sort Dropdown -->
+                <div class="col-md-2 col-6">
+                    <select class="form-select" asp-for="SortBy">
+                        <option value="PriceLowHigh">Price (Low to High)</option>
+                        <option value="PriceHighLow">Price (High to Low)</option>
+                    </select>
+                </div>
+
+                <!-- Search Button -->
+                <div class="col-md-2 col-12 mt-2 mt-md-0 text-md-end">
+                    <button type="submit" asp-controller="Home" asp-action="SearchResults" class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-search me-1"></i> Search
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden input to persist the searchPhrase between requests 
+        <input type="hidden" name="searchPhrase" /> -->
     </div>
 </form>
 

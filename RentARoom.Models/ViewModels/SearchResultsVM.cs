@@ -15,6 +15,9 @@ namespace RentARoom.Models.ViewModels
         public IEnumerable<SelectListItem> PropertyTypeList { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> ApplicationUserList { get; set; }
+        public string Keywords { get; set; }
+        public string SortBy { get; set; }
+        public string SearchType { get; set; }
 
     }
 }

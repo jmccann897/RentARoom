@@ -34,10 +34,6 @@ namespace RentARoom.Areas.User.Controllers
                 LocationList = await _mapService.GetMapLocations()
 
             };
-
-            // Add in Search and filter model
-            SearchAndFilterBarVM searchAndFilterBarVM = new();
-            ViewData["SearchAndFilterBar"] = searchAndFilterBarVM; // Pass to partial view
             return View(mapSearchVM);
         }
 
