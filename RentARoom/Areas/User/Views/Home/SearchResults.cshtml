@@ -1,26 +1,53 @@
 ﻿@using System.Globalization
 @model SearchResultsVM
 
-<!-- Render Search and Filter Bar -->
+<!-- Search Bar -->
 <form asp-controller="Home" asp-action="SearchResults" method="POST">
-    <div>
-        @Html.Partial("_SearchAndFilterBar", ViewData["SearchAndFilterBar"] as RentARoom.Models.ViewModels.SearchAndFilterBarVM)
-        <!-- Hidden input to persist the searchPhrase between requests -->
-        <input type="hidden" name="searchPhrase" />
-    </div>
+        <div class="container-fluid">
+            <div class="row d-flex flex-wrap justify-content-around align-items-center bg-light rounded">
+                <!-- Search Field -->
+            <div class="form-group mt-3" style="flex: 1 1 150px;">
+                <input id="searchField" name="searchPhrase" type="text" class="form-control" placeholder="Enter keywords ..." asp-for="Keywords" class="d-flex align-items-center justify-content-center" />
+                </div>
+
+                <!-- Search Type Dropdown -->
+                <div class="form-group" style="flex: 1 1 180px;">
+                    <select class="form-select" asp-for="SearchType">
+                        <option value="">All</option>
+                        <option value="House">House</option>
+                        <option value="Bedroom">Room only</option>
+                    </select>
+                </div>
+
+                <!-- Sort Dropdown -->
+                <div class="form-group" style="flex: 1 1 180px;">
+                    <select class="form-select" asp-for="SortBy">
+                        <option value="PriceLowHigh">Price (Low to High)</option>
+                        <option value="PriceHighLow">Price (High to Low)</option>
+                    </select>
+                </div>
+
+                <!-- Search Button -->
+                <div class="form-group" style="flex: 1 1 150px;">
+                    <button type="submit" asp-controller="Home" asp-action="SearchResults" class="btn btn-primary w-100 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-search me-1"></i> Search
+                    </button>
+                </div>
+            </div>
+        </div>
 </form>
 
 <!-- Property Results -->
-<div class="container">
+<div class="container-fluid mt-3">
     @if( Model.PropertyList != null && Model.PropertyList.Any())
     {
         @foreach (var property in Model.PropertyList)
         {
-            <div class="row g-4 mb-4 align-items-center">
+            <div class="row g-4 mb-4 justify-content-center align-items-start">
                 <!-- Image Carousel -->
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <div id="carouselProperty_@property.Id" class="carousel slide shadow rounded" data-bs-ride="carousel">
-                        <div class="carousel-inner">
+                        <div class="carousel-inner mt-2">
                             @if (property.Images != null && property.Images.Any())
                             {
                                 int index = 0;
@@ -51,7 +78,7 @@
                 </div>
                 <!-- Property Details -->
                 <div class="col-md-6">
-                    <div class="card border-0 shadow border-top border-5 rounded h-100">
+                    <div class="card border-0 shadow border-top rounded">
                         <div class="card-body">
                             @if (string.Equals(property.PropertyType.Name, "Bedroom"))
                             {

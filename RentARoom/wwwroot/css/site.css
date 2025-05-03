@@ -124,10 +124,10 @@ body {
 
 /* Property details page */
 .property-details-card {
-    max-width: 800px; /* Set your preferred max-width */
+    max-width: 1000px; /* Set your preferred max-width */
     width: 100%; /* Ensure it stretches to the available width on smaller screens */
     margin: 0 auto; /* Center the card */
-    padding-left: 15px; /* Optional: some padding for small screen adjustments */
+    padding-left: 15px; 
     padding-right: 15px;
 }
 

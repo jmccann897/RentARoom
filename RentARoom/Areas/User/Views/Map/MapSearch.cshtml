@@ -3,10 +3,6 @@
     // Razor variable to check if the user is logged in
     var isLoggedIn = User.Identity.IsAuthenticated;
 }
-<!-- Render Search and Filter Bar -->
-<div>
-    @Html.Partial("_SearchAndFilterBar", ViewData["SearchAndFilterBar"] as RentARoom.Models.ViewModels.SearchAndFilterBarVM)
-</div>
 
 @* https://leafletjs.com/examples/quick-start/ *@
 <!-- Load Leaflet CSS First -->
@@ -28,6 +24,10 @@
 
 <div id="mapContainer" class="container" style="position: relative;" data-is-logged-in="@isLoggedIn.ToString().ToLower()">
     <h3>Browse rental properties on map in relation to your Points of Interest</h3>
+    <div class="map-search-bar">
+        <input id="searchField" name="searchPhrase" type="text" class="form-control"
+               placeholder="Search properties on the map ..." asp-for="Keywords" />
+    </div>
     <div id="map" style="position: relative;"></div>
 </div>
 
