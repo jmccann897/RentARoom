@@ -8,6 +8,8 @@ using System.Security.Claims;
 using Property = RentARoom.Models.Property;
 using RentARoom.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 
 namespace RentARoom.Areas.User.Controllers
 {
@@ -155,6 +157,29 @@ namespace RentARoom.Areas.User.Controllers
             return Json(viewsPerDay);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SearchSuggestionsAsync(string searchType, string userInput)
+        {
+            if (string.IsNullOrWhiteSpace(userInput))
+                return NoContent();
+
+            if (searchType != "House" && searchType != "Bedroom")
+            {
+                searchType = "All";
+            }
+            // Filter locations by city/postcode/address matching the term
+            var matchingProperties = await _propertyService.SearchPropertiesAsync(searchType, userInput);
+
+            var suggestions = matchingProperties
+                .Select(p => new[] { p.City, p.Postcode, p.Address })
+                .SelectMany(x => x)
+                .Where(s => !string.IsNullOrWhiteSpace(s) && s.Contains(userInput, StringComparison.OrdinalIgnoreCase))
+                .Distinct()
+                .Take(10);
+
+           
+            return Json(suggestions);
+        }
 
         #endregion
 

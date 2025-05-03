@@ -173,3 +173,35 @@ body {
     #notificationIcon.show {
         display: flex;
     }
+
+.home-search-bar {
+    position: relative;
+}
+
+/* Suggestions list */
+#suggestionsList {
+    position: absolute;
+    max-height: 300px;
+    left: 0;
+    right: 0;
+    max-width: none;
+    overflow-y: auto;
+    background-color: white;
+    z-index: 9999;
+}
+
+    #suggestionsList li {
+        padding: 8px 10px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+        /* Highlighting the hovered or focused suggestion */
+        #suggestionsList li.bg-primary {
+            background-color: #007bff !important;
+            color: white !important;
+        }
+
+        #suggestionsList li:hover {
+            background-color: #f1f1f1;
+        }

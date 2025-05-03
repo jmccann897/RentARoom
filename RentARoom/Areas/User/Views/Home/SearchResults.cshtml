@@ -4,11 +4,14 @@
 <!-- Search Bar -->
 <form asp-controller="Home" asp-action="SearchResults" method="POST">
         <div class="container-fluid">
-            <div class="row d-flex flex-wrap justify-content-around align-items-center bg-light rounded">
+            <div class="row d-flex flex-wrap justify-content-around align-items-center ">
                 <!-- Search Field -->
-            <div class="form-group mt-3" style="flex: 1 1 150px;">
-                <input id="searchField" name="searchPhrase" type="text" class="form-control" placeholder="Enter keywords ..." asp-for="Keywords" class="d-flex align-items-center justify-content-center" />
+            <div class="form-group" style="flex: 1 1 150px;">
+                <div class="home-search-bar">
+                    <input id="searchPhrase" name="searchPhrase" type="text" class="form-control" placeholder="Enter keywords ..." asp-for="Keywords" class="d-flex align-items-center justify-content-center" />
+                    <ul id="suggestionsList" class="list-group"></ul>
                 </div>
+            </div>
 
                 <!-- Search Type Dropdown -->
                 <div class="form-group" style="flex: 1 1 180px;">
@@ -123,4 +126,8 @@
     }
 
 </div>
+
+@section Scripts {
+    <script src="~/js/homeSearch.js" asp-append-version="true"></script>
+}
 
