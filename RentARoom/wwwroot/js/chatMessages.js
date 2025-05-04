@@ -30,9 +30,6 @@ export async function loadChatMessages(conversationId, chatWindow, conversationP
             }
 
             // Construct chat messages and add them to the window
-            //messages.forEach(message => appendMessage(messagesList, message, currentUserId));
-
-            // Construct chat messages and add them to the window
             messages.forEach(message => {
                 //console.log("Message Data: ", message); // Log message before appending
                 appendMessage(messagesList, message, currentUserId);
@@ -116,7 +113,7 @@ export function scrollToBottom(chatWindow) {
 
 
 // Helper function to get or create a chat window
-export function getOrCreateChatWindow(receiverEmail, conversationId, conversationPropertyId) {
+export async function getOrCreateChatWindow(receiverEmail, conversationId, conversationPropertyId) {
     // Find the existing chat window for the current conversationId
     let chatWindow = document.querySelector(`.chat-window[data-conversation-id="${conversationId}"][data-property-id="${conversationPropertyId}"]`);
 
@@ -137,13 +134,14 @@ export function getOrCreateChatWindow(receiverEmail, conversationId, conversatio
 
             document.getElementById("chatWindows").appendChild(chatWindow);
         }
-        // Load previous messages for the conversation
-        loadChatMessages(conversationId, chatWindow, conversationPropertyId);
+        // Clear previous messages and load new ones
+        const messagesList = chatWindow.querySelector('.messages-list');
+        if (messagesList) {
+            messagesList.innerHTML = ''; // Clear previous messages
+            // Load previous messages for the conversation
+            await loadChatMessages(conversationId, chatWindow, conversationPropertyId);
+        }
     }
-
-    //console.log("Value being passed as chatWindow:", chatWindow);
-    //console.log("Send message clicked, receiverEmail:", receiverEmail);
-    //sendMessageHandler(connectionChat, chatWindow, receiverEmail, conversationPropertyId);
 
     // Get the send button (ensure it's set up once)
     const sendButton = chatWindow.querySelector(".send-private-message");
@@ -183,7 +181,6 @@ export function getOrCreateChatWindow(receiverEmail, conversationId, conversatio
     // Mark this window as the active one and hide others
     setActiveChatWindow(chatWindow, document.querySelector(`.conversation-item[data-conversation-id="${conversationId}"][data-property-id="${conversationPropertyId}"]`));
     hideOtherChatWindows(chatWindow);
-    //console.log("getOrCreateChatWindow returning:", chatWindow);
     return chatWindow;
 }
 
@@ -282,7 +279,6 @@ export function setActiveChatWindow(currentChatWindow, conversationItem) {
         chatWindow.prepend(propertyInfoDiv);
         return;
     }
-    //console.log("conversationPropertyId received:", conversationPropertyId);
 
     // Fetch property details based on propertyId
     fetch(`/${conversationPropertyId}`)

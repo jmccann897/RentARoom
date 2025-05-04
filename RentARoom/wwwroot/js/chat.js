@@ -13,7 +13,7 @@ let chatWindow;
 let messagePayload;
 
 // Function to set up chatListeners
-function setupChatListeners(conncectionChat, currentUserId) {
+async function setupChatListeners(conncectionChat, currentUserId) {
     // Ensure currentUserId is available
     if (!currentUserId) {
         console.error('Current user ID is not defined!');
@@ -68,7 +68,7 @@ function setupChatListeners(conncectionChat, currentUserId) {
             conversationPropertyId = selectedConversationPropertyId
 
             // Get or create a chat window
-            chatWindow = getOrCreateChatWindow(receiverEmail, conversationId, conversationPropertyId);
+            chatWindow = await getOrCreateChatWindow(receiverEmail, conversationId, conversationPropertyId);
 
         });
     });
@@ -119,7 +119,7 @@ function setupChatListeners(conncectionChat, currentUserId) {
 
         if (existingConversation) {
             conversationId = existingConversation.chatConversationId;
-            chatWindow = getOrCreateChatWindow(receiverEmail, conversationId, propertyId);
+            chatWindow = await getOrCreateChatWindow(receiverEmail, conversationId, propertyId);
         } else {
             console.log("No existing conversation found, creating a new one.");
 
@@ -145,7 +145,7 @@ function setupChatListeners(conncectionChat, currentUserId) {
                     userConversationList.push({ chatConversationId: conversationId, receiverEmail, propertyId });
 
                     // Create or open a chat window for the receiver
-                    chatWindow = getOrCreateChatWindow(receiverEmail, conversationId, propertyId);
+                    chatWindow = await getOrCreateChatWindow(receiverEmail, conversationId, propertyId);
 
                 } else {
                     console.error("Error fetching or creating conversation:", result.error);

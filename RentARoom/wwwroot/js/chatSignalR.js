@@ -24,36 +24,19 @@ export function initialiseChatConnection() {
             connectionChat.start().then(() => {
                 console.log("SignalR Connected for chat within chatsignalr.js");
 
-                //// Check if the listener has already been added
-                //if (!isMessageReceivedListenerAdded) {
-                //    // Add listener for receiving messages
-                //    console.log("messagereceived listener being added");
-                //    connectionChat.on("MessageReceived", function (messagePayload) {
-                //        handleReceivedMessage(messagePayload, connectionChat);
-                //    });
-                //    isMessageReceivedListenerAdded = true;
-                // }
-
                 setTimeout(() => {
                     if (!isMessageReceivedListenerAdded) {
                         console.log("messagereceived listener being added");
-                        connectionChat.on("MessageReceived", function (messagePayload) {
-                            handleReceivedMessage(messagePayload, connectionChat);
+                        connectionChat.on("MessageReceived", async function (messagePayload) {
+                            try {
+                                await handleReceivedMessage(messagePayload, connectionChat);
+                            } catch (err) {
+                                console.error("Error handling received message:", err);
+                            }
                         });
                         isMessageReceivedListenerAdded = true;
                     }
                 }, 100); // Add a 100ms delay
-
-                //// Remove previous listener to avoid duplicates
-                //connectionChat.off("MessageReceived");
-
-                //// Add listener for receiving messages
-                //console.log("Re-adding 'MessageReceived' listener");
-                //connectionChat.on("MessageReceived", function (messagePayload) {
-                //    console.log("Is this called?");
-                //    handleReceivedMessage(messagePayload, connectionChat);
-                //});
-
                 
                 // Resolve the promise after the connection is established
                 resolve(connectionChat);
@@ -69,7 +52,7 @@ export function initialiseChatConnection() {
 }
     
      
-function handleReceivedMessage(messagePayload, connectionChat) {
+async function handleReceivedMessage(messagePayload, connectionChat) {
 
     console.log("MessageReceived event triggered:", messagePayload);
     // Prevent sender from processing their own message
@@ -77,7 +60,6 @@ function handleReceivedMessage(messagePayload, connectionChat) {
     if (senderEmailField && messagePayload.senderEmail === senderEmailField.value) return;
 
     // Check if the message has already been appended
-    //const existingMessage = document.querySelector(`[data-message-id="${messagePayload.chatMessageId}"]`);
     const existingMessage = document.querySelector(`.messages-list[data-conversation-id="${messagePayload.conversationId}"] [data-message-id="${messagePayload.chatMessageId}"]`);
     if (existingMessage) return; // Skip if already appended
 
@@ -85,9 +67,7 @@ function handleReceivedMessage(messagePayload, connectionChat) {
     connectionChat.invoke("AddToConversationOnMessage", messagePayload.conversationId)
         .catch(err => console.error("Error adding receiver to conversation:", err));
 
-
-    const chatWindow = getOrCreateChatWindow(messagePayload.senderEmail, messagePayload.conversationId, messagePayload.propertyId);
-    //const chatWindow = document.querySelector(`.chat-window[data-conversation-id="${messagePayload.conversationId}][data-property-id=${messagePayload.propertyId}"]`);
+    const chatWindow = await getOrCreateChatWindow(messagePayload.senderEmail, messagePayload.conversationId, messagePayload.propertyId);
 
     // Get or create chat window for receiver where the sender is the data-receiver
     if (!chatWindow) {
@@ -116,10 +96,12 @@ function handleReceivedMessage(messagePayload, connectionChat) {
     }
 
     // Get current user Id (email in this case)
-    const currentUserEmail = senderEmailField?.value || "";
+    //const currentUserEmail = senderEmailField?.value || "";
+    //const currentUserId = messagePayload.senderId;
+    const currentUserId = window.currentUserId || sessionStorage.getItem('userId') || localStorage.getItem('userId');
 
     // Append message with correct parameters
-    appendMessage(messagesList, messagePayload, currentUserEmail);
+    appendMessage(messagesList, messagePayload, currentUserId);
 
     // Select conversationItem to set as active
     const conversationItem = document.querySelector(`.conversation-item[data-conversation-id="${messagePayload.conversationId}"][data-property-id="${messagePayload.propertyId}"]`);
@@ -182,30 +164,35 @@ export async function sendMessage(connectionChat, senderEmail, receiverEmail, me
 }
 
 // Function to listen for 'MessageAppended' event and append the message
-export function listenForNewMessage(connectionChat, currentUserId) {
+export async function listenForNewMessage(connectionChat, currentUserId) {
 
     console.log("Setting up listener for 'MessageAppended'...");
-    connectionChat.on("MessageAppended", function (message) {
+    connectionChat.on("MessageAppended", async function (message) {
         console.log("within message appended listener setup");
-        // Get or create chat window based on conversationId, sender and property Id
-        const chatWindow = getOrCreateChatWindow(message.senderEmail, message.conversationId, message.propertyId);
 
-        if (!chatWindow) {
-            console.error("Chat window not found or created.");
-            return;
+        try {
+            // Get or create chat window based on conversationId, sender and property Id
+            const chatWindow = await getOrCreateChatWindow(message.senderEmail, message.conversationId, message.propertyId);
+
+            if (!chatWindow) {
+                console.error("Chat window not found or created.");
+                return;
+            }
+
+            const messagesList = chatWindow.querySelector(".messages-list");
+            if (!messagesList) {
+                console.error("Messages list not found in chat window.");
+                return;
+            }
+
+            // Append the message, passing in the currentUserId to check if it's sent or received
+            appendMessage(messagesList, message, currentUserId);
+
+            // Ensure the chat window scrolls to the bottom
+            scrollToBottom(chatWindow);
+        } catch (err) {
+            console.error("Error handling message appended:", err);
         }
-
-        const messagesList = chatWindow.querySelector(".messages-list");
-        if (!messagesList) {
-            console.error("Messages list not found in chat window.");
-            return;
-        }
-
-        // Append the message, passing in the currentUserId to check if it's sent or received
-        appendMessage(messagesList, message, currentUserId);
-
-        // Ensure the chat window scrolls to the bottom
-        scrollToBottom(chatWindow);
     });
 }
 
