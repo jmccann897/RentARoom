@@ -179,3 +179,22 @@ RentARoom uses **Azure Blob Storage** to store images uploaded for properties. Y
     "ContainerName": "your-container-name-here"
   }
   ```
+
+  ### 4. **SMTP provider**
+
+RentARoom uses an extended version of **ASP .NET Identity** that requires email confirmation as part of registration process. To enable this, an SMTP provider is required for sending transactional emails (such as confirmation and password reset).
+During development or testing, a personal Gmail account can be used (as demonstrated during live demo deployment to Azure), but this is not suitable for production. For production use, consider providers like SendGrid, Mailgun, or Amazon SES.
+
+- **Email**: The email used to send outgoing mail
+- **Password**: Password to connect to SMTP provider
+- **Host**: The SMTP server hostname
+- **Port**: Port to connect to SMTP provider
+- Example configuration for user secrets:
+  ```json
+  "EmailConfiguration": {
+    "Email": "your-email-here",
+    "Password": "your-password-here",
+    "Host": "your-host-name-here",
+    "Port": "your-port-num-here"
+  }
+  ```
