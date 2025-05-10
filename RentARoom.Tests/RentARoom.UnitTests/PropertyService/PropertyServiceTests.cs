@@ -122,14 +122,14 @@ namespace RentARoom.Tests.RentARoom.UnitTests
         }
 
         [Fact]
-        public async Task GetPropertiesForUserAsync_ReturnsAllPropertiesForNonAgent()
+        public async Task GetPropertiesForUserAsync_ReturnsAllPropertiesForAdmin()
         {
             // Arrange
-            var user = new ApplicationUser { Id = "testUserId" };
-            var role = new List<string> { "NonAgentRole" }; // Simulate a non-agent role
+            var user = new ApplicationUser { Id = "adminUserId" };
+            var role = new List<string> { "Admin" }; // Simulate a non-agent role
             var allProperties = new List<Property>
             {
-                new Property { Id = 1, ApplicationUserId = "testUserId" },
+                new Property { Id = 1, ApplicationUserId = "adminUserId" },
                 new Property { Id = 2, ApplicationUserId = "otherUserId" }
             };
 
