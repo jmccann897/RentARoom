@@ -76,9 +76,16 @@ namespace RentARoom.Services.IServices
                     .Where(x => x.ApplicationUserId == user.Id)
                     .ToList();
                 return agentProperties;
+            } 
+            else if (role.Contains(SD.Role_Admin))
+            {
+                var allProperties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,PropertyViews").ToList();
+                return allProperties;
             }
-            var allProperties = _unitOfWork.Property.GetAll(includeProperties: "PropertyType,ApplicationUser,PropertyViews").ToList();
-            return allProperties;
+            else
+            {
+                return new List<Property>();
+            }
         }
 
         public async Task<Property> GetPropertyAsync(int id)
