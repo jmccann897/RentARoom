@@ -29,14 +29,14 @@
         <!-- Hidden input for User's email -->
         <input type="hidden" id="senderEmail" value="@User.Identity.Name" />   
         
-        <div class="col-md-6">
+        <div class="col-md-12">
             <label for="receiverEmail" class="form-label"></label>
             <div class="d-flex align-items-center">
                 <!-- Prepopulate if provided -->
-                <input type="text" class="form-control" 
-                    id="receiverEmail" value="@recipientEmail" 
+                <input type="text" class="form-control me-2"
+                       id="receiverEmail" value="@recipientEmail" 
                     placeholder="Enter their email" />
-                <select id="propertySelect">
+                <select id="propertySelect" class="form-select">
                     <option value="">Select Property (Optional)</option>
                     @foreach (var property in Model.PropertyList)
                     {
