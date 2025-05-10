@@ -73,15 +73,8 @@
                                 Query: <strong>@(string.IsNullOrWhiteSpace(conversation.PropertyAddress) ? "General" : conversation.PropertyAddress)</strong>
                             </div>
                             <div class="last-message">@conversation.LastMessage</div>
-                            <div class="timestamp">
-                                @if (conversation.LastMessageTimestamp.HasValue)
-                                {
-                                    @conversation.LastMessageTimestamp.Value.ToString("g")
-                                }
-                                else
-                                {
-                                    @:No timestamp available
-                                }
+                            <div class="timestamp" data-utc-timestamp="@conversation.LastMessageTimestamp?.ToUniversalTime().ToString("o")">
+                                 Loading...
                             </div>
                         </div>
                     }

@@ -366,3 +366,20 @@ export function setActiveChatWindow(currentChatWindow, conversationItem) {
         })
         .catch(error => console.error('Error fetching receiver info:', error));
 }
+export function formatConversationTimestamps() {
+    document.querySelectorAll('.timestamp[data-utc-timestamp]').forEach(elem => {
+        const raw = elem.getAttribute('data-utc-timestamp');
+        if (!raw) return;
+
+        const timestamp = new Date(raw);
+        if (isNaN(timestamp)) {
+            elem.textContent = "Invalid Date";
+            return;
+        }
+
+        const time = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const date = timestamp.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
+
+        elem.textContent = `${time}, ${date}`;
+    });
+}

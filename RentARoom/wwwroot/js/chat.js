@@ -1,6 +1,6 @@
 ﻿
 import { initialiseChatConnection, joinConversation, sendMessage, listenForNewMessage, connectionChat } from './chatSignalR.js';
-import { loadChatMessages, appendMessage, getOrCreateChatWindow } from './chatMessages.js';
+import { loadChatMessages, appendMessage, getOrCreateChatWindow, formatConversationTimestamps } from './chatMessages.js';
 import { debounce } from './site.js';
 import { checkUserEmail, filterPropertiesByEmail } from './chatInputhelpers.js';
 
@@ -241,6 +241,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // CurrentUserId from sessionStorage, localStorage, or from the global window object
     let currentUserId = window.currentUserId || sessionStorage.getItem('userId') || localStorage.getItem('userId');
+
+    formatConversationTimestamps();
 
     // Initialize the SignalR connection only once
     initialiseChatConnection().then(conn => {
