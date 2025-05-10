@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using RentARoom.DataAccess.Repository;
+using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
 using RentARoom.Models.DTOs;
 using RentARoom.Utility;
@@ -10,10 +12,19 @@ namespace RentARoom.Services.IServices
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IPropertyService _propertyService;
+        private readonly IChatConversationRepository _chatConversationRepository;
+        private readonly IChatMessageRepository _chatMessageRepository;
 
-        public UserService (UserManager<ApplicationUser> userManager)
+        public UserService (UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork, IPropertyService propertyService,
+            IChatConversationRepository chatConversationRepository, IChatMessageRepository chatMessageRepository)
         {
             _userManager = userManager;
+            _unitOfWork = unitOfWork;
+            _propertyService = propertyService;
+            _chatConversationRepository = chatConversationRepository;
+            _chatMessageRepository = chatMessageRepository;
         }
 
         public async Task<List<ApplicationUser>> GetAdminAndAgentUsersAsync()
@@ -87,6 +98,32 @@ namespace RentARoom.Services.IServices
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return false;
+
+            // Remove user's properties
+            // get users properties with getpropertiesforuserasync, loop through and call deletePropertyAsync on each
+            var properties = await _propertyService.GetPropertiesForUserAsync(user);
+            if(properties != null && properties.Any())
+            {
+                foreach(var property in properties)
+                {
+                    try
+                    {
+                        await _propertyService.DeletePropertyAsync(property.Id);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error deleting property {property.Id}: {ex.Message}");
+                    }
+                }
+            }
+
+            // Remove ChatConversationParticipant entries
+            await _chatConversationRepository.RemoveConversationParticipantsForUserAsync(userId);
+
+            await _chatMessageRepository.RemoveMessagesForUserAsync(userId);
+
+            // Save related entity deletions before deleting user
+            await _unitOfWork.SaveAsync();
 
             var result = await _userManager.DeleteAsync(user);
             return result.Succeeded;

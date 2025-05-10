@@ -20,5 +20,19 @@ namespace RentARoom.DataAccess.Repository.IRepository
         /// <returns></returns>
         Task<List<string>> GetConversationIdsByUserIdAsync(string userId);
 
+        /// <summary>
+        /// Retrieves the list of conversation participants for a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user for whom the conversation participants are being retrieved.</param>
+        /// <returns>A task representing the asynchronous operation, with a result of a list of <see cref="ChatConversationParticipant"/> objects.</returns>
+        Task<List<ChatConversationParticipant>> GetConversationParticipantsForUserAsync(string userId);
+
+        /// <summary>
+        /// Removes all conversation participants associated with a specific user.
+        /// </summary>
+        /// <param name="userId">The ID of the user for whom the conversation participants are being removed.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        Task RemoveConversationParticipantsForUserAsync(string userId);
+
     }
 }

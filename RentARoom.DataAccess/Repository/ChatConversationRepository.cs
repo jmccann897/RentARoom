@@ -37,5 +37,22 @@ namespace RentARoom.DataAccess.Repository
                 .Select(c => c.ChatConversationId)
                 .ToListAsync();
         }
+
+        public async Task<List<ChatConversationParticipant>> GetConversationParticipantsForUserAsync(string userId)
+        {
+            return await _db.ChatConversationParticipants
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+        }
+
+        public async Task RemoveConversationParticipantsForUserAsync(string userId)
+        {
+            var participants = await GetConversationParticipantsForUserAsync(userId);
+            if (participants.Any())
+            {
+                _db.ChatConversationParticipants.RemoveRange(participants);
+                await _db.SaveChangesAsync();
+            }
+        }
     }
 }

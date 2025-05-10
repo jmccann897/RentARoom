@@ -25,6 +25,23 @@ namespace RentARoom.DataAccess.Repository
             .OrderByTimestamp()
             .ToListAsync();
         }
+
+        public async Task<List<ChatMessage>> GetMessagesForUserAsync(string userId)
+        {
+            return await _db.ChatMessages
+                .Where(m => m.SenderId == userId || m.RecipientId == userId)
+                .ToListAsync();
+        }
+
+        public async Task RemoveMessagesForUserAsync(string userId)
+        {
+            var messages = await GetMessagesForUserAsync(userId);
+            if (messages.Any())
+            {
+                _db.ChatMessages.RemoveRange(messages);
+                await _db.SaveChangesAsync();
+            }
+        }
     }
 
     public static class QueryExtensions

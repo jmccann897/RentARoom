@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using NSubstitute;
+using RentARoom.DataAccess.Repository.IRepository;
 using RentARoom.Models;
 using RentARoom.Services.IServices;
 using RentARoom.Utility;
@@ -16,6 +17,10 @@ namespace RentARoom.Tests.RentARoom.UnitTests
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly UserService _userService;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IPropertyService _propertyService;
+        private readonly IChatConversationRepository _chatConversationRepository;
+        private readonly IChatMessageRepository _chatMessageRepository;
 
         private readonly ApplicationUser _agentUser;
         private readonly ApplicationUser _adminUser;
@@ -30,9 +35,13 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             var userStore = Substitute.For<IUserStore<ApplicationUser>>();
             // Set up mock userManager
             _userManager = Substitute.For<UserManager<ApplicationUser>>(userStore, null, null, null, null, null, null, null, null);
+            _unitOfWork = Substitute.For<IUnitOfWork>();
+            _propertyService = Substitute.For<IPropertyService>();
+            _chatConversationRepository = Substitute.For<IChatConversationRepository>();
+            _chatMessageRepository = Substitute.For<IChatMessageRepository>();
 
             // Set up mock userService
-            _userService = new UserService(_userManager);
+            _userService = new UserService(_userManager, _unitOfWork, _propertyService, _chatConversationRepository, _chatMessageRepository);
 
             // Set up mock users
             _agentUser = new ApplicationUser { Id = "1", UserName = "agentUser", Email = "agent@example.com" };
@@ -315,6 +324,11 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             // Arrange
             _userManager.FindByIdAsync(_testUser.Id).Returns(_testUser);
             _userManager.DeleteAsync(_testUser).Returns(IdentityResult.Success);
+            _propertyService.GetPropertiesForUserAsync(_testUser).Returns(new List<Property> { new Property { Id = 1 } });
+            _propertyService.DeletePropertyAsync(Arg.Any<int>()).Returns(Task.FromResult(true));
+            _chatConversationRepository.RemoveConversationParticipantsForUserAsync(_testUser.Id).Returns(Task.CompletedTask);
+            _chatMessageRepository.RemoveMessagesForUserAsync(_testUser.Id).Returns(Task.CompletedTask);
+
 
             // Act
             var result = await _userService.DeleteUser(_testUser.Id);
@@ -325,6 +339,9 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             // Verify FindByIdAsync and DeleteAsync were called once
             await _userManager.Received(1).FindByIdAsync(_testUser.Id);
             await _userManager.Received(1).DeleteAsync(_testUser);
+            await _propertyService.Received(1).DeletePropertyAsync(Arg.Any<int>());
+            await _chatConversationRepository.Received(1).RemoveConversationParticipantsForUserAsync(_testUser.Id);
+            await _chatMessageRepository.Received(1).RemoveMessagesForUserAsync(_testUser.Id);
         }
 
         [Fact]
@@ -342,6 +359,9 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             // Verify FindByIdAsync was called once and DeleteAsync never called
             await _userManager.Received(1).FindByIdAsync(_nonExistentUserId);
             await _userManager.DidNotReceive().DeleteAsync(Arg.Any<ApplicationUser>());
+            await _propertyService.DidNotReceive().DeletePropertyAsync(Arg.Any<int>());
+            await _chatConversationRepository.DidNotReceive().RemoveConversationParticipantsForUserAsync(Arg.Any<string>());
+            await _chatMessageRepository.DidNotReceive().RemoveMessagesForUserAsync(Arg.Any<string>());
         }
 
         [Fact]
@@ -350,6 +370,10 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             // Arrange
             _userManager.FindByIdAsync(_testUser.Id).Returns(_testUser);
             _userManager.DeleteAsync(_testUser).Returns(IdentityResult.Failed());
+            _propertyService.GetPropertiesForUserAsync(_testUser).Returns(new List<Property> { new Property { Id = 1 } });
+            _propertyService.DeletePropertyAsync(Arg.Any<int>()).Returns(Task.FromResult(true));
+            _chatConversationRepository.RemoveConversationParticipantsForUserAsync(_testUser.Id).Returns(Task.CompletedTask);
+            _chatMessageRepository.RemoveMessagesForUserAsync(_testUser.Id).Returns(Task.CompletedTask);
 
             // Act
             var result = await _userService.DeleteUser(_testUser.Id);
@@ -360,6 +384,10 @@ namespace RentARoom.Tests.RentARoom.UnitTests
             // Verify FindByIdAsync and DeleteAsync were called once
             await _userManager.Received(1).FindByIdAsync(_testUser.Id);
             await _userManager.Received(1).DeleteAsync(_testUser);
+            await _propertyService.Received(1).DeletePropertyAsync(Arg.Any<int>());
+            await _chatConversationRepository.Received(1).RemoveConversationParticipantsForUserAsync(_testUser.Id);
+            await _chatMessageRepository.Received(1).RemoveMessagesForUserAsync(_testUser.Id);
+
         }
 
         [Fact]
