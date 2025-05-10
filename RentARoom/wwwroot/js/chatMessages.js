@@ -62,19 +62,20 @@ export function appendMessage(messagesList, message, currentUserId) {
     const messageContent = createMessageContent(message.content);
     li.appendChild(messageContent);
 
-    // Use provided timestamp or generate a new one
-    let timestamp = message.timestamp ? message.timestamp : new Date().toISOString();
+    // Handle timestamp as a string first
+    let timestampStr = message.timestamp;
 
-    //Truncate timestamp to remove milliseconds 
-    timestamp = timestamp.split('.')[0]; 
-
-    // Append 'Z' if not present for UTC consistency
-    if (!timestamp.endsWith('Z')) {
-        timestamp += 'Z';
+    // If it's a string and includes milliseconds, strip them
+    if (typeof timestampStr === 'string' && timestampStr.includes('.')) {
+        timestampStr = timestampStr.split('.')[0];
     }
 
-    // Parse the timestamp into a Date object
-    const localTimestamp = new Date(timestamp);
+    // Ensure 'Z' is appended for UTC if not already
+    if (typeof timestampStr === 'string' && !timestampStr.endsWith('Z')) {
+        timestampStr += 'Z';
+    }
+
+    const localTimestamp = new Date(timestampStr);
 
     if (isNaN(localTimestamp)) {
         console.error("Invalid timestamp:", message.timestamp);

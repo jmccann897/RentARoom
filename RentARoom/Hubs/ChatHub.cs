@@ -116,9 +116,9 @@ namespace RentARoom.Hubs
                     SenderEmail = senderEmail,
                     ReceiverEmail = receiverEmail,
                     Content = message,
-                    Timestamp = DateTime.UtcNow,
+                    savedMessage.Timestamp,
                     SenderId = senderId,
-                    ChatMessageId = savedMessage.ChatMessageId,
+                    savedMessage.ChatMessageId,
                     PropertyId = parsedPropertyId
                 };
 
