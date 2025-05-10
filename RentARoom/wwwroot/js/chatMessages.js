@@ -101,7 +101,7 @@ function createTimeStamp(timestamp) {
 
     // Ensure the timestamp is valid before formatting
     if (timestamp instanceof Date && !isNaN(timestamp.getTime())) {
-        const formattedTime = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const formattedTime = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
         const formattedDate = timestamp.toLocaleDateString([], { day: '2-digit', month: '2-digit', year: '2-digit' });
 
         timestampElement.textContent = `${formattedTime}, ${formattedDate}`;
