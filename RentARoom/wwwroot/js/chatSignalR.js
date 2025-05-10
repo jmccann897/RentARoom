@@ -147,20 +147,6 @@ export async function sendMessage(connectionChat, senderEmail, receiverEmail, me
     } else {
         console.error("SignalR connection is not in the 'Connected' state.");
     }
-
-
-    //try {
-    //    await connectionChat.invoke("SendMessageToReceiver", senderEmail, receiverEmail, message, propertyId);
-    //    console.log("AFTER calling send() - Message sent to SignalR hub successfully");
-    //} catch (err) {
-    //    console.error("Error sending message: ", err);
-    //}
-
-    //return connectionChat.send("SendMessageToReceiver", senderEmail, receiverEmail, message, propertyId)
-    //    .catch(err => {
-    //        console.error("Error sending message: ", err);
-    //        throw err; // Rethrow the error so the caller can handle it
-    //    });
 }
 
 // Function to listen for 'MessageAppended' event and append the message

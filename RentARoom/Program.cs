@@ -70,6 +70,8 @@ builder.Services.AddScoped<IPropertyViewService, PropertyViewService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IMapService, MapService>();
 builder.Services.AddSingleton<IHttpClientWrapper, HttpClientWrapper>();
+builder.Services.AddScoped<IChatConversationRepository, ChatConversationRepository>();
+builder.Services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 
 
 builder.Services.AddRazorPages(); // needed for identity

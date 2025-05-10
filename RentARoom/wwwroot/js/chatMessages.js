@@ -31,7 +31,7 @@ export async function loadChatMessages(conversationId, chatWindow, conversationP
 
             // Construct chat messages and add them to the window
             messages.forEach(message => {
-                //console.log("Message Data: ", message); // Log message before appending
+                console.log("Message Data: ", message); // Log message before appending
                 appendMessage(messagesList, message, currentUserId);
             });
 
@@ -63,13 +63,28 @@ export function appendMessage(messagesList, message, currentUserId) {
     li.appendChild(messageContent);
 
     // Use provided timestamp or generate a new one
-    const timestamp = message.timestamp ? new Date(message.timestamp) : new Date();
-    const timestampElement = createTimeStamp(timestamp);
+    let timestamp = message.timestamp ? message.timestamp : new Date().toISOString();
+
+    //Truncate timestamp to remove milliseconds 
+    timestamp = timestamp.split('.')[0]; 
+
+    // Append 'Z' if not present for UTC consistency
+    if (!timestamp.endsWith('Z')) {
+        timestamp += 'Z';
+    }
+
+    // Parse the timestamp into a Date object
+    const localTimestamp = new Date(timestamp);
+
+    if (isNaN(localTimestamp)) {
+        console.error("Invalid timestamp:", message.timestamp);
+    }
+
+    const timestampElement = createTimeStamp(localTimestamp);
     li.appendChild(timestampElement);
 
     messagesList.appendChild(li);
 }
-
 
 // Helper function to create the message content
 function createMessageContent(content) {
